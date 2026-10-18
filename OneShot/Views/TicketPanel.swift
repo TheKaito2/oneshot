@@ -58,7 +58,7 @@ struct TicketPanel: View {
             })
         }
         .fullScreenCover(isPresented: $paying) {
-            PayView(total: total, onPaid: { method, received in
+            PayView(total: total, catalog: app.catalog, onPaid: { method, received in
                 do {
                     let sale = try SalesLog.record(lines, total: total, method: method, received: received,
                                                    ringUp: chargedAt.flatMap { charged in app.scan.map { charged.timeIntervalSince($0.lockedAt) } },

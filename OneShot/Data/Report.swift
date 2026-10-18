@@ -46,8 +46,10 @@ enum ReportPeriod: String, CaseIterable, Identifiable {
         }
         let end = calendar.date(byAdding: unit, value: 1, to: start)!
         let previousStart = calendar.date(byAdding: unit, value: -1, to: start)!
-        return (DateInterval(start: start, end: end),
-                DateInterval(start: previousStart, duration: min(now, end).timeIntervalSince(start)))
+        // By the calendar, not by elapsed seconds: on 31 March, "the same days of last month" ends on 28 February,
+        // where adding 30 days to 1 February spilled into this month (19 Oct).
+        let previousEnd = min(start, calendar.date(byAdding: unit, value: -1, to: min(now, end))!)
+        return (DateInterval(start: start, end: end), DateInterval(start: previousStart, end: previousEnd))
     }
 
     /// Chart bars: hours for one day, days for longer.

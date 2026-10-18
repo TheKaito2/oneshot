@@ -18,15 +18,25 @@ struct HomeView: View {
 
     @AppStorage(SettingsKey.shopName) private var shopName = ""
     /// Live from the store: a sale paid in Checkout or a refund in history shows here at once.
-    @Query(sort: \SaleRecord.date) private var records: [SaleRecord]
+    @Query private var records: [SaleRecord]
     @Query(sort: \CloseRecord.date) private var closeRecords: [CloseRecord]
     @State private var insight: SalesInsight?
+    /// What the insight was written for, so coming back to Home doesn't blank and rewrite an unchanged one.
+    @State private var insightKey: String?
     @State private var aiStatus: String?
     @State private var closingDay = false
     @State private var width: CGFloat = 0
 
     /// The judge sees the insight within this, or the numbers alone. Never a hang.
     private static let aiTimeout: Duration = .seconds(10)
+
+    /// Home only shows today, yesterday and this week's pace, so it reads the last 8 days: it used to rebuild the
+    /// whole history several times per render.
+    init(app: AppModel) {
+        self.app = app
+        let since = Calendar.current.date(byAdding: .day, value: -8, to: Calendar.current.startOfDay(for: .now)) ?? .distantPast
+        _records = Query(filter: #Predicate<SaleRecord> { $0.date >= since }, sort: \.date)
+    }
 
     private var sales: [Sale] { records.map(\.sale) }
     private var summary: DaySummary { DaySummary.of(sales) }
@@ -101,7 +111,7 @@ struct HomeView: View {
         }
         .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
         .background(GridBackground())
-        .task(id: "\(summary.sales)-\(app.stock.low.count)") { await generateInsight() }
+        .task(id: insightInputs) { await generateInsight() }
     }
 
     // MARK: - Header and hero
@@ -280,7 +290,11 @@ struct HomeView: View {
                         .font(.seed(.callout))
                 }
             } else {
-                Text(aiStatus ?? summary.template).font(.seed(.subheadline)).foregroundStyle(Brand.muted)
+                // The day in plain numbers, always; why there's no AI read goes underneath.
+                Text(summary.template).font(.seed(.subheadline)).foregroundStyle(Brand.body)
+                if let aiStatus {
+                    Text(aiStatus).font(.seed(.caption)).foregroundStyle(Brand.muted)
+                }
             }
         }
         .card(padding: 18)
@@ -288,14 +302,26 @@ struct HomeView: View {
 
     // MARK: - On-device AI
 
+    /// Changes when the day's numbers do (a sale, a refund, a shelf running low).
+    private var insightInputs: String { "\(summary.sales)-\(summary.revenue)-\(low.count)" }
+
     private func generateInsight() async {
+        let key = insightInputs
+        guard key != insightKey || insight == nil else { return }
         insight = nil
+        aiStatus = nil
         guard summary.sales > 0 else { return }
         switch SystemLanguageModel.default.availability {
         case .available:
             aiStatus = String(localized: "Writing…")
-        case .unavailable(let reason):
-            aiStatus = String(localized: "Not on this iPad (\(String(describing: reason))); the numbers above are the summary.")
+        case .unavailable(.appleIntelligenceNotEnabled):
+            aiStatus = String(localized: "Turn on Apple Intelligence in Settings for an AI read of the day.")
+            return
+        case .unavailable(.modelNotReady):
+            aiStatus = String(localized: "The on-device model is still downloading.")
+            return
+        case .unavailable:
+            aiStatus = String(localized: "This iPad doesn't run Apple Intelligence.")
             return
         }
         var prompt = """
@@ -313,16 +339,19 @@ struct HomeView: View {
                     """)
                 return try await session.respond(to: request, generating: SalesInsight.self).content
             }
+            insightKey = key
+            aiStatus = nil
         } catch is CancellationError {
             return   // the day changed underneath (a new sale); the next run writes it
         } catch {
-            aiStatus = String(localized: "Couldn't write a summary (\(error.localizedDescription)); the numbers above are the summary.")
+            aiStatus = error is TimedOut ? String(localized: "The AI took too long; here are the numbers.")
+                : String(localized: "Couldn't write an AI read of the day.")
         }
     }
 }
 
 private struct TimedOut: LocalizedError {
-    var errorDescription: String? { "took too long" }
+    var errorDescription: String? { String(localized: "The AI took too long; here are the numbers.") }
 }
 
 /// Runs `work`, giving up after `limit`.

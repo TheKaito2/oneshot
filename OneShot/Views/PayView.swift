@@ -5,6 +5,8 @@ import SwiftUI
 /// "Turn to customer" flips what the customer needs (total, QR, change) for the person across the counter.
 struct PayView: View {
     let total: Decimal
+    /// For the receipt's product names in the app's language.
+    let catalog: Catalog
     /// Records the sale; returns it for the receipt (nil if logging failed: the sale still ends).
     let onPaid: (PaymentMethod, Decimal?) -> Sale?
     /// Next customer.
@@ -59,11 +61,11 @@ struct PayView: View {
                 if let change = sale.change, change > 0 {
                     Text("Change \(change.baht)").font(.seed(.title2, .bold)).foregroundStyle(Brand.accent)
                 }
-                ReceiptView(sale: sale, shopName: shopName)
+                ReceiptView(sale: sale, shopName: shopName, catalog: catalog)
                     .clipShape(.rect(cornerRadius: 16))
                     .shadow(color: .black.opacity(0.12), radius: 16, y: 6)
                 HStack {
-                    if let image = ReceiptView.image(sale, shopName: shopName) {
+                    if let image = ReceiptView.image(sale, shopName: shopName, catalog: catalog) {
                         ShareLink(item: image, preview: SharePreview("Receipt", image: image)) {
                             Label("Share or print", systemImage: "square.and.arrow.up")
                         }

@@ -9,25 +9,23 @@ struct SalesHistoryView: View {
     @Query(sort: \SaleRecord.date) private var records: [SaleRecord]
     @State private var selected: Int?
     @State private var csvURL: URL?
+    @State private var problem: String?
     @AppStorage(SettingsKey.shopName) private var shopName = ""
 
-    private var sales: [Sale] { records.map(\.sale) }
-
-    private var days: [Date] {
-        Array(Set(sales.map { Calendar.current.startOfDay(for: $0.date) })).sorted(by: >)
-    }
-
-    private var refundedIDs: Set<UUID> { Set(sales.compactMap(\.refundOf)) }
-
     var body: some View {
+        // Built once per render and passed down: each row used to rebuild every Sale from the store, which froze the
+        // screen with a few hundred sales (O(days × sales²)).
+        let sales = records.map(\.sale)
+        let refundedIDs = Set(sales.compactMap(\.refundOf))
+        let byDay = Dictionary(grouping: sales.indices) { Calendar.current.startOfDay(for: sales[$0].date) }
         List {
             if sales.isEmpty {
                 Text("No sales yet.").foregroundStyle(Brand.muted)
             }
-            ForEach(days, id: \.self) { day in
+            ForEach(byDay.keys.sorted(by: >), id: \.self) { day in
                 Section {
-                    ForEach(indices(on: day), id: \.self) { index in
-                        Button { selected = index } label: { row(sales[index]) }
+                    ForEach(byDay[day, default: []].reversed(), id: \.self) { index in
+                        Button { selected = index } label: { row(sales[index], refundedIDs: refundedIDs) }
                             .buttonStyle(.plain)
                     }
                 } header: {
@@ -44,34 +42,40 @@ struct SalesHistoryView: View {
             }
         }
         .sheet(item: Binding(get: { selected.map(IndexBox.init) }, set: { selected = $0?.id })) { box in
-            SaleDetail(sale: sales[box.id], refunded: sales[box.id].id.map(refundedIDs.contains) ?? false,
-                       shopName: shopName, onRefund: { refund(sales[box.id]) })
+            if sales.indices.contains(box.id) {
+                SaleDetail(sale: sales[box.id], refunded: sales[box.id].id.map(refundedIDs.contains) ?? false,
+                           shopName: shopName, catalog: app.catalog, onRefund: { refund(sales[box.id]) })
+            }
         }
-        .task(id: records.count) { writeCSV() }
+        .task(id: records.count) { writeCSV(sales) }
+        .alert("Refund not saved", isPresented: Binding(get: { problem != nil }, set: { if !$0 { problem = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(problem ?? "")
+        }
     }
 
-    private func indices(on day: Date) -> [Int] {
-        sales.indices.filter { Calendar.current.isDate(sales[$0].date, inSameDayAs: day) }.reversed()
-    }
-
-    private func row(_ sale: Sale) -> some View {
+    private func row(_ sale: Sale, refundedIDs: Set<UUID>) -> some View {
         HStack(spacing: 12) {
             Image(systemName: sale.isRefund ? "arrow.uturn.backward.circle.fill" : (sale.method == .cash ? "banknote" : "qrcode"))
                 .foregroundStyle(sale.isRefund ? Brand.negative : Brand.accent)
                 .frame(width: 28)
-            Text(sale.date, style: .time).monospacedDigit().foregroundStyle(Brand.muted)
-            Text(sale.lines.map { abs($0.quantity) > 1 ? "\($0.name) ×\(abs($0.quantity))" : $0.name }.joined(separator: ", "))
+            Text(sale.date, style: .time).foregroundStyle(Brand.muted)
+            Text(sale.lines.map { line in
+                let name = app.catalog[line.sku]?.name ?? line.name
+                return abs(line.quantity) > 1 ? "\(name) ×\(abs(line.quantity))" : name
+            }.joined(separator: ", "))
                 .lineLimit(1)
             Spacer()
             if let id = sale.id, refundedIDs.contains(id) {
                 Text("Refunded").font(.seed(.caption, .bold)).foregroundStyle(Brand.negative)
             }
-            Text(sale.total.baht).bold().monospacedDigit().foregroundStyle(sale.isRefund ? Brand.negative : Brand.ink)
+            Text(sale.total.baht).font(.seed(.body, .bold)).foregroundStyle(sale.isRefund ? Brand.negative : Brand.ink)
         }
         .contentShape(.rect)
     }
 
-    private func writeCSV() {
+    private func writeCSV(_ sales: [Sale]) {
         let url = FileManager.default.temporaryDirectory.appending(path: "OneShot sales.csv")
         do {
             try SalesLog.csv(sales).write(to: url, atomically: true, encoding: .utf8)
@@ -87,7 +91,7 @@ struct SalesHistoryView: View {
             let refund = try SalesLog.refund(sale, in: context)
             app.applyToStock(refund)   // the items go back on the shelf
         } catch {
-            print("refund failed: \(error)")
+            problem = error.localizedDescription
         }
         selected = nil
     }
@@ -99,8 +103,11 @@ private struct SaleDetail: View {
     let sale: Sale
     let refunded: Bool
     let shopName: String
+    let catalog: Catalog
     let onRefund: () -> Void
 
+    /// Rendered once: at 3× on every pass it re-ran on each PIN keystroke.
+    @State private var image: Image?
     @State private var confirming = false
     @State private var askingPIN = false
     @State private var pinEntry = ""
@@ -119,14 +126,14 @@ private struct SaleDetail: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 18) {
-                    ReceiptView(sale: sale, shopName: shopName)
+                    ReceiptView(sale: sale, shopName: shopName, catalog: catalog)
                         .clipShape(.rect(cornerRadius: 16))
                         .shadow(color: .black.opacity(0.12), radius: 16, y: 6)
                     if refunded {
                         Label("Refunded", systemImage: "arrow.uturn.backward.circle.fill").foregroundStyle(Brand.negative)
                     }
                     HStack {
-                        if let image = ReceiptView.image(sale, shopName: shopName) {
+                        if let image {
                             ShareLink(item: image, preview: SharePreview("Receipt", image: image)) {
                                 Label("Share or print", systemImage: "square.and.arrow.up")
                             }
@@ -149,6 +156,7 @@ private struct SaleDetail: View {
                 .frame(maxWidth: .infinity)
             }
             .background(GridBackground())
+            .task { image = ReceiptView.image(sale, shopName: shopName, catalog: catalog) }
             .navigationTitle(sale.isRefund ? Text("Refund") : Text("Receipt"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

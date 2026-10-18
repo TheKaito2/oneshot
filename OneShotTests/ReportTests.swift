@@ -50,6 +50,13 @@ struct ReportTests {
         #expect(previous.end == calendar.date(from: DateComponents(year: 2026, month: 9, day: 18, hour: 13))!)
     }
 
+    @Test func monthEndComparisonStaysInLastMonth() {
+        let march31 = calendar.date(from: DateComponents(year: 2027, month: 3, day: 31, hour: 13))!
+        let (current, previous) = ReportPeriod.month.spans(now: march31, calendar: calendar)
+        #expect(previous.end <= current.start)   // 1 Feb + 30 days 13 h used to land on 3 March
+        #expect(previous.end == calendar.date(from: DateComponents(year: 2027, month: 2, day: 28, hour: 13))!)
+    }
+
     @Test func summaryNetsRefundsAndClaimsProfitOnlyWhereCostIsKnown() {
         let first = sale([("kitkat", 2), ("lays", 1)], at: at(9), method: .cash)          // ฿44
         let second = sale([("kitkat", 1), ("cola", 2)], at: at(10))                        // ฿32

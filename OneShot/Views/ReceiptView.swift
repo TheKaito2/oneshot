@@ -4,6 +4,9 @@ import SwiftUI
 struct ReceiptView: View {
     let sale: Sale
     let shopName: String
+    /// Names lines in the app's language (the log keeps the English name, for the CSV). A Thai receipt under
+    /// "ใบเสร็จ" used to list "Lay's Nori (M)".
+    var catalog: Catalog?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -19,7 +22,7 @@ struct ReceiptView: View {
             dashes
             ForEach(Array(sale.lines.enumerated()), id: \.offset) { _, line in
                 HStack(alignment: .firstTextBaseline) {
-                    Text(line.name)
+                    Text(catalog?[line.sku]?.name ?? line.name)
                     if abs(line.quantity) > 1 { Text("× \(abs(line.quantity))").foregroundStyle(Brand.muted) }
                     Spacer()
                     Text(line.amount.baht).monospacedDigit()
@@ -46,7 +49,7 @@ struct ReceiptView: View {
             VStack(spacing: 2) {
                 Text(verbatim: "Thank you · ขอบคุณค่ะ").font(.seed(.subheadline, .bold))
                 if let id = sale.id {
-                    Text("No. \(String(id.uuidString.prefix(8)))").font(.caption2.monospaced()).foregroundStyle(Brand.muted)
+                    Text("No. \(String(id.uuidString.prefix(8)))").font(.seed(.caption)).foregroundStyle(Brand.muted)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -79,8 +82,8 @@ struct ReceiptView: View {
 
     /// The receipt as an image for ShareLink: AirDrop, Messages, Save, or Print.
     @MainActor
-    static func image(_ sale: Sale, shopName: String) -> Image? {
-        let renderer = ImageRenderer(content: ReceiptView(sale: sale, shopName: shopName))
+    static func image(_ sale: Sale, shopName: String, catalog: Catalog?) -> Image? {
+        let renderer = ImageRenderer(content: ReceiptView(sale: sale, shopName: shopName, catalog: catalog))
         renderer.scale = 3
         return renderer.uiImage.map { Image(uiImage: $0) }
     }
