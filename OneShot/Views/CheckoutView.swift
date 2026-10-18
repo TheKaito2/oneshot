@@ -14,6 +14,9 @@ struct CheckoutView: View {
     @State private var flash: Color?
     @State private var shutter = false
     @State private var addingByHand = false
+    /// Demo camera: the photo in the zone and the boxes the detector draws on it, as the live preview would.
+    @State private var demoFrame: CGImage?
+    @State private var demoBoxes: [Box] = []
     @AppStorage(SettingsKey.debugOverlay) private var debugOverlay = false
     /// One tip at a time under the zone: how to ring up first, then how to teach a product.
     @State private var tips = TipGroup(.ordered) {
@@ -60,6 +63,7 @@ struct CheckoutView: View {
         .onChange(of: app.scan?.id) { _, id in
             if id != nil { Task { await signalLock() } }
         }
+        .task(id: app.demo ? app.demoIndex : -1) { await loadDemoFrame() }
     }
 
     /// The sale, or the Teach-a-product panel while teaching.
@@ -92,6 +96,8 @@ struct CheckoutView: View {
                                    fill: false, reveal: true)
                             .id(scan.id)
                     }
+            } else if app.demo, !app.teaching {
+                demoFeed
             } else {
                 switch camera.state {
                 case .idle:
@@ -99,7 +105,7 @@ struct CheckoutView: View {
                 case .running(let device):
                     CameraPreview(session: camera.session, device: device, onAngle: camera.setPreviewAngle)
                     if !app.teaching {
-                        BoxOverlay(marks: liveMarks, imageSize: camera.frameSize)
+                        BoxOverlay(marks: liveMarks(camera.boxes), imageSize: camera.frameSize)
                     }
                     ScanSweep()
                 case .denied:
@@ -126,6 +132,13 @@ struct CheckoutView: View {
         .overlay(alignment: .bottom) {
             statusChip.padding(.bottom, 14)
         }
+        .overlay(alignment: .topLeading) {
+            if app.demo, !app.teaching, app.scan == nil || app.scanningMore {
+                Button("Next photo", systemImage: "arrow.forward") { app.demoIndex += 1 }
+                    .buttonStyle(.glass)
+                    .padding(14)
+            }
+        }
         .overlay(alignment: .bottomTrailing) {
             Group {
                 if app.scanningMore {
@@ -133,7 +146,10 @@ struct CheckoutView: View {
                 } else if app.scan != nil {
                     HStack(spacing: 10) {
                         Menu {
-                            Button("Scan more items", systemImage: "viewfinder") { app.scanningMore = true }
+                            Button("Scan more items", systemImage: "viewfinder") {
+                                app.scanningMore = true
+                                if app.demo { app.demoIndex += 1 }   // the next table, not the one just billed
+                            }
                             Button("Add an item by hand", systemImage: "hand.tap") { addingByHand = true }
                         } label: {
                             Label("Add items", systemImage: "plus")
@@ -163,6 +179,8 @@ struct CheckoutView: View {
                 Label("\(scan.regions.count) items in \(String(format: "%.2f", elapsed.inSeconds)) s", systemImage: "bolt.fill")
             } else if app.teaching {
                 Label("Teach mode", systemImage: "plus.viewfinder")
+            } else if app.demo {
+                Label("DEMO", systemImage: "photo")
             } else if debugOverlay {
                 Text(String(format: "%.0f fps · detect %.0f ms · %d boxes", camera.fps, camera.detectMs, camera.boxes.count))
                     .monospacedDigit()
@@ -179,9 +197,46 @@ struct CheckoutView: View {
         .glassEffect(.regular, in: .capsule)
     }
 
-    private var liveMarks: [Mark] {
-        camera.boxes.enumerated().map { index, box in
-            Mark(id: index, rect: box.rect, label: "\(box.label) \(Int(box.confidence * 100))", color: .white)
+    /// A bundled table photo in place of the camera, with the detector's boxes drawn like the live preview's.
+    @ViewBuilder
+    private var demoFeed: some View {
+        if let demoFrame {
+            Image(decorative: demoFrame, scale: 1)
+                .resizable()
+                .scaledToFit()
+                .overlay {
+                    BoxOverlay(marks: liveMarks(demoBoxes), imageSize: CGSize(width: demoFrame.width, height: demoFrame.height),
+                               fill: false)
+                }
+                .id(app.demoIndex)
+                .transition(.opacity)
+            ScanSweep()
+        } else {
+            ProgressView().tint(.white)
+        }
+    }
+
+    private func loadDemoFrame() async {
+        guard app.demo else { return }
+        let frame = DemoFeed.frame(app.demoIndex)
+        withAnimation { demoFrame = frame; demoBoxes = [] }
+        guard let frame else { return }
+        // The model may still be loading right after launch; the boxes are decoration, so a miss just leaves none.
+        for _ in 0..<20 {
+            do {
+                demoBoxes = try await camera.detect(frame)
+                return
+            } catch {
+                try? await Task.sleep(for: .milliseconds(250))
+            }
+        }
+    }
+
+    /// What the detector sees before Ring up: the product's name (not its SKU id) and the detector's confidence.
+    private func liveMarks(_ boxes: [Box]) -> [Mark] {
+        boxes.enumerated().map { index, box in
+            Mark(id: index, rect: box.rect, label: "\(app.catalog[box.label]?.name ?? box.label) \(Int(box.confidence * 100))%",
+                 color: .white)
         }
     }
 
@@ -250,6 +305,11 @@ struct CheckoutView: View {
             PhotosPicker(selection: $photo, matching: .images) {
                 Label("Photo", systemImage: "photo")
             }
+            // Presenting without the snacks, or from the simulator: table photos stand in for the camera.
+            Toggle(isOn: $app.demo) {
+                Label("Demo", systemImage: "photo.on.rectangle.angled")
+            }
+            .toggleStyle(.button)
         }
         .lineLimit(1)
         .fixedSize()
@@ -292,6 +352,10 @@ struct CheckoutView: View {
         let clock = ContinuousClock()
         let start = clock.now
         do {
+            if app.demo, let frame = demoFrame {
+                await bill(image: frame, boxes: try await camera.detect(frame), start: start, clock: clock)
+                return
+            }
             let (image, boxes) = try await camera.lock()
             await bill(image: image, boxes: boxes, start: start, clock: clock)
         } catch {

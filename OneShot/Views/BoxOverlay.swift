@@ -27,8 +27,11 @@ struct BoxOverlay: View {
                     .stroke(mark.color, style: StrokeStyle(lineWidth: 3, lineCap: .round))
                     .frame(width: frame.width, height: frame.height)
                     .overlay(alignment: .topLeading) {
+                        // One line, even past a narrow box: wrapped labels stacked into each other over a busy table.
                         Text(mark.label)
                             .font(.seed(.caption, .bold))
+                            .lineLimit(1)
+                            .fixedSize()
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(mark.color, in: .rect(cornerRadius: 6, style: .continuous))

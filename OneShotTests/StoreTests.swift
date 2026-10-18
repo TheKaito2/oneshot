@@ -24,6 +24,20 @@ struct StoreTests {
         #expect(all[0].change == Decimal(string: "40.1")!)
     }
 
+    @Test func sampleSalesAreRepeatableAndNeverInTheFuture() throws {
+        let catalog = Catalog(products: [lays, pocky])
+        let count = try SampleSales.fill(catalog: catalog, days: 3, now: t0, in: context)
+        let sales = SalesLog.all(in: context)
+        #expect(count == sales.count && count > 20)
+        #expect(sales.allSatisfy { $0.date <= t0 && !$0.lines.isEmpty })
+        #expect(sales.allSatisfy { $0.total == $0.lines.reduce(0) { $0 + $1.amount } })
+        #expect(sales.allSatisfy { $0.method == .promptPay || ($0.received ?? 0) >= $0.total })
+
+        let again = try Store.inMemory()
+        try SampleSales.fill(catalog: catalog, days: 3, now: t0, in: again.mainContext)
+        #expect(SalesLog.all(in: again.mainContext).map(\.total) == sales.map(\.total))   // seeded: same books every demo
+    }
+
     @Test func stockAndClosesPersist() throws {
         var stock = StockBook(levels: [:])
         stock.set("lays", count: 10, reorderAt: 4)

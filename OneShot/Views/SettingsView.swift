@@ -9,6 +9,7 @@ enum SettingsKey {
 }
 
 struct SettingsView: View {
+    @Bindable var app: AppModel
     @AppStorage(SettingsKey.promptPayID) private var promptPayID = ""
     @AppStorage(SettingsKey.debugOverlay) private var debugOverlay = false
     @AppStorage(SettingsKey.shopName) private var shopName = ""
@@ -20,6 +21,10 @@ struct SettingsView: View {
     @State private var pinProblem: String?
     @State private var backup: [URL] = []
     @State private var backupProblem: String?
+    @State private var addingSamples = false
+    @State private var sampleNote: String?
+    /// Sample sales are only offered on empty books.
+    @Query private var sales: [SaleRecord]
     @Environment(\.modelContext) private var context
     @Environment(\.openURL) private var openURL
 
@@ -84,6 +89,19 @@ struct SettingsView: View {
                     Text("The spoken total is always Thai.")
                 }
                 .frostedRows()
+                Section {
+                    Toggle("Demo camera: table photos instead of the camera", isOn: $app.demo)
+                    Button("Add two weeks of sample sales") { addingSamples = true }
+                        .disabled(!sales.isEmpty)
+                    if let sampleNote {
+                        Text(sampleNote).font(.seed(.caption)).foregroundStyle(Brand.muted)
+                    }
+                } header: {
+                    Text("Demo")
+                } footer: {
+                    Text("For presenting without the snacks, or from the simulator. Sample sales can only be added while the books are empty, so they never mix with real ones.")
+                }
+                .frostedRows()
                 Section("Debug") {
                     Toggle("Show speed HUD and save lock photos", isOn: $debugOverlay)
                     // Before each new judge.
@@ -99,6 +117,11 @@ struct SettingsView: View {
             }
             .gridList()
             .navigationTitle("Settings")
+            .confirmationDialog("Add two weeks of sample sales?", isPresented: $addingSamples, titleVisibility: .visible) {
+                Button("Add sample sales") { addSamples() }
+            } message: {
+                Text("Made-up sales fill Home and Reports for a demo. Delete the app to remove them.")
+            }
             .alert("Turn off the refund PIN?", isPresented: $turningOffPIN) {
                 SecureField("Current PIN", text: $pinEntry).keyboardType(.numberPad)
                 Button("Turn off", role: .destructive) {
@@ -113,6 +136,15 @@ struct SettingsView: View {
             hasPIN = RefundPIN.isSet()
         }
         .task { await writeBackup() }
+    }
+
+    private func addSamples() {
+        do {
+            let count = try SampleSales.fill(catalog: app.catalog, in: context)
+            sampleNote = String(localized: "Added \(count) sample sales.")
+        } catch {
+            sampleNote = error.localizedDescription
+        }
     }
 
     private func savePIN(_ pin: String?) {

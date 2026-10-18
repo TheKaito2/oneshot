@@ -13,6 +13,17 @@ final class AppModel {
     }
     /// Add items › Scan more: the bill stays, the camera comes back, and the next Ring up adds to it.
     var scanningMore = false
+    /// Demo camera: bundled table photos stand in for the live feed (DemoFeed). On by default in the simulator,
+    /// which has no camera, so the app can be presented from a Mac.
+    var demo: Bool = {
+        #if targetEnvironment(simulator)
+        true
+        #else
+        false
+        #endif
+    }()
+    /// Which demo photo is in the zone; Next photo and Scan more step through them.
+    var demoIndex = 0
     /// The Teach-a-product panel is open in Checkout.
     var teaching = false
     /// Shelf counts; sales take from it, refunds and deliveries add to it.
@@ -23,7 +34,7 @@ final class AppModel {
     let race = Race()
 
     /// The camera rests whenever nothing needs it live: another tab or a frozen sale (unless scanning more into it).
-    var cameraIdle: Bool { tab != .checkout || (scan != nil && !scanningMore) }
+    var cameraIdle: Bool { tab != .checkout || (demo && !teaching) || (scan != nil && !scanningMore) }
 
     /// Picks up barcodes, prices and quick-adds saved since launch.
     func reloadCatalog() { catalog = Catalog.load() }

@@ -42,7 +42,7 @@ struct RootView: View {
                 ReportsView(app: app)
             }
             Tab("Settings", systemImage: "gearshape.fill", value: AppModel.Tab.settings) {
-                SettingsView()
+                SettingsView(app: app)
             }
         }
         .tabViewStyle(.sidebarAdaptable)

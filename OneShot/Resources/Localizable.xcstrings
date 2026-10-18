@@ -1005,6 +1005,16 @@
         }
       }
     },
+    "DEMO" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เดโม"
+          }
+        }
+      }
+    },
     "Date" : {
       "localizations" : {
         "th" : {
@@ -1051,6 +1061,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ลบรูป"
+          }
+        }
+      }
+    },
+    "Demo" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เดโม"
           }
         }
       }
@@ -1624,6 +1644,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "สแกนใหม่"
+          }
+        }
+      }
+    },
+    "Next photo" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รูปถัดไป"
           }
         }
       }
