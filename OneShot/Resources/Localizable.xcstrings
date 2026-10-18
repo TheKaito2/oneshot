@@ -1,0 +1,3379 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ + %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ + %2$@"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ + %2$@"
+          }
+        }
+      }
+    },
+    "%@ each" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ชิ้นละ %@"
+          }
+        }
+      }
+    },
+    "%@ s" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ วินาที"
+          }
+        }
+      }
+    },
+    "%lld" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
+    },
+    "%lld baskets" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld บิล"
+          }
+        }
+      }
+    },
+    "%lld item(s) to check before paying" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "มี %lld ชิ้นต้องตรวจก่อนชำระเงิน"
+          }
+        }
+      }
+    },
+    "%lld items" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ชิ้น"
+          }
+        }
+      }
+    },
+    "%lld items in %@ s" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld items in %2$@ s"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ชิ้น ใน %@ วิ."
+          }
+        }
+      }
+    },
+    "%lld items in %@ s · %@ s an item" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld items in %2$@ s · %3$@ s an item"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ชิ้น ใน %@ วินาที · ชิ้นละ %@ วินาที"
+          }
+        }
+      }
+    },
+    "%lld items · %@ s an item" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld items · %2$@ s an item"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ชิ้น · ชิ้นละ %@ วินาที"
+          }
+        }
+      }
+    },
+    "%lld left" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เหลือ %lld"
+          }
+        }
+      }
+    },
+    "%lld of %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld จาก %2$lld"
+          }
+        }
+      }
+    },
+    "%lld on the shelf" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เหลือบนชั้น %lld"
+          }
+        }
+      }
+    },
+    "%lld sales" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld บิล"
+          }
+        }
+      }
+    },
+    "%lld sales · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld sales · %2$@"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld บิล · %2$@"
+          }
+        }
+      }
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld/%lld"
+          }
+        }
+      }
+    },
+    "+%lld" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld"
+          }
+        }
+      }
+    },
+    "0" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0"
+          }
+        }
+      }
+    },
+    "4-digit PIN" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รหัส PIN 4 หลัก"
+          }
+        }
+      }
+    },
+    "8 photos and a price. No retraining." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถ่าย 8 รูปแล้วใส่ราคา ไม่ต้องเทรนใหม่"
+          }
+        }
+      }
+    },
+    "8 photos, no retraining" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "8 รูป ไม่ต้องเทรนใหม่"
+          }
+        }
+      }
+    },
+    "? %lld · tap to choose" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "? %lld · แตะเพื่อเลือก"
+          }
+        }
+      }
+    },
+    "A month of takings on one page: daily totals, refunds, and the PromptPay share a bank can check against its own records. For a loan application or your own books." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขายทั้งเดือนในหน้าเดียว: ยอดรายวัน การคืนเงิน และยอดพร้อมเพย์ที่ธนาคารตรวจสอบกับบันทึกของธนาคารเองได้ ใช้ประกอบการขอสินเชื่อ หรือเก็บไว้เป็นบัญชีของร้าน"
+          }
+        }
+      }
+    },
+    "About" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เกี่ยวกับ"
+          }
+        }
+      }
+    },
+    "Activity" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ความเคลื่อนไหว"
+          }
+        }
+      }
+    },
+    "Add an item" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่มสินค้า"
+          }
+        }
+      }
+    },
+    "Add an item by hand" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่มสินค้าเอง"
+          }
+        }
+      }
+    },
+    "Add item" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่มสินค้า"
+          }
+        }
+      }
+    },
+    "Add items" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่มสินค้า"
+          }
+        }
+      }
+    },
+    "Add one" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่มหนึ่งชิ้น"
+          }
+        }
+      }
+    },
+    "Add what you pay for each product in Products to see profit." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใส่ต้นทุนของสินค้าแต่ละอย่างในหน้าสินค้า เพื่อดูกำไร"
+          }
+        }
+      }
+    },
+    "Against 22 barcode scans a minute, a staffed lane's pace." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบกับการสแกนบาร์โค้ดนาทีละ 22 ชิ้น ความเร็วของแคชเชียร์ทั่วไป"
+          }
+        }
+      }
+    },
+    "Against 22 barcode scans a minute, a staffed lane's pace. Run a speed race for your own." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบกับการสแกนบาร์โค้ดนาทีละ 22 ชิ้น ความเร็วของแคชเชียร์ทั่วไป ลองแข่งความเร็วเพื่อวัดของร้านคุณเอง"
+          }
+        }
+      }
+    },
+    "Against your race's barcode pace: %@ s an item." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบกับความเร็วบาร์โค้ดจากการแข่งของคุณ: ชิ้นละ %@ วินาที"
+          }
+        }
+      }
+    },
+    "All items" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สินค้าทั้งหมด"
+          }
+        }
+      }
+    },
+    "Average a day open" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เฉลี่ยต่อวันที่เปิดร้าน"
+          }
+        }
+      }
+    },
+    "Average basket" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เฉลี่ยต่อบิล"
+          }
+        }
+      }
+    },
+    "Average ring-up" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เวลาคิดเงินเฉลี่ย"
+          }
+        }
+      }
+    },
+    "Average sale" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดเฉลี่ยต่อบิล"
+          }
+        }
+      }
+    },
+    "Back" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กลับ"
+          }
+        }
+      }
+    },
+    "Back to the bill" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กลับไปที่บิล"
+          }
+        }
+      }
+    },
+    "Back up the books" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สำรองข้อมูลร้าน"
+          }
+        }
+      }
+    },
+    "Backup failed: %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สำรองข้อมูลไม่สำเร็จ: %@"
+          }
+        }
+      }
+    },
+    "Baht" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บาท"
+          }
+        }
+      }
+    },
+    "Barcode" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บาร์โค้ด"
+          }
+        }
+      }
+    },
+    "Barcode %@ s for %lld · OneShot %@ s for %lld · %@× faster" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Barcode %1$@ s for %2$lld · OneShot %3$@ s for %4$lld · %5$@× faster"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บาร์โค้ด %@ วิ. %lld ชิ้น · OneShot %@ วิ. %lld ชิ้น · เร็วกว่า %@ เท่า"
+          }
+        }
+      }
+    },
+    "Barcode scanning isn't available here" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สแกนบาร์โค้ดบนเครื่องนี้ไม่ได้"
+          }
+        }
+      }
+    },
+    "Barcode vs OneShot, timed" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บาร์โค้ด vs OneShot จับเวลา"
+          }
+        }
+      }
+    },
+    "Barcode, one by one" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บาร์โค้ดทีละชิ้น"
+          }
+        }
+      }
+    },
+    "Barcode: %lld items in %@ s" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Barcode: %1$lld items in %2$@ s"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บาร์โค้ด: %lld ชิ้น ใน %@ วิ."
+          }
+        }
+      }
+    },
+    "Barcodes" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บาร์โค้ด"
+          }
+        }
+      }
+    },
+    "Best seller: %@ (%lld)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Best seller: %1$@ (%2$lld)."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขายดีที่สุด: %@ (%lld)"
+          }
+        }
+      }
+    },
+    "Bill" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บิล"
+          }
+        }
+      }
+    },
+    "Biscuits" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บิสกิต"
+          }
+        }
+      }
+    },
+    "Books" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ข้อมูลร้าน"
+          }
+        }
+      }
+    },
+    "Bought together" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "มักซื้อคู่กัน"
+          }
+        }
+      }
+    },
+    "Breakdown" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แยกตามรายการ"
+          }
+        }
+      }
+    },
+    "Camera access is off. Turn it on in Settings › OneShot." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ปิดการเข้าถึงกล้องอยู่ เปิดได้ที่ การตั้งค่า › OneShot"
+          }
+        }
+      }
+    },
+    "Can't read camera frames." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อ่านภาพจากกล้องไม่ได้"
+          }
+        }
+      }
+    },
+    "Can't use the camera input." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใช้งานกล้องไม่ได้"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยกเลิก"
+          }
+        }
+      }
+    },
+    "Candy" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลูกอม"
+          }
+        }
+      }
+    },
+    "Cash" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เงินสด"
+          }
+        }
+      }
+    },
+    "Cash drawer" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลิ้นชักเงินสด"
+          }
+        }
+      }
+    },
+    "Cash in drawer" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เงินสดในลิ้นชัก"
+          }
+        }
+      }
+    },
+    "Cash received" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รับเงินสด"
+          }
+        }
+      }
+    },
+    "Category" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หมวดหมู่"
+          }
+        }
+      }
+    },
+    "Change" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เงินทอน"
+          }
+        }
+      }
+    },
+    "Change %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ทอน %@"
+          }
+        }
+      }
+    },
+    "Charge %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เก็บเงิน %@"
+          }
+        }
+      }
+    },
+    "Check these" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตรวจรายการเหล่านี้"
+          }
+        }
+      }
+    },
+    "Checkout" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขายของ"
+          }
+        }
+      }
+    },
+    "Chips" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "มันฝรั่งทอด"
+          }
+        }
+      }
+    },
+    "Chocolate" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ช็อกโกแลต"
+          }
+        }
+      }
+    },
+    "Clear" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ล้าง"
+          }
+        }
+      }
+    },
+    "Close" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ปิด"
+          }
+        }
+      }
+    },
+    "Close the day" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ปิดยอดวันนี้"
+          }
+        }
+      }
+    },
+    "Closed days" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "วันที่ปิดยอดแล้ว"
+          }
+        }
+      }
+    },
+    "Compared with the day before." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบกับวันก่อนหน้า"
+          }
+        }
+      }
+    },
+    "Compared with the same days of last month." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบกับช่วงวันเดียวกันของเดือนที่แล้ว"
+          }
+        }
+      }
+    },
+    "Compared with the same days of last week." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบกับช่วงวันเดียวกันของสัปดาห์ที่แล้ว"
+          }
+        }
+      }
+    },
+    "Compared with yesterday up to this time." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบกับเมื่อวานจนถึงเวลานี้"
+          }
+        }
+      }
+    },
+    "Cost ฿ (what you pay)" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ต้นทุน ฿ (ราคาที่ร้านซื้อมา)"
+          }
+        }
+      }
+    },
+    "Couldn't freeze the camera frame." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "จับภาพจากกล้องไม่ได้"
+          }
+        }
+      }
+    },
+    "Couldn't lock" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ล็อกภาพไม่ได้"
+          }
+        }
+      }
+    },
+    "Couldn't open that photo." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เปิดรูปนี้ไม่ได้"
+          }
+        }
+      }
+    },
+    "Couldn't save the item: %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บันทึกสินค้าไม่ได้: %@"
+          }
+        }
+      }
+    },
+    "Couldn't see the item. Leave a gap around it and try again." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "มองไม่เห็นสินค้า เว้นที่ว่างรอบ ๆ แล้วลองใหม่"
+          }
+        }
+      }
+    },
+    "Couldn't write a summary (%@); the numbers above are the summary." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เขียนสรุปไม่ได้ (%@) ตัวเลขด้านบนคือสรุปยอด"
+          }
+        }
+      }
+    },
+    "Count the drawer" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "นับเงินในลิ้นชัก"
+          }
+        }
+      }
+    },
+    "Count the drawer, over or short" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "นับเงินในลิ้นชัก ขาดหรือเกิน"
+          }
+        }
+      }
+    },
+    "Counted cash" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เงินที่นับได้"
+          }
+        }
+      }
+    },
+    "Current PIN" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รหัส PIN ปัจจุบัน"
+          }
+        }
+      }
+    },
+    "Current sale" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บิลปัจจุบัน"
+          }
+        }
+      }
+    },
+    "Date" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "วันที่"
+          }
+        }
+      }
+    },
+    "Day closed" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ปิดยอดแล้ว"
+          }
+        }
+      }
+    },
+    "Days open" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "วันที่เปิดร้าน"
+          }
+        }
+      }
+    },
+    "Debug" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ดีบัก"
+          }
+        }
+      }
+    },
+    "Delete photo" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลบรูป"
+          }
+        }
+      }
+    },
+    "Didn't sell" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขายไม่ออก"
+          }
+        }
+      }
+    },
+    "Difference" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ส่วนต่าง"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เสร็จ"
+          }
+        }
+      }
+    },
+    "Drawer: expected" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลิ้นชัก: ควรมี"
+          }
+        }
+      }
+    },
+    "Drinks" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เครื่องดื่ม"
+          }
+        }
+      }
+    },
+    "Enter a cost of zero or more, or leave it empty." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใส่ต้นทุนตั้งแต่ 0 ขึ้นไป หรือเว้นว่างไว้"
+          }
+        }
+      }
+    },
+    "Enter a price above zero." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใส่ราคาที่มากกว่าศูนย์"
+          }
+        }
+      }
+    },
+    "Enter the shop's PromptPay number once" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใส่เลขพร้อมเพย์ของร้านครั้งเดียว"
+          }
+        }
+      }
+    },
+    "Even" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "พอดี"
+          }
+        }
+      }
+    },
+    "Every product sold at least once." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สินค้าทุกอย่างขายได้อย่างน้อยหนึ่งครั้ง"
+          }
+        }
+      }
+    },
+    "Exact" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "พอดี"
+          }
+        }
+      }
+    },
+    "Expected %@ · counted %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Expected %1$@ · counted %2$@"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ควรมี %1$@ · นับได้ %2$@"
+          }
+        }
+      }
+    },
+    "Expected in drawer" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ควรมีในลิ้นชัก"
+          }
+        }
+      }
+    },
+    "Export CSV" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ส่งออก CSV"
+          }
+        }
+      }
+    },
+    "Export items CSV" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ส่งออกยอดขายตามสินค้าเป็น CSV"
+          }
+        }
+      }
+    },
+    "Float at opening" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เงินทอนตั้งต้น"
+          }
+        }
+      }
+    },
+    "Font" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ฟอนต์"
+          }
+        }
+      }
+    },
+    "From the sales recorded by OneShot on the shop's iPad. PromptPay amounts can be matched with the shop's bank statement." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "จากยอดขายที่ OneShot บันทึกไว้ใน iPad ของร้าน ยอดพร้อมเพย์ตรวจสอบกับรายการเดินบัญชีธนาคารของร้านได้"
+          }
+        }
+      }
+    },
+    "From the sales recorded by OneShot on the shop's iPad. PromptPay payments went to PromptPay ID %@ and can be matched with the shop's bank statement." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "จากยอดขายที่ OneShot บันทึกไว้ใน iPad ของร้าน เงินพร้อมเพย์เข้าพร้อมเพย์หมายเลข %@ และตรวจสอบกับรายการเดินบัญชีธนาคารของร้านได้"
+          }
+        }
+      }
+    },
+    "GO" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GO"
+          }
+        }
+      }
+    },
+    "Give the customer the cash back. The items go back into stock." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คืนเงินสดให้ลูกค้า สินค้าจะกลับเข้าสต็อก"
+          }
+        }
+      }
+    },
+    "Gross profit" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำไรขั้นต้น"
+          }
+        }
+      }
+    },
+    "Gross sales" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขายรวม"
+          }
+        }
+      }
+    },
+    "Hold over the items, then tap Ring up" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถือ iPad เหนือสินค้า แล้วแตะคิดเงิน"
+          }
+        }
+      }
+    },
+    "Hold over the items, then tap 🔒" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถือ iPad เหนือสินค้า แล้วแตะ 🔒"
+          }
+        }
+      }
+    },
+    "Hold still…" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถือนิ่ง ๆ…"
+          }
+        }
+      }
+    },
+    "Hold the iPad over the items, then tap Ring up." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถือ iPad เหนือสินค้า แล้วแตะคิดเงิน"
+          }
+        }
+      }
+    },
+    "Hold the iPad over the items. One tap rings them all up." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถือ iPad เหนือสินค้า แตะครั้งเดียวคิดเงินได้ทั้งหมด"
+          }
+        }
+      }
+    },
+    "Home" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หน้าหลัก"
+          }
+        }
+      }
+    },
+    "Hour" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ชั่วโมง"
+          }
+        }
+      }
+    },
+    "Item" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สินค้า"
+          }
+        }
+      }
+    },
+    "Items" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สินค้า"
+          }
+        }
+      }
+    },
+    "Items per sale" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "จำนวนชิ้นต่อบิล"
+          }
+        }
+      }
+    },
+    "Items sold" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "จำนวนชิ้นที่ขาย"
+          }
+        }
+      }
+    },
+    "Items: %lld" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "จำนวน: %lld"
+          }
+        }
+      }
+    },
+    "LIVE" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สด"
+          }
+        }
+      }
+    },
+    "Language: English / ไทย" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ภาษา: English / ไทย"
+          }
+        }
+      }
+    },
+    "Last month" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เดือนที่แล้ว"
+          }
+        }
+      }
+    },
+    "Learned from ^[%lld photo](inflect: true)" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เรียนรู้จาก %lld รูป"
+          }
+        }
+      }
+    },
+    "Leaves out %@ of sales with no cost yet" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยังไม่รวมยอดขาย %@ ที่ยังไม่มีต้นทุน"
+          }
+        }
+      }
+    },
+    "Lock and build the bill" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ล็อกภาพและสร้างบิล"
+          }
+        }
+      }
+    },
+    "Made %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สร้างเมื่อ %@"
+          }
+        }
+      }
+    },
+    "Mobile, 13-digit ID or e-wallet" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เบอร์มือถือ เลข 13 หลัก หรือ e-wallet"
+          }
+        }
+      }
+    },
+    "Month" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เดือน"
+          }
+        }
+      }
+    },
+    "Monthly statement for the bank" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รายงานยอดขายรายเดือนสำหรับธนาคาร"
+          }
+        }
+      }
+    },
+    "Name (English)" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ชื่อ (ภาษาอังกฤษ)"
+          }
+        }
+      }
+    },
+    "Named by the AI" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI ระบุเอง"
+          }
+        }
+      }
+    },
+    "Net" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สุทธิ"
+          }
+        }
+      }
+    },
+    "Net sales" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขายสุทธิ"
+          }
+        }
+      }
+    },
+    "Net sales by day" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขายสุทธิรายวัน"
+          }
+        }
+      }
+    },
+    "Net sales by hour" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขายสุทธิรายชั่วโมง"
+          }
+        }
+      }
+    },
+    "New barcode %@. Pick the item below and it's remembered." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บาร์โค้ดใหม่ %@ เลือกสินค้าด้านล่างแล้วระบบจะจำไว้"
+          }
+        }
+      }
+    },
+    "New item" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่มสินค้า"
+          }
+        }
+      }
+    },
+    "New item · %lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "New item · %1$lld/%2$lld"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สินค้าใหม่ · %lld/%lld"
+          }
+        }
+      }
+    },
+    "New sale" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขายบิลใหม่"
+          }
+        }
+      }
+    },
+    "New scan" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สแกนใหม่"
+          }
+        }
+      }
+    },
+    "No back camera found." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ไม่พบกล้องหลัง"
+          }
+        }
+      }
+    },
+    "No items recognised" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยังไม่พบสินค้า"
+          }
+        }
+      }
+    },
+    "No photos yet. Teach it, or pick it once from a yellow item." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยังไม่มีรูป สอนสินค้านี้ หรือเลือกจากรายการสีเหลืองสักครั้ง"
+          }
+        }
+      }
+    },
+    "No sales in this period." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยังไม่มียอดขายในช่วงนี้"
+          }
+        }
+      }
+    },
+    "No sales yet today." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "วันนี้ยังไม่มียอดขาย"
+          }
+        }
+      }
+    },
+    "No sales yet today. Your first sale shows up here." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "วันนี้ยังไม่มียอดขาย บิลแรกจะแสดงที่นี่"
+          }
+        }
+      }
+    },
+    "No sales yet." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยังไม่มียอดขาย"
+          }
+        }
+      }
+    },
+    "No. %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เลขที่ %@"
+          }
+        }
+      }
+    },
+    "Not a Thai mobile number, 13-digit ID or 15-digit e-wallet ID." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ไม่ใช่เบอร์มือถือไทย เลข 13 หลัก หรือเลข e-wallet 15 หลัก"
+          }
+        }
+      }
+    },
+    "Not an item" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ไม่ใช่สินค้า"
+          }
+        }
+      }
+    },
+    "Not on this iPad (%@); the numbers above are the summary." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใช้ไม่ได้บน iPad เครื่องนี้ (%@) ตัวเลขด้านบนคือสรุปยอด"
+          }
+        }
+      }
+    },
+    "Not selling this week" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สัปดาห์นี้ยังขายไม่ได้"
+          }
+        }
+      }
+    },
+    "Nothing sold yet." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยังไม่มีสินค้าที่ขายได้"
+          }
+        }
+      }
+    },
+    "Now OneShot: tap GO, then 🔒" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ต่อไป OneShot: แตะ GO แล้วแตะ 🔒"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตกลง"
+          }
+        }
+      }
+    },
+    "On the shelf: %lld" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บนชั้น: %lld"
+          }
+        }
+      }
+    },
+    "On-device AI" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI ในเครื่อง"
+          }
+        }
+      }
+    },
+    "One photo rings up the whole pile." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถ่ายรูปเดียว คิดเงินได้ทั้งกอง"
+          }
+        }
+      }
+    },
+    "One-tap checkout" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คิดเงินในแตะเดียว"
+          }
+        }
+      }
+    },
+    "OneShot" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OneShot"
+          }
+        }
+      }
+    },
+    "OneShot speed" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ความเร็วของ OneShot"
+          }
+        }
+      }
+    },
+    "Other" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อื่นๆ"
+          }
+        }
+      }
+    },
+    "Over %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เกิน %@"
+          }
+        }
+      }
+    },
+    "Over time" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตามช่วงเวลา"
+          }
+        }
+      }
+    },
+    "Overview" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ภาพรวม"
+          }
+        }
+      }
+    },
+    "Paid" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ชำระแล้ว"
+          }
+        }
+      }
+    },
+    "Paid %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ชำระแล้ว %@"
+          }
+        }
+      }
+    },
+    "Past sales" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขายย้อนหลัง"
+          }
+        }
+      }
+    },
+    "Pay" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ชำระเงิน"
+          }
+        }
+      }
+    },
+    "Payment" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การชำระเงิน"
+          }
+        }
+      }
+    },
+    "Payments" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การชำระเงิน"
+          }
+        }
+      }
+    },
+    "Period" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ช่วงเวลา"
+          }
+        }
+      }
+    },
+    "Period before" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ช่วงก่อนหน้า"
+          }
+        }
+      }
+    },
+    "Photo" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รูปภาพ"
+          }
+        }
+      }
+    },
+    "Preview" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ดูตัวอย่าง"
+          }
+        }
+      }
+    },
+    "Price" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ราคา"
+          }
+        }
+      }
+    },
+    "Price ฿" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ราคา ฿"
+          }
+        }
+      }
+    },
+    "Prices and learned photos" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ราคาและรูปที่เรียนรู้"
+          }
+        }
+      }
+    },
+    "Products" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สินค้า"
+          }
+        }
+      }
+    },
+    "Profit" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำไร"
+          }
+        }
+      }
+    },
+    "Profit %@ a unit · margin %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Profit %1$@ a unit · margin %2$@"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำไรชิ้นละ %1$@ · อัตรากำไร %2$@"
+          }
+        }
+      }
+    },
+    "PromptPay" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "พร้อมเพย์"
+          }
+        }
+      }
+    },
+    "PromptPay QR for %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "QR พร้อมเพย์ สำหรับ %@"
+          }
+        }
+      }
+    },
+    "PromptPay · ••••%@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "พร้อมเพย์ · ••••%@"
+          }
+        }
+      }
+    },
+    "PromptPay: mobile, 13-digit ID or e-wallet" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "พร้อมเพย์: เบอร์มือถือ เลข 13 หลัก หรือ e-wallet"
+          }
+        }
+      }
+    },
+    "Put the item on its own with a gap around it. Turn it a little between shots." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "วางสินค้าชิ้นเดียว เว้นที่ว่างรอบ ๆ แล้วหมุนเล็กน้อยระหว่างถ่ายแต่ละรูป"
+          }
+        }
+      }
+    },
+    "Race" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แข่งความเร็ว"
+          }
+        }
+      }
+    },
+    "Ready for the next customer" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "พร้อมรับลูกค้าคนถัดไป"
+          }
+        }
+      }
+    },
+    "Receipt" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใบเสร็จ"
+          }
+        }
+      }
+    },
+    "Received" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รับเงิน"
+          }
+        }
+      }
+    },
+    "Received %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รับ %@"
+          }
+        }
+      }
+    },
+    "Recent sales" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขายล่าสุด"
+          }
+        }
+      }
+    },
+    "Records" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บันทึก"
+          }
+        }
+      }
+    },
+    "Refund" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คืนเงิน"
+          }
+        }
+      }
+    },
+    "Refund %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คืนเงิน %@"
+          }
+        }
+      }
+    },
+    "Refund %@?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คืนเงิน %@?"
+          }
+        }
+      }
+    },
+    "Refund PIN" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รหัส PIN คืนเงิน"
+          }
+        }
+      }
+    },
+    "Refunded" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คืนเงินแล้ว"
+          }
+        }
+      }
+    },
+    "Refunds" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คืนเงิน"
+          }
+        }
+      }
+    },
+    "Refunds ask for this PIN. To change it, turn it off and set a new one." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การคืนเงินต้องใส่รหัส PIN นี้ หากจะเปลี่ยน ให้ปิดแล้วตั้งรหัสใหม่"
+          }
+        }
+      }
+    },
+    "Refunds ask for this PIN. To change it, turn it off and set a new one. Forgot it? Back up the books, reinstall OneShot, then put them back." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การคืนเงินต้องใส่ PIN นี้ หากต้องการเปลี่ยน ให้ปิดแล้วตั้งใหม่ ลืม PIN? สำรองข้อมูลบัญชี ติดตั้ง OneShot ใหม่ แล้วนำข้อมูลกลับมา"
+          }
+        }
+      }
+    },
+    "Remove one" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลบหนึ่งชิ้น"
+          }
+        }
+      }
+    },
+    "Reorder at: %lld" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สั่งเพิ่มเมื่อเหลือ: %lld"
+          }
+        }
+      }
+    },
+    "Reports" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รายงาน"
+          }
+        }
+      }
+    },
+    "Results" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ผลการค้นหา"
+          }
+        }
+      }
+    },
+    "Revenue" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขาย"
+          }
+        }
+      }
+    },
+    "Ring up" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คิดเงิน"
+          }
+        }
+      }
+    },
+    "Ring up the items in view" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คิดเงินสินค้าที่อยู่ในภาพ"
+          }
+        }
+      }
+    },
+    "Ring-up times start with sales made in this version." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เวลาคิดเงินจะเริ่มเก็บจากการขายในเวอร์ชันนี้"
+          }
+        }
+      }
+    },
+    "Ringing up…" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำลังคิดเงิน…"
+          }
+        }
+      }
+    },
+    "Running low" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใกล้หมด"
+          }
+        }
+      }
+    },
+    "Sale %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขาย %@"
+          }
+        }
+      }
+    },
+    "Sales" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บิล"
+          }
+        }
+      }
+    },
+    "Sales and payments" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขายและการชำระเงิน"
+          }
+        }
+      }
+    },
+    "Sales by category" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขายตามหมวดหมู่"
+          }
+        }
+      }
+    },
+    "Sales by hour" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขายรายชั่วโมง"
+          }
+        }
+      }
+    },
+    "Sales by item" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขายตามสินค้า"
+          }
+        }
+      }
+    },
+    "Sales by payment type" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขายตามวิธีชำระเงิน"
+          }
+        }
+      }
+    },
+    "Sales statement" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รายงานยอดขาย"
+          }
+        }
+      }
+    },
+    "Sales take from the shelf, refunds put back. At or below the reorder point it shows on Home." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขายแล้วตัดสต็อก คืนเงินแล้วเพิ่มกลับ เมื่อถึงจุดสั่งซื้อจะแจ้งที่หน้าหลัก"
+          }
+        }
+      }
+    },
+    "Sales, refunds and day closes show up here." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การขาย การคืนเงิน และการปิดยอดจะขึ้นที่นี่"
+          }
+        }
+      }
+    },
+    "Sales, refunds, day closes and stock as 3 files. Keep them outside OneShot, e.g. in iCloud Drive. To put them back, copy them into OneShot's folder in the Files app, then close OneShot in the app switcher and open it again." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขาย การคืนเงิน การปิดยอด และสต็อก เป็นไฟล์ 3 ไฟล์ ควรเก็บไว้นอกโฟลเดอร์ OneShot เช่นใน iCloud Drive หากจะนำกลับมา ให้คัดลอกไฟล์ไปไว้ในโฟลเดอร์ OneShot ในแอปไฟล์ แล้วปิด OneShot จากตัวสลับแอปแล้วเปิดใหม่"
+          }
+        }
+      }
+    },
+    "Sales, refunds, day closes and stock as 3 files. To put them back, copy them into OneShot's folder in the Files app and reopen OneShot." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขาย การคืนเงิน การปิดยอดรายวัน และสต็อก เป็นไฟล์ 3 ไฟล์ หากต้องการนำกลับมา ให้คัดลอกไปไว้ในโฟลเดอร์ของ OneShot ในแอปไฟล์ แล้วเปิด OneShot ใหม่"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บันทึก"
+          }
+        }
+      }
+    },
+    "Save item" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บันทึกสินค้า"
+          }
+        }
+      }
+    },
+    "Saved %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บันทึกแล้ว %@"
+          }
+        }
+      }
+    },
+    "Saved this photo to learn %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บันทึกรูปนี้ไว้เรียนรู้ %@ แล้ว"
+          }
+        }
+      }
+    },
+    "Say it again" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "พูดอีกครั้ง"
+          }
+        }
+      }
+    },
+    "Scan more items" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สแกนเพิ่ม"
+          }
+        }
+      }
+    },
+    "Scan the barcode" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สแกนบาร์โค้ด"
+          }
+        }
+      }
+    },
+    "Search items" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ค้นหาสินค้า"
+          }
+        }
+      }
+    },
+    "See all" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ดูทั้งหมด"
+          }
+        }
+      }
+    },
+    "Sells %@/day · about %lld day(s) left" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Sells %1$@/day · about %2$lld day(s) left"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขายวันละ %@ · เหลืออีกราว %lld วัน"
+          }
+        }
+      }
+    },
+    "Send the money back by PromptPay. The items go back into stock." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "โอนเงินคืนทางพร้อมเพย์ สินค้าจะกลับเข้าสต็อก"
+          }
+        }
+      }
+    },
+    "Series" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ชุดข้อมูล"
+          }
+        }
+      }
+    },
+    "Set a PIN and only someone who knows it can refund a sale." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตั้งรหัส PIN แล้วเฉพาะคนที่รู้รหัสเท่านั้นที่คืนเงินได้"
+          }
+        }
+      }
+    },
+    "Set refund PIN" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตั้งรหัส PIN คืนเงิน"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตั้งค่า"
+          }
+        }
+      }
+    },
+    "Share" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สัดส่วน"
+          }
+        }
+      }
+    },
+    "Share PDF" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แชร์ PDF"
+          }
+        }
+      }
+    },
+    "Share or print" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แชร์หรือพิมพ์"
+          }
+        }
+      }
+    },
+    "Share the day report" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แชร์รายงานประจำวัน"
+          }
+        }
+      }
+    },
+    "Shelve them side by side, or price them as a set." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "วางไว้ใกล้กัน หรือจัดเป็นชุดขายคู่กัน"
+          }
+        }
+      }
+    },
+    "Shop" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ร้าน"
+          }
+        }
+      }
+    },
+    "Shop name" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ชื่อร้าน"
+          }
+        }
+      }
+    },
+    "Short %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขาด %@"
+          }
+        }
+      }
+    },
+    "Show speed HUD and save lock photos" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แสดงความเร็วและบันทึกภาพที่ล็อก"
+          }
+        }
+      }
+    },
+    "Show tips again" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แสดงคำแนะนำอีกครั้ง"
+          }
+        }
+      }
+    },
+    "Size %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขนาด %@"
+          }
+        }
+      }
+    },
+    "Sold" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขายได้"
+          }
+        }
+      }
+    },
+    "Sold out" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หมดแล้ว"
+          }
+        }
+      }
+    },
+    "Speed race" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แข่งความเร็ว"
+          }
+        }
+      }
+    },
+    "Stage timer" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "จับเวลาบนเวที"
+          }
+        }
+      }
+    },
+    "Start a sale" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เริ่มขาย"
+          }
+        }
+      }
+    },
+    "Start over" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เริ่มใหม่"
+          }
+        }
+      }
+    },
+    "Statement" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รายงานยอดขาย"
+          }
+        }
+      }
+    },
+    "Stock" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สต็อก"
+          }
+        }
+      }
+    },
+    "Summary" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สรุปยอด"
+          }
+        }
+      }
+    },
+    "Take photo" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถ่ายรูป"
+          }
+        }
+      }
+    },
+    "Take shot" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถ่ายรูป"
+          }
+        }
+      }
+    },
+    "Tap GO with the video, then Ring up" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แตะ GO พร้อมวิดีโอ แล้วกดคิดเงิน"
+          }
+        }
+      }
+    },
+    "Tap it and pick the right item. OneShot never guesses a price." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แตะแล้วเลือกสินค้าที่ถูกต้อง OneShot ไม่เดาราคาเอง"
+          }
+        }
+      }
+    },
+    "Teach" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สอน"
+          }
+        }
+      }
+    },
+    "Teach a new product" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สอนสินค้าใหม่"
+          }
+        }
+      }
+    },
+    "Teach a product" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สอนสินค้าใหม่"
+          }
+        }
+      }
+    },
+    "Teach mode" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "โหมดสอนสินค้า"
+          }
+        }
+      }
+    },
+    "The camera is still starting. Try again in a second." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กล้องกำลังเปิด ลองใหม่อีกสักครู่"
+          }
+        }
+      }
+    },
+    "The cost is only used for profit in Reports. Leave it empty if you don't know it." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ต้นทุนใช้คำนวณกำไรในหน้ารายงานเท่านั้น ถ้าไม่ทราบให้เว้นว่างไว้"
+          }
+        }
+      }
+    },
+    "The saved books wouldn't open, so they were set aside and new books started. Tell the owner." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เปิดข้อมูลร้านที่บันทึกไว้ไม่ได้ จึงเก็บแยกไว้และเริ่มข้อมูลใหม่ โปรดแจ้งเจ้าของร้าน"
+          }
+        }
+      }
+    },
+    "The spoken total is always Thai." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เสียงบอกยอดรวมเป็นภาษาไทยเสมอ"
+          }
+        }
+      }
+    },
+    "This month" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เดือนนี้"
+          }
+        }
+      }
+    },
+    "This period" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ช่วงนี้"
+          }
+        }
+      }
+    },
+    "This sale was already refunded." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บิลนี้คืนเงินไปแล้ว"
+          }
+        }
+      }
+    },
+    "This week" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สัปดาห์นี้"
+          }
+        }
+      }
+    },
+    "Time" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เวลา"
+          }
+        }
+      }
+    },
+    "Time a ring-up next to the cashier video" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "จับเวลาการคิดเงินเทียบกับวิดีโอแคชเชียร์"
+          }
+        }
+      }
+    },
+    "Time saved vs barcodes" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เวลาที่ประหยัดได้เทียบกับบาร์โค้ด"
+          }
+        }
+      }
+    },
+    "Today" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "วันนี้"
+          }
+        }
+      }
+    },
+    "Today: %lld sales, %lld items, %@. Average basket %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Today: %1$lld sales, %2$lld items, %3$@. Average basket %4$@."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "วันนี้: ขาย %lld บิล %lld ชิ้น รวม %@ เฉลี่ยบิลละ %@"
+          }
+        }
+      }
+    },
+    "Top products" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สินค้าขายดี"
+          }
+        }
+      }
+    },
+    "Top sellers" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขายดี"
+          }
+        }
+      }
+    },
+    "Total" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดรวม"
+          }
+        }
+      }
+    },
+    "Touch and hold a photo to delete it, for example a wrong pick or a blurry shot." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แตะค้างที่รูปเพื่อลบ เช่น รูปที่เลือกผิดหรือรูปเบลอ"
+          }
+        }
+      }
+    },
+    "Track stock" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ติดตามสต็อก"
+          }
+        }
+      }
+    },
+    "Turn off" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ปิด"
+          }
+        }
+      }
+    },
+    "Turn off the refund PIN" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ปิดรหัส PIN คืนเงิน"
+          }
+        }
+      }
+    },
+    "Turn off the refund PIN?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ปิดรหัส PIN คืนเงินไหม"
+          }
+        }
+      }
+    },
+    "Turn to customer" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หันให้ลูกค้า"
+          }
+        }
+      }
+    },
+    "Two items show up here once they share a basket at least twice." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สินค้าสองอย่างจะขึ้นที่นี่เมื่ออยู่ในบิลเดียวกันอย่างน้อยสองครั้ง"
+          }
+        }
+      }
+    },
+    "Update stock in Products" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อัปเดตสต็อกในหน้าสินค้า"
+          }
+        }
+      }
+    },
+    "Which item is this?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สินค้านี้คืออะไร"
+          }
+        }
+      }
+    },
+    "Writing…" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำลังเขียน…"
+          }
+        }
+      }
+    },
+    "Wrong PIN." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รหัส PIN ไม่ถูกต้อง"
+          }
+        }
+      }
+    },
+    "Wrong PIN. Nothing was refunded." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รหัส PIN ไม่ถูกต้อง ยังไม่ได้คืนเงิน"
+          }
+        }
+      }
+    },
+    "Yellow means not sure" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สีเหลืองคือยังไม่แน่ใจ"
+          }
+        }
+      }
+    },
+    "Yesterday" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เมื่อวาน"
+          }
+        }
+      }
+    },
+    "Your shop" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ร้านของคุณ"
+          }
+        }
+      }
+    },
+    "^[%lld item](inflect: true)" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ชิ้น"
+          }
+        }
+      }
+    },
+    "counted" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "นับได้"
+          }
+        }
+      }
+    },
+    "even" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "พอดี"
+          }
+        }
+      }
+    },
+    "over %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เกิน %@"
+          }
+        }
+      }
+    },
+    "short %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขาด %@"
+          }
+        }
+      }
+    },
+    "vs last month" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบเดือนที่แล้ว"
+          }
+        }
+      }
+    },
+    "vs last month so far" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบช่วงเดียวกันของเดือนที่แล้ว"
+          }
+        }
+      }
+    },
+    "vs last week" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบสัปดาห์ที่แล้ว"
+          }
+        }
+      }
+    },
+    "vs last week so far" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบช่วงเดียวกันของสัปดาห์ที่แล้ว"
+          }
+        }
+      }
+    },
+    "vs the day before" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบกับวันก่อนหน้า"
+          }
+        }
+      }
+    },
+    "vs yesterday" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบเมื่อวาน"
+          }
+        }
+      }
+    },
+    "vs yesterday at this time" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เทียบกับเมื่อวานเวลาเดียวกัน"
+          }
+        }
+      }
+    },
+    "© LY Corporation. SIL Open Font License 1.1." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "© LY Corporation. SIL Open Font License 1.1."
+          }
+        }
+      }
+    },
+    "× %lld" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "× %lld"
+          }
+        }
+      }
+    },
+    "ชื่อ (ภาษาไทย, optional)" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ชื่อ (ภาษาไทย, ไม่บังคับ)"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

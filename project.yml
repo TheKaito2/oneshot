@@ -1,0 +1,70 @@
+name: OneShot
+options:
+  bundleIdPrefix: com.krist.hackday
+  developmentLanguage: en
+  deploymentTarget:
+    iOS: "26.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    DEVELOPMENT_TEAM: 97BS2K8UQ2
+    CODE_SIGN_STYLE: Automatic
+targets:
+  OneShot:
+    type: application
+    platform: iOS
+    sources:
+      - path: OneShot
+    info:
+      path: OneShot/Info.plist
+      properties:
+        CFBundleDisplayName: OneShot
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, th]
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        NSCameraUsageDescription: OneShot uses the camera to recognise the items on the counter.
+        UILaunchScreen: {}
+        UIFileSharingEnabled: true
+        LSSupportsOpeningDocumentsInPlace: true
+        ITSAppUsesNonExemptEncryption: false
+        UIAppFonts:
+          - LINESeedSansTH_A_Rg.ttf
+          - LINESeedSansTH_A_Bd.ttf
+          - LINESeedSansTH_A_XBd.ttf
+          - LINESeedSansTH_A_He.ttf
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.krist.hackday.oneshot
+        TARGETED_DEVICE_FAMILY: "2"
+        COREML_CODEGEN_LANGUAGE: None
+        SWIFT_EMIT_LOC_STRINGS: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+  OneShotTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: OneShotTests
+    dependencies:
+      - target: OneShot
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  OneShot:
+    build:
+      targets:
+        OneShot: all
+        OneShotTests: [test]
+    run:
+      config: Release
+    test:
+      targets:
+        - OneShotTests

@@ -1,0 +1,248 @@
+import AVFoundation
+import SwiftUI
+
+/// Pay by PromptPay QR or cash. The total is spoken in Thai; with cash, so is the change.
+/// "Turn to customer" flips what the customer needs (total, QR, change) for the person across the counter.
+struct PayView: View {
+    let total: Decimal
+    /// Records the sale; returns it for the receipt (nil if logging failed: the sale still ends).
+    let onPaid: (PaymentMethod, Decimal?) -> Sale?
+    /// Next customer.
+    let onDone: () -> Void
+
+    @AppStorage(SettingsKey.promptPayID) private var promptPayID = ""
+    @State private var method: PaymentMethod = .promptPay
+    @State private var received: Decimal?
+    @State private var receivedText = ""
+    @State private var facingCustomer = false
+    @State private var draftID = ""
+    @State private var speech = AVSpeechSynthesizer()
+    @State private var receipt: Sale?
+    /// A field has the keyboard: scroll so it and Paid sit above it.
+    @FocusState private var typing: Bool
+    @AppStorage(SettingsKey.shopName) private var shopName = ""
+    @Environment(\.dismiss) private var dismiss
+
+    private var qr: CGImage? {
+        (try? PromptPay.payload(target: promptPayID, amount: total)).flatMap { PromptPay.qrImage($0) }
+    }
+
+    private var canFinish: Bool {
+        switch method {
+        case .promptPay: qr != nil
+        case .cash: (received ?? 0) >= total
+        }
+    }
+
+    var body: some View {
+        NavigationStack {
+            if let receipt {
+                done(receipt)
+            } else {
+                paying
+            }
+        }
+        .onAppear { speak(ThaiVoice.totalPhrase(total)) }
+    }
+
+    /// After Paid, like Square's: the outcome, the receipt to share or print, and the way to the next customer.
+    private func done(_ sale: Sale) -> some View {
+        ScrollView {
+            VStack(spacing: 18) {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 72))
+                    .foregroundStyle(.green)
+                    .symbolEffect(.bounce, value: sale.id)
+                Text("Paid \(sale.total.baht)").font(.seed(.largeTitle, .bold))
+                if let change = sale.change, change > 0 {
+                    Text("Change \(change.baht)").font(.seed(.title2, .bold)).foregroundStyle(Brand.accent)
+                }
+                ReceiptView(sale: sale, shopName: shopName)
+                    .clipShape(.rect(cornerRadius: 16))
+                    .shadow(color: .black.opacity(0.12), radius: 16, y: 6)
+                HStack {
+                    if let image = ReceiptView.image(sale, shopName: shopName) {
+                        ShareLink(item: image, preview: SharePreview("Receipt", image: image)) {
+                            Label("Share or print", systemImage: "square.and.arrow.up")
+                        }
+                        .buttonStyle(.glass)
+                    }
+                    Button("New sale", systemImage: "bolt.fill", action: onDone)
+                        .primaryButton()
+                }
+                .controlSize(.large)
+            }
+            .padding(32)
+            .frame(maxWidth: .infinity)
+        }
+        .background(GridBackground())
+    }
+
+    private var paying: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(spacing: 20) {
+                    customerPanel
+                        .frame(maxWidth: 640)   // a QR-sized panel, not a full-width slab in landscape
+                        .rotationEffect(.degrees(facingCustomer ? 180 : 0))
+                        .animation(.spring, value: facingCustomer)
+                    Picker("Payment", selection: $method) {
+                        Text("PromptPay").tag(PaymentMethod.promptPay)
+                        Text("Cash").tag(PaymentMethod.cash)
+                    }
+                    .pickerStyle(.segmented)
+                    .frame(maxWidth: 360)
+                    if method == .cash {
+                        cashControls
+                    } else if qr == nil {
+                        idEntry
+                    }
+                    HStack {
+                        Button("Say it again", systemImage: "speaker.wave.2.fill") { speakAgain() }
+                            .buttonStyle(.glass)
+                        Button("Paid", systemImage: "checkmark.circle.fill") { finish() }
+                            .primaryButton()
+                            .disabled(!canFinish)
+                    }
+                    .controlSize(.large)
+                    .id("actions")
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+            }
+            // Centred while it fits; scrollable once the keyboard takes the bottom half.
+            .defaultScrollAnchor(.center, for: .alignment)
+            .scrollDismissesKeyboard(.interactively)
+            // On the keyboard's arrival, not on focus: only then has the scroll view's inset made room.
+            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidShowNotification)) { _ in
+                if typing { withAnimation { proxy.scrollTo("actions", anchor: .bottom) } }
+            }
+        }
+        .background(GridBackground())
+        .navigationTitle("Pay")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) { Button("Back") { dismiss() } }
+            ToolbarItem(placement: .primaryAction) {
+                Toggle(isOn: $facingCustomer) {
+                    Label("Turn to customer", systemImage: "rotate.right")
+                }
+                .toggleStyle(.button)
+            }
+        }
+    }
+
+    private func finish() {
+        let sale = onPaid(method, method == .cash ? received : nil)
+        if let sale {
+            withAnimation(.spring) { receipt = sale }
+        } else {
+            onDone()
+        }
+    }
+
+    /// What the customer reads: the total, then the QR or the change.
+    private var customerPanel: some View {
+        VStack(spacing: 12) {
+            Text(total.baht).font(.seed(size: 56, .heavy)).foregroundStyle(Brand.ink)
+            switch method {
+            case .promptPay:
+                if let qr {
+                    Image(decorative: qr, scale: 1)
+                        .interpolation(.none)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: 340, maxHeight: 340)
+                        .padding(16)
+                        .background(.white, in: .rect(cornerRadius: 22, style: .continuous))
+                        .shadow(color: .black.opacity(0.15), radius: 8, y: 2)
+                        .accessibilityLabel("PromptPay QR for \(total.baht)")
+                    Text("PromptPay · ••••\(String(promptPayID.filter(\.isNumber).suffix(4)))")
+                        .font(.seed(.subheadline))
+                        .foregroundStyle(Brand.body)
+                }
+            case .cash:
+                if let received {
+                    Text("Received \(received.baht)").font(.seed(.title3, .regular)).foregroundStyle(Brand.body)
+                    Text("Change \((received - total).baht)")
+                        .font(.seed(size: 48, .extraBold))
+                        .foregroundStyle(.green)
+                }
+            }
+        }
+        .card(padding: 24, alignment: .center)   // centred: the default leading alignment pushed the QR hard left
+    }
+
+    private var cashControls: some View {
+        VStack(spacing: 12) {
+            GlassEffectContainer(spacing: 10) {
+                HStack {
+                    ForEach(Cash.suggestions(for: total), id: \.self) { amount in
+                        Button(amount == total ? String(localized: "Exact") : amount.baht) { take(amount) }
+                            .buttonStyle(.glass)
+                            .controlSize(.large)
+                    }
+                }
+            }
+            TextField("Cash received", text: $receivedText)
+                .keyboardType(.decimalPad)
+                .focused($typing)
+                .textFieldStyle(.roundedBorder)
+                .frame(maxWidth: 240)
+                .onSubmit {
+                    if let amount = Decimal(string: receivedText), amount >= total { take(amount) }
+                }
+        }
+    }
+
+    /// First run only; Settings › Payment changes it later.
+    private var idEntry: some View {
+        VStack(spacing: 8) {
+            Text("Enter the shop's PromptPay number once").font(.seed(.headline))
+            TextField("Mobile, 13-digit ID or e-wallet", text: $draftID)
+                .keyboardType(.numberPad)
+                .focused($typing)
+                .textFieldStyle(.roundedBorder)
+                .frame(maxWidth: 360)
+            if !draftID.isEmpty, !PromptPay.isValidTarget(draftID) {
+                Text("Not a Thai mobile number, 13-digit ID or 15-digit e-wallet ID.")
+                    .font(.seed(.caption))
+                    .foregroundStyle(.red)
+            }
+            Button("Save") { promptPayID = draftID }
+                .primaryButton()
+                .disabled(!PromptPay.isValidTarget(draftID))
+        }
+    }
+
+    private func take(_ amount: Decimal) {
+        received = amount
+        receivedText = ""
+        speak(ThaiVoice.changePhrase(received: amount, total: total))
+    }
+
+    private func speakAgain() {
+        if method == .cash, let received {
+            speak(ThaiVoice.changePhrase(received: received, total: total))
+        } else {
+            speak(ThaiVoice.totalPhrase(total))
+        }
+    }
+
+    /// Always Thai (Kanya, the best quality installed), whatever the screen language.
+    private func speak(_ text: String) {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, options: .duckOthers)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("audio session: \(error)")
+        }
+        let utterance = AVSpeechUtterance(string: text)
+        // The best Thai voice installed: Kanya (Enhanced), a free download in Settings › Accessibility › Spoken Content
+        // › Voices › Thai, sounds far more natural than the compact Kanya that `AVSpeechSynthesisVoice(language:)` returns.
+        utterance.voice = AVSpeechSynthesisVoice.speechVoices().filter { $0.language == "th-TH" }
+            .max { $0.quality.rawValue < $1.quality.rawValue } ?? AVSpeechSynthesisVoice(language: "th-TH")
+        speech.stopSpeaking(at: .immediate)
+        speech.speak(utterance)
+    }
+}

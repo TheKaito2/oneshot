@@ -1,0 +1,17 @@
+# Build output
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+.DS_Store
+
+# Training and data (regenerable, large): raw photos, YOLO sets, cut-outs, runs, contact sheets
+data/raw/
+data/yolo/
+data/cutouts/
+data/cutouts-mixed/
+data/cutouts-distractors/
+runs/
+sheets/
+models/
+tools/pylib/

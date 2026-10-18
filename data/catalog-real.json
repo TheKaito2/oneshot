@@ -1,0 +1,14 @@
+[
+  {"id": "hersheys-nugget-cookiencream", "nameEN": "Hershey's Nuggets Cookies 'n' Creme", "nameTH": "เฮอร์ชีส์ นักเก็ต คุกกี้แอนด์ครีม", "price": 25, "barcode": null, "category": "chocolate"},
+  {"id": "jolly-cola", "nameEN": "Jolly Cola", "nameTH": "จอลลี่ โคล่า", "price": 10, "barcode": null, "category": "candy"},
+  {"id": "julies-cheddar-cheese", "nameEN": "Julie's Le-Mond Cheddar", "nameTH": "จูลี่ส์ เลมอนด์ เชดดาร์ชีส", "price": 12, "barcode": null, "category": "biscuits"},
+  {"id": "kitkat-original", "nameEN": "KitKat", "nameTH": "คิทแคท", "price": 12, "barcode": null, "category": "chocolate"},
+  {"id": "lactasoy-melon", "nameEN": "Lactasoy Melon", "nameTH": "แลคตาซอย รสเมลอน", "price": 8, "barcode": null, "category": "drinks"},
+  {"id": "lays-nori-medium", "nameEN": "Lay's Nori (M)", "nameTH": "เลย์ รสโนริสาหร่าย (กลาง)", "price": 30, "barcode": null, "category": "chips", "size": "M"},
+  {"id": "lays-nori-small", "nameEN": "Lay's Nori (S)", "nameTH": "เลย์ รสโนริสาหร่าย (เล็ก)", "price": 20, "barcode": null, "category": "chips", "size": "S"},
+  {"id": "lays-ridges-bbq", "nameEN": "Lay's Rock BBQ", "nameTH": "เลย์ ร็อค บาร์บีคิว", "price": 20, "barcode": null, "category": "chips"},
+  {"id": "lays-ridges-hot-chilli-squid", "nameEN": "Lay's Rock Hot Chilli Squid", "nameTH": "เลย์ ร็อค หมึกย่างฮอตชิลลี่", "price": 20, "barcode": null, "category": "chips"},
+  {"id": "mars-bar", "nameEN": "Mars", "nameTH": "มาร์ส", "price": 25, "barcode": null, "category": "chocolate"},
+  {"id": "mm-peanut", "nameEN": "M&M's Peanut", "nameTH": "เอ็มแอนด์เอ็ม ถั่ว", "price": 25, "barcode": null, "category": "chocolate"},
+  {"id": "sticko-fingers-vanilla", "nameEN": "Stick-o Fingers Vanilla", "nameTH": "สติ๊กโก้ ฟิงเกอร์ วานิลลา", "price": 20, "barcode": null, "category": "biscuits"}
+]

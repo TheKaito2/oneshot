@@ -1,0 +1,22 @@
+{
+  "images": [
+    {
+      "filename": "chameleon-ink.png",
+      "idiom": "universal"
+    },
+    {
+      "filename": "chameleon-chalk.png",
+      "idiom": "universal",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ]
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}
