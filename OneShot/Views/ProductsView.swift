@@ -124,6 +124,9 @@ private struct ProductDetail: View {
     @State private var reorderAt = 5
     @State private var error: String?
     @State private var photos: [URL] = []
+    /// Photos from the training shoot that the gallery also knows it by (bundled, so they can't be deleted here).
+    @State private var seedPhotos = 0
+    @State private var deleting = false
     @Environment(\.dismiss) private var dismiss
 
     /// Live as the owner types: what one unit earns.
@@ -165,7 +168,7 @@ private struct ProductDetail: View {
                         Stepper("On the shelf: \(count)", value: $count, in: 0...9999)
                         Stepper("Reorder at: \(reorderAt)", value: $reorderAt, in: 0...999)
                         HStack {
-                            Text("Received")
+                            Text("Stock in")
                             Spacer()
                             ForEach([6, 12, 24], id: \.self) { n in
                                 Button("+\(n)") { count += n }.buttonStyle(.glass)
@@ -186,7 +189,10 @@ private struct ProductDetail: View {
                 }
                 Section {
                     if photos.isEmpty {
-                        Text("No photos yet. Teach it, or pick it once from a yellow item.").foregroundStyle(Brand.muted)
+                        Text(seedPhotos > 0
+                             ? "Known from \(seedPhotos) training photos. Each time you pick it from a yellow item, that photo is added here."
+                             : "No photos yet. Teach it, or pick it once from a yellow item.")
+                            .foregroundStyle(Brand.muted)
                     } else {
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 84), spacing: 8)], spacing: 8) {
                             ForEach(photos, id: \.self) { url in
@@ -206,9 +212,22 @@ private struct ProductDetail: View {
                     if !photos.isEmpty { Text("Touch and hold a photo to delete it, for example a wrong pick or a blurry shot.") }
                 }
                 .frostedRows()
+                if Catalog.isQuickAdd(product.id) {
+                    Section {
+                        Button("Delete this product", systemImage: "trash", role: .destructive) { deleting = true }
+                    } footer: {
+                        Text("For a test or duplicate teach. Past sales keep their lines.")
+                    }
+                    .frostedRows()
+                }
             }
             .gridList()
-            .navigationTitle(product.nameEN)
+            .confirmationDialog("Delete \(product.name)?", isPresented: $deleting, titleVisibility: .visible) {
+                Button("Delete product", role: .destructive) { deleteProduct() }
+            } message: {
+                Text("OneShot stops recognising it, and its photos are removed.")
+            }
+            .navigationTitle(product.name)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
@@ -217,6 +236,7 @@ private struct ProductDetail: View {
         }
         .onAppear {
             photos = CropStore.photos(for: product.id)
+            seedPhotos = Gallery.bundledSeeds()[product.id]?.count ?? 0
             price = "\(product.price)"
             cost = product.cost.map { "\($0)" } ?? ""
             tracked = stock != nil
@@ -237,6 +257,18 @@ private struct ProductDetail: View {
         onSaved()   // reloads the catalog, so the grid's photo count follows
         let sku = product.id, gallery = gallery
         Task.detached(priority: .utility) { gallery.rebuild(sku) }
+    }
+
+    private func deleteProduct() {
+        do {
+            try Catalog.removeQuickAdd(product.id)
+            gallery.remove(product.id)
+            onStock(nil)
+            onSaved()
+            dismiss()
+        } catch {
+            self.error = error.localizedDescription
+        }
     }
 
     private func save() {

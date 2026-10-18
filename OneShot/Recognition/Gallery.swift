@@ -21,6 +21,8 @@ final class Gallery: @unchecked Sendable {
     // Sendable: `views` is behind a lock; the rest is immutable.
     private let views: OSAllocatedUnfairLock<[String: [[Float]]]>
     private let url: URL
+    /// Writes go one at a time and each writes the newest state, so an older snapshot can never land last.
+    private let writes = DispatchQueue(label: "oneshot.gallery.writes")
 
     init(url: URL = URL.documentsDirectory.appending(path: "gallery.json")) {
         self.url = url
@@ -38,10 +40,15 @@ final class Gallery: @unchecked Sendable {
     var isEmpty: Bool { views.withLock { $0.isEmpty } }
 
     func add(_ vectors: [[Float]], to sku: String) {
-        persist(views.withLock { views in
-            views[sku, default: []] += vectors
-            return views
-        })
+        guard !vectors.isEmpty else { return }
+        views.withLock { $0[sku, default: []] += vectors }
+        persist()
+    }
+
+    /// A deleted product stops voting.
+    func remove(_ sku: String) {
+        views.withLock { $0[sku] = nil }
+        persist()
     }
 
     /// A product's views again from what is left of its photos (bundled seeds and learned photos), after the owner
@@ -49,17 +56,21 @@ final class Gallery: @unchecked Sendable {
     /// `embed` is swappable because Vision's FeaturePrint doesn't run in the simulator, where the tests do.
     func rebuild(_ sku: String, embed: (URL) -> [Float]? = Gallery.embed(contentsOf:)) {
         let vectors = (Self.bundledSeeds()[sku, default: []] + CropStore.photos(for: sku)).compactMap(embed)
-        persist(views.withLock { views in
-            views[sku] = vectors.isEmpty ? nil : vectors
-            return views
-        })
+        views.withLock { $0[sku] = vectors.isEmpty ? nil : vectors }
+        persist()
     }
 
-    private func persist(_ snapshot: [String: [[Float]]]) {
-        do {
-            try JSONEncoder().encode(snapshot).write(to: url, options: .atomic)
-        } catch {
-            print("gallery save failed: \(error)")
+    /// Waits for queued writes; the tests read the file right after a change.
+    func flush() { writes.sync {} }
+
+    private func persist() {
+        writes.async { [self] in
+            let snapshot = views.withLock { $0 }
+            do {
+                try JSONEncoder().encode(snapshot).write(to: url, options: .atomic)
+            } catch {
+                print("gallery save failed: \(error)")
+            }
         }
     }
 

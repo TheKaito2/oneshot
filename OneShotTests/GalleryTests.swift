@@ -45,7 +45,7 @@ struct GalleryTests {
             let source = try #require(CGImageSourceCreateWithURL(url as CFURL, nil))
             CropStore.save(try #require(CGImageSourceCreateImageAtIndex(source, 0, nil)), sku: sku)
         }
-        func views() throws -> Int? { try JSONDecoder().decode([String: [[Float]]].self, from: Data(contentsOf: file))[sku]?.count }
+        func views() throws -> Int? { gallery.flush(); return try JSONDecoder().decode([String: [[Float]]].self, from: Data(contentsOf: file))[sku]?.count }
 
         gallery.rebuild(sku) { _ in [1, 0] }
         #expect(try views() == 2)

@@ -86,20 +86,25 @@ struct QuickAddPanel: View {
                         .padding(.vertical, 8)
                 }
                 .primaryButton()
-                .disabled(busy)
-                .accessibilityLabel("Take shot")
+                .disabled(busy || !cameraRunning)
+                if !cameraRunning {
+                    Text("Teaching needs the iPad's camera. In the simulator, show it with the products already taught.")
+                        .font(.seed(.callout))
+                        .foregroundStyle(Brand.muted)
+                }
             } else {
                 VStack(spacing: 10) {
-                    TextField("Name (English)", text: $nameEN).focused($typing)
-                    TextField("ชื่อ (ภาษาไทย, optional)", text: $nameTH).focused($typing)
+                    TextField("Name in English", text: $nameEN).focused($typing)
+                    TextField("Name in Thai", text: $nameTH).focused($typing)
                     TextField("Price ฿", text: $price).keyboardType(.decimalPad).focused($typing)
                 }
                 .textFieldStyle(.roundedBorder)
-                Button("Save item") { save() }
-                    .primaryButton()
-                    .controlSize(.large)
-                    .frame(maxWidth: .infinity)
-                    .disabled(nameEN.trimmingCharacters(in: .whitespaces).isEmpty || parsedPrice == nil)
+                Button { save() } label: {
+                    Text("Save item").font(.seed(.title3, .bold)).frame(maxWidth: .infinity).padding(.vertical, 8)
+                }
+                .primaryButton()
+                // Either name will do: a Thai-only shop couldn't save before.
+                .disabled((nameEN + nameTH).trimmingCharacters(in: .whitespaces).isEmpty || parsedPrice == nil)
             }
         }
         .padding(20)
@@ -132,22 +137,31 @@ struct QuickAddPanel: View {
         }
     }
 
+    private var cameraRunning: Bool {
+        if case .running = camera.state { true } else { false }
+    }
+
     private func save() {
         guard let price = parsedPrice else { return }
-        let name = nameEN.trimmingCharacters(in: .whitespaces)
+        let english = nameEN.trimmingCharacters(in: .whitespaces)
         let thai = nameTH.trimmingCharacters(in: .whitespaces)
-        let product = Product(id: "qa-\(Int(Date().timeIntervalSince1970))", nameEN: name,
-                              nameTH: thai.isEmpty ? name : thai, price: price, barcode: nil)
+        let product = Product(id: "qa-\(Int(Date().timeIntervalSince1970))", nameEN: english.isEmpty ? thai : english,
+                              nameTH: thai.isEmpty ? english : thai, price: price, barcode: nil)
         do {
             try onSave(product)
-            for (index, shot) in shots.enumerated() {
-                CropStore.save(shot.crop, sku: product.id)
-                // Full frames with the item rect, so background crops can be measured as negatives (calibration).
-                let r = shot.item
-                CropStore.write(shot.frame, to: String(format: "Debug/%@/frame-%d_%.3f-%.3f-%.3f-%.3f.jpg",
-                                                       product.id, index, r.minX, r.minY, r.width, r.height))
-            }
+            // The vectors vote at once; the photo files follow off the main thread (16 JPEG encodes froze Save item).
             gallery.add(shots.map(\.vector), to: product.id)
+            let shots = shots, id = product.id, calibration = UserDefaults.standard.bool(forKey: SettingsKey.debugOverlay)
+            Task.detached(priority: .utility) {
+                for (index, shot) in shots.enumerated() {
+                    CropStore.save(shot.crop, sku: id)
+                    // Settings › Debug: full frames with the item rect, so background crops can be measured as negatives.
+                    guard calibration else { continue }
+                    let r = shot.item
+                    CropStore.write(shot.frame, to: String(format: "Debug/%@/frame-%d_%.3f-%.3f-%.3f-%.3f.jpg",
+                                                           id, index, r.minX, r.minY, r.width, r.height))
+                }
+            }
         } catch {
             note = String(localized: "Couldn't save the item: \(error.localizedDescription)")
         }

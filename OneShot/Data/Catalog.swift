@@ -98,6 +98,16 @@ struct Catalog {
         try JSONEncoder().encode(quickAdded() + [product]).write(to: quickAddURL, options: .atomic)
     }
 
+    /// Taught products have ids starting "qa-"; only these can be deleted (the bundled ones ship with the model).
+    static func isQuickAdd(_ sku: String) -> Bool { sku.hasPrefix("qa-") }
+
+    /// Deletes a taught product: a rehearsal or duplicate teach used to stay forever and keep voting.
+    static func removeQuickAdd(_ sku: String) throws {
+        try JSONEncoder().encode(quickAdded().filter { $0.id != sku }).write(to: quickAddURL, options: .atomic)
+        let photos = URL.documentsDirectory.appending(path: "Crops/\(sku)", directoryHint: .isDirectory)
+        if FileManager.default.fileExists(atPath: photos.path()) { try FileManager.default.removeItem(at: photos) }
+    }
+
     /// Remembers that `code` is `sku`; the catalog sheet needs no barcodes typed in.
     static func assignBarcode(_ code: String, to sku: String) throws {
         var all = read([String: String].self, from: barcodesURL) ?? [:]
