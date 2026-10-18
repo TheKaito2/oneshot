@@ -8,7 +8,7 @@ struct RaceBanner: View {
         switch race.phase {
         case .ready:
             VStack(spacing: 10) {
-                Text("Stage timer").font(.seed(.title2, .bold))
+                Text("Speed race").font(.seed(.title2, .bold))
                 Text("Tap GO with the video, then Ring up").foregroundStyle(Brand.muted)
                 HStack(spacing: 16) {
                     Button("Cancel", role: .cancel) { race.reset() }
@@ -51,8 +51,10 @@ struct RaceClock: View {
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 0.1)) { _ in
+            // A fixed width: the face has no tabular digits, so the glass pill wobbled ten times a second.
             Text(String(format: "%.1f s", start.map { (ContinuousClock.now - $0).inSeconds } ?? 0))
                 .font(.seed(size: 72, .extraBold))
+                .frame(minWidth: 280)
         }
     }
 }

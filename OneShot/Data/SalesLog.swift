@@ -78,7 +78,9 @@ enum SalesLog {
 
     /// One row per line, for a spreadsheet or an accountant.
     nonisolated static func csv(_ sales: [Sale]) -> String {
+        // Local time with its offset ("2026-10-19T14:05:00+07:00"), as the app shows it; plain ISO 8601 wrote UTC.
         let iso = ISO8601DateFormatter()
+        iso.timeZone = .current
         var rows = ["date,sale,refund_of,method,sku,name,quantity,amount"]
         for sale in sales {
             for line in sale.lines {
@@ -88,7 +90,8 @@ enum SalesLog {
                     .joined(separator: ","))
             }
         }
-        return rows.joined(separator: "\n") + "\n"
+        // The byte-order mark makes Excel read the file as UTF-8, so Thai names don't come out garbled.
+        return "\u{FEFF}" + rows.joined(separator: "\n") + "\n"
     }
 }
 

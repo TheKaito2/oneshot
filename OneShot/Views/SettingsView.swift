@@ -142,6 +142,7 @@ struct SettingsView: View {
         do {
             let count = try SampleSales.fill(catalog: app.catalog, in: context)
             sampleNote = String(localized: "Added \(count) sample sales.")
+            Task { await writeBackup() }   // the backup on this page would otherwise miss them
         } catch {
             sampleNote = error.localizedDescription
         }

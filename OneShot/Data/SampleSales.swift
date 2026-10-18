@@ -30,14 +30,15 @@ enum SampleSales {
                 let total = lines.reduce(Decimal(0)) { $0 + $1.amount }
                 let units = lines.reduce(0) { $0 + $1.quantity }
                 let cash = rng.below(5) < 2
-                try SalesLog.record(lines, total: total, method: cash ? .cash : .promptPay,
-                                    received: cash ? Cash.suggestions(for: total).last : nil,
-                                    ringUp: 2 + Double(rng.below(40)) / 10,
-                                    autoUnits: units - (rng.below(6) == 0 ? 1 : 0),
-                                    at: date, in: context)
+                let sale = Sale(id: UUID(), date: date, lines: lines.map {
+                    SaleLine(sku: $0.product.id, name: $0.product.nameEN, quantity: $0.quantity, amount: $0.amount)
+                }, total: total, method: cash ? .cash : .promptPay, received: cash ? Cash.suggestions(for: total).last : nil,
+                    ringUp: 2 + Double(rng.below(40)) / 10, autoUnits: units - (rng.below(6) == 0 ? 1 : 0))
+                context.insert(SaleRecord(sale))
                 count += 1
             }
         }
+        try context.save()   // once: a save per sale froze the screen for ~270 of them
         return count
     }
 }

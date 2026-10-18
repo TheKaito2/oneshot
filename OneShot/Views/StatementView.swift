@@ -121,9 +121,14 @@ struct StatementView: View {
         let url = URL.temporaryDirectory.appending(path: String(format: "OneShot statement %04d-%02d.pdf", parts.year ?? 0, parts.month ?? 0))
         var written = false
         ImageRenderer(content: self).render { size, draw in
-            var box = CGRect(origin: .zero, size: size)
+            // An A4 page whatever the month's length (the page used to be as tall as the content), top-aligned, and
+            // scaled down only when a long month would spill past the bottom.
+            var box = CGRect(x: 0, y: 0, width: 595.2, height: 841.8)
             guard let pdf = CGContext(url as CFURL, mediaBox: &box, nil) else { return }
+            let scale = min(1, box.width / size.width, box.height / size.height)
             pdf.beginPDFPage(nil)
+            pdf.translateBy(x: (box.width - size.width * scale) / 2, y: box.height - size.height * scale)
+            pdf.scaleBy(x: scale, y: scale)
             draw(pdf)
             pdf.endPDFPage()
             pdf.closePDF()

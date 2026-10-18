@@ -74,7 +74,7 @@ struct RefundAndCloseTests {
                         total: 12, method: .promptPay)
         let csv = SalesLog.csv([paid])
         #expect(csv.contains("\"Julie's \"\"Le-Mond\"\"\""))
-        #expect(csv.hasPrefix("date,sale,refund_of,method,sku,name,quantity,amount\n"))
+        #expect(csv.hasPrefix("\u{FEFF}date,sale,refund_of,method,sku,name,quantity,amount\n"))   // BOM: Excel reads Thai
     }
 
     @Test func dayCloseShowsOverAndShort() {

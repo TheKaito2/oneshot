@@ -22,7 +22,9 @@ struct TicketPanel: View {
             HStack {
                 Text("Current sale").font(.seed(.title3)).foregroundStyle(Brand.ink)
                 Spacer()
-                Text(Date.now, style: .time).font(.seed(.subheadline)).foregroundStyle(Brand.muted)
+                TimelineView(.everyMinute) { context in
+                    Text(context.date, style: .time).font(.seed(.subheadline)).foregroundStyle(Brand.muted)
+                }
             }
             .padding([.horizontal, .top], 20)
             .padding(.bottom, 12)
@@ -131,13 +133,20 @@ struct TicketPanel: View {
                 Text("\(line.product.price.baht) each").font(.seed(.subheadline)).foregroundStyle(Brand.muted).lineLimit(1)
             }
             Spacer(minLength: 4)
+            // 44 pt targets: at ~21 pt, 12 pt apart, a + on stage hit the − (or missed).
             Button("Remove one", systemImage: "minus.circle.fill") { app.scan?.removeOne(line.product.id) }
                 .labelStyle(.iconOnly)
                 .foregroundStyle(Brand.muted)
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(.rect)
+                .accessibilityLabel(Text("Remove one \(line.product.name)"))
             Text("\(line.quantity)").font(.seed(.headline)).foregroundStyle(Brand.ink).frame(minWidth: 22)
             // A pack hidden under another one: the camera can't see it, the cashier can.
             Button("Add one", systemImage: "plus.circle.fill") { app.scan?.manual.append(line.product.id) }
                 .labelStyle(.iconOnly)
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(.rect)
+                .accessibilityLabel(Text("Add one \(line.product.name)"))
             Text(line.amount.baht).font(.seed(.headline)).foregroundStyle(Brand.ink).frame(minWidth: 70, alignment: .trailing)
         }
         .font(.seed(.title3))

@@ -303,7 +303,7 @@ struct CheckoutView: View {
             Button {
                 app.race.start()
             } label: {
-                Label("Stage timer", systemImage: "stopwatch")
+                Label("Speed race", systemImage: "flag.checkered")
             }
             .disabled(billOpen)   // GO would run a clock that Ring up can't stop
             PhotosPicker(selection: $photo, matching: .images) {

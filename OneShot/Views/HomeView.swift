@@ -1,5 +1,6 @@
 import Charts
 import FoundationModels
+import os
 import SwiftData
 import SwiftUI
 
@@ -77,13 +78,13 @@ struct HomeView: View {
                 hero
                 SectionMarker(index: 1, total: 3, title: "Today", subtitle: ReportPeriod.today.comparison)
                 KPIRows {
-                    KPITile(title: "Revenue", value: report.net.baht, symbol: "banknote",
+                    KPITile(title: "Net sales", value: report.net.baht, symbol: "banknote",
                             change: Report.change(report.net, from: before.net), tint: Brand.accent)
                     KPITile(title: "Sales", value: "\(report.sales)", symbol: "cart",
                             change: Report.change(Double(report.sales), from: Double(before.sales)), tint: Brand.sky)
-                    KPITile(title: "Items", value: "\(report.units)", symbol: "shippingbox",
+                    KPITile(title: "Items sold", value: "\(report.units)", symbol: "shippingbox",
                             change: Report.change(Double(report.units), from: Double(before.units)), tint: Brand.sage)
-                    KPITile(title: "Average basket", value: report.averageSale.baht, symbol: "basket",
+                    KPITile(title: "Average sale", value: report.averageSale.baht, symbol: "basket",
                             change: Report.change(report.averageSale, from: before.averageSale), tint: Brand.mauve)
                 }
                 if wide {
@@ -144,7 +145,7 @@ struct HomeView: View {
             GlassEffectContainer(spacing: 12) {
                 VStack(alignment: .leading, spacing: 12) {
                     Button { app.tab = .checkout } label: {
-                        Label("Ring up", systemImage: "viewfinder").font(.seed(.title3, .bold)).padding(.horizontal, 10).padding(.vertical, 2)
+                        Label("Ring up", systemImage: "bolt.fill").font(.seed(.title3, .bold)).padding(.horizontal, 10).padding(.vertical, 2)
                     }
                     .primaryButton()
                     .controlSize(.large)
@@ -183,7 +184,7 @@ struct HomeView: View {
     private var heroActions: some View {
         Button("Speed race", systemImage: "flag.checkered") { app.startRace() }
         Button("Teach a product", systemImage: "plus.viewfinder") { app.startTeaching() }
-        Button("Close the day", systemImage: "moon.stars") { closingDay = true }
+        Button("Close the day", systemImage: "moon.stars.fill") { closingDay = true }
     }
 
     // MARK: - Dashboard and rail
@@ -260,7 +261,7 @@ struct HomeView: View {
                             Text(paceText(sku: item.sku, level: item.level)).font(.seed(.caption)).foregroundStyle(Brand.muted)
                         }
                         Spacer()
-                        Text("\(item.level.count) left").font(.seed(.subheadline, .bold)).foregroundStyle(item.level.count == 0 ? Brand.negative : Brand.accent)
+                        Text("\(item.level.count) left").font(.seed(.subheadline, .bold)).foregroundStyle(item.level.count == 0 ? Brand.negative : Brand.warning)
                     }
                 }
             }
@@ -354,16 +355,23 @@ private struct TimedOut: LocalizedError {
     var errorDescription: String? { String(localized: "The AI took too long; here are the numbers.") }
 }
 
-/// Runs `work`, giving up after `limit`.
+/// Runs `work`, giving up after `limit`. A task group can't do it: leaving the group waits for every child, so a
+/// model that ignores cancellation held the card on "Writing…" past the limit. First to finish resumes the caller.
 private func withTimeout<T: Sendable>(_ limit: Duration, _ work: @escaping @Sendable () async throws -> T) async throws -> T {
-    try await withThrowingTaskGroup(of: T.self) { group in
-        group.addTask { try await work() }
-        group.addTask {
-            try await Task.sleep(for: limit)
-            throw TimedOut()
+    let result: T = try await withCheckedThrowingContinuation { continuation in
+        let resumed = OSAllocatedUnfairLock(initialState: false)
+        let finish: @Sendable (Result<T, Error>) -> Void = { result in
+            if resumed.withLock({ done in defer { done = true }; return !done }) { continuation.resume(with: result) }
         }
-        defer { group.cancelAll() }
-        guard let first = try await group.next() else { throw TimedOut() }
-        return first
+        let job = Task {
+            do { finish(.success(try await work())) } catch { finish(.failure(error)) }
+        }
+        Task {
+            try? await Task.sleep(for: limit)
+            job.cancel()
+            finish(.failure(TimedOut()))
+        }
     }
+    try Task.checkCancellation()   // the day changed while it ran; the next run writes the card
+    return result
 }

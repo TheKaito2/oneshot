@@ -12,6 +12,7 @@ struct PickListView: View {
     @State private var scanningBarcode = false
     /// A scanned barcode the catalog doesn't know yet; the next pick remembers it.
     @State private var pendingBarcode: String?
+    @Environment(\.dismiss) private var dismiss
 
     private var candidates: [Product] {
         guard case .unsure(let ids)? = region?.verdict else { return [] }
@@ -78,12 +79,10 @@ struct PickListView: View {
             .searchable(text: $query, prompt: "Search items")
             .navigationTitle(region == nil ? Text("Add an item") : Text("Which item is this?"))
             .navigationBarTitleDisplayMode(.inline)
+            .gridList()
+            // Cancel top-left like every sheet; the destructive 'Not an item' used to sit there.
             .toolbar {
-                if let onNotAnItem {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button("Not an item", role: .destructive, action: onNotAnItem)
-                    }
-                }
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Barcode", systemImage: "barcode.viewfinder") { scanningBarcode = true }
                 }

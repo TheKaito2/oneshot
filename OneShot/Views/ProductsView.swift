@@ -57,6 +57,7 @@ struct ProductsView: View {
             ZStack(alignment: .bottomTrailing) {
                 Brand.buttonFill
                 Image("Chameleon").resizable().scaledToFit().frame(height: 150).opacity(0.3).offset(x: 30, y: 24)
+                    .accessibilityHidden(true)
             }
             .clipShape(.rect(cornerRadius: 24, style: .continuous))
         }

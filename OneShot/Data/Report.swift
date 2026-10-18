@@ -225,10 +225,11 @@ struct Report: Equatable {
 
     /// Fractional change from `before` to `now`; nil when there was nothing before to compare with.
     static func change(_ now: Decimal, from before: Decimal) -> Double? {
-        before == 0 ? nil : NSDecimalNumber(decimal: (now - before) / before).doubleValue
+        change(now.double, from: before.double)
     }
 
+    /// Relative to the size of the base, so a better day after a refund-only day (negative net) reads as up.
     static func change(_ now: Double, from before: Double) -> Double? {
-        before == 0 ? nil : (now - before) / before
+        before == 0 ? nil : (now - before) / abs(before)
     }
 }

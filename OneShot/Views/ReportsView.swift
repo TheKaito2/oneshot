@@ -152,7 +152,7 @@ struct ReportsView: View {
                         Text(r.net > 0 ? (item.net.double / r.net.double).formatted(.percent.precision(.fractionLength(0))) : "–")
                             .monospacedDigit()
                             .foregroundStyle(Brand.muted)
-                        Text(item.profit?.baht ?? "–").monospacedDigit().foregroundStyle(item.profit == nil ? .secondary : .primary)
+                        Text(item.profit?.baht ?? "–").foregroundStyle(item.profit == nil ? Brand.muted : Brand.ink)
                     }
                     .font(.seed(.callout))
                 }
@@ -264,7 +264,8 @@ struct ReportsView: View {
         }
         let url = URL.temporaryDirectory.appending(path: "OneShot items \(period.rawValue).csv")
         do {
-            try (rows.joined(separator: "\n") + "\n").write(to: url, atomically: true, encoding: .utf8)
+            // The byte-order mark makes Excel read the file as UTF-8, so Thai names don't come out garbled.
+            try ("\u{FEFF}" + rows.joined(separator: "\n") + "\n").write(to: url, atomically: true, encoding: .utf8)
             return url
         } catch {
             print("items csv not written: \(error)")
