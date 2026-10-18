@@ -38,7 +38,7 @@ struct PickListView: View {
                     if let pendingBarcode {
                         Label("New barcode \(pendingBarcode). Pick the item below and it's remembered.",
                               systemImage: "barcode")
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Brand.warning)
                     }
                     if query.isEmpty, !candidates.isEmpty {
                         HStack {

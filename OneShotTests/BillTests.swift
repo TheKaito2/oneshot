@@ -136,6 +136,16 @@ struct BillTests {
         #expect(merged.lockedAt == first.lockedAt)                           // ring-up time runs from the first tap
     }
 
+    @Test func typedAmountsParseStrictly() {
+        #expect(Decimal(baht: "25") == 25)
+        #expect(Decimal(baht: " 1,250 ") == 1250)          // was ฿1: Decimal(string:) stopped at the comma
+        #expect(Decimal(baht: "฿59.90") == Decimal(string: "59.9")!)
+        #expect(Decimal(baht: "12.345") == nil)            // satang has 2 places
+        #expect(Decimal(baht: "12abc") == nil)
+        #expect(Decimal(baht: "") == nil)
+        #expect(Decimal(baht: "-5") == nil)
+    }
+
     @Test func cropRectFlipsVisionOrigin() {
         // Vision's bottom-left quarter is the pixel rect's bottom-left quarter (origin top-left).
         let rect = LockedScan.pixelRect(for: CGRect(x: 0, y: 0, width: 0.5, height: 0.5), width: 1080, height: 1920)

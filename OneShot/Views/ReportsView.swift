@@ -147,7 +147,7 @@ struct ReportsView: View {
                             Text(item.name).foregroundStyle(Brand.ink).lineLimit(1)
                         }
                         Text(item.sold, format: .number).monospacedDigit()
-                        Text(verbatim: item.refunded > 0 ? "\(item.refunded)" : "–").monospacedDigit().foregroundStyle(item.refunded > 0 ? .red : .secondary)
+                        Text(verbatim: item.refunded > 0 ? "\(item.refunded)" : "–").foregroundStyle(item.refunded > 0 ? Brand.negative : Brand.muted)
                         Text(item.net.baht).font(.seed(.callout, .bold)).foregroundStyle(Brand.ink)
                         Text(r.net > 0 ? (item.net.double / r.net.double).formatted(.percent.precision(.fractionLength(0))) : "–")
                             .monospacedDigit()
@@ -245,7 +245,7 @@ struct ReportsView: View {
                     Text("Expected \(close.expected.baht) · counted \(close.counted.baht)").foregroundStyle(Brand.muted)
                     Text(close.difference == 0 ? "Even" : (close.difference > 0 ? "Over \(close.difference.baht)" : "Short \((-close.difference).baht)"))
                         .bold()
-                        .foregroundStyle(close.difference == 0 ? .green : (close.difference > 0 ? .orange : .red))
+                        .foregroundStyle(close.difference == 0 ? Brand.positive : (close.difference > 0 ? Brand.warning : Brand.negative))
                         .frame(minWidth: 110, alignment: .trailing)
                 }
                 .font(.seed(.subheadline))

@@ -25,6 +25,12 @@ enum Brand {
     static let mauve = Color(light: 0x7E6394, dark: 0xA58AB8)
     static let palette = [accent, sand, sage, sky, mauve]
 
+    // Status colours for text, 4.5:1 on the canvas in both appearances (system green/orange/red failed it in light
+    // mode). Box strokes and fills over the camera keep the system colours.
+    static let positive = Color(light: 0x2E7D32, dark: 0x6FCF7F)
+    static let warning = Color(light: 0xA45A00, dark: 0xF5A524)
+    static let negative = Color(light: 0xC62828, dark: 0xFF6B6B)
+
     /// The colour of the n-th series, wrapping round.
     static func series(_ index: Int) -> Color {
         palette[index % palette.count]
@@ -202,7 +208,7 @@ struct ChangeLabel: View {
 
     private var color: Color {
         guard let change, change != 0 else { return Brand.muted }
-        return (change > 0) == upIsGood ? .green : .red
+        return (change > 0) == upIsGood ? Brand.positive : Brand.negative
     }
 }
 

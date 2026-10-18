@@ -16,16 +16,15 @@ struct PayView: View {
     @State private var receivedText = ""
     @State private var facingCustomer = false
     @State private var draftID = ""
-    @State private var speech = AVSpeechSynthesizer()
+    @State private var voice = CounterVoice()
+    /// Made once per PromptPay number, not on every render (it built a new CIContext up to 3 times a pass).
+    @State private var qr: CGImage?
     @State private var receipt: Sale?
     /// A field has the keyboard: scroll so it and Paid sit above it.
     @FocusState private var typing: Bool
     @AppStorage(SettingsKey.shopName) private var shopName = ""
     @Environment(\.dismiss) private var dismiss
 
-    private var qr: CGImage? {
-        (try? PromptPay.payload(target: promptPayID, amount: total)).flatMap { PromptPay.qrImage($0) }
-    }
 
     private var canFinish: Bool {
         switch method {
@@ -42,7 +41,10 @@ struct PayView: View {
                 paying
             }
         }
-        .onAppear { speak(ThaiVoice.totalPhrase(total)) }
+        .onAppear { voice.say(ThaiVoice.totalPhrase(total)) }
+        .task(id: promptPayID) {
+            qr = (try? PromptPay.payload(target: promptPayID, amount: total)).flatMap { PromptPay.qrImage($0) }
+        }
     }
 
     /// After Paid, like Square's: the outcome, the receipt to share or print, and the way to the next customer.
@@ -51,7 +53,7 @@ struct PayView: View {
             VStack(spacing: 18) {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 72))
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Brand.positive)
                     .symbolEffect(.bounce, value: sale.id)
                 Text("Paid \(sale.total.baht)").font(.seed(.largeTitle, .bold))
                 if let change = sale.change, change > 0 {
@@ -166,7 +168,7 @@ struct PayView: View {
                     Text("Received \(received.baht)").font(.seed(.title3, .regular)).foregroundStyle(Brand.body)
                     Text("Change \((received - total).baht)")
                         .font(.seed(size: 48, .extraBold))
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Brand.positive)
                 }
             }
         }
@@ -189,8 +191,12 @@ struct PayView: View {
                 .focused($typing)
                 .textFieldStyle(.roundedBorder)
                 .frame(maxWidth: 240)
+                // Counts as it's typed: Paid used to stay grey until Return, or record an earlier chip amount.
+                .onChange(of: receivedText) { _, text in
+                    if let amount = Decimal(baht: text), amount >= total { received = amount }
+                }
                 .onSubmit {
-                    if let amount = Decimal(string: receivedText), amount >= total { take(amount) }
+                    if let amount = Decimal(baht: receivedText), amount >= total { take(amount) }
                 }
         }
     }
@@ -204,10 +210,10 @@ struct PayView: View {
                 .focused($typing)
                 .textFieldStyle(.roundedBorder)
                 .frame(maxWidth: 360)
-            if !draftID.isEmpty, !PromptPay.isValidTarget(draftID) {
+            if PromptPay.looksFinished(draftID), !PromptPay.isValidTarget(draftID) {
                 Text("Not a Thai mobile number, 13-digit ID or 15-digit e-wallet ID.")
                     .font(.seed(.caption))
-                    .foregroundStyle(.red)
+                    .foregroundStyle(Brand.negative)
             }
             Button("Save") { promptPayID = draftID }
                 .primaryButton()
@@ -218,19 +224,29 @@ struct PayView: View {
     private func take(_ amount: Decimal) {
         received = amount
         receivedText = ""
-        speak(ThaiVoice.changePhrase(received: amount, total: total))
+        voice.say(ThaiVoice.changePhrase(received: amount, total: total))
     }
 
     private func speakAgain() {
         if method == .cash, let received {
-            speak(ThaiVoice.changePhrase(received: received, total: total))
+            voice.say(ThaiVoice.changePhrase(received: received, total: total))
         } else {
-            speak(ThaiVoice.totalPhrase(total))
+            voice.say(ThaiVoice.totalPhrase(total))
         }
     }
+}
 
-    /// Always Thai (Kanya, the best quality installed), whatever the screen language.
-    private func speak(_ text: String) {
+/// The spoken total and change, always Thai (Kanya, the best quality installed), whatever the screen language.
+/// Shop music dips while it speaks and comes back after (it used to stay quiet after the first payment).
+final class CounterVoice: NSObject, AVSpeechSynthesizerDelegate {
+    private let synthesizer = AVSpeechSynthesizer()
+
+    override init() {
+        super.init()
+        synthesizer.delegate = self
+    }
+
+    func say(_ text: String) {
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, options: .duckOthers)
             try AVAudioSession.sharedInstance().setActive(true)
@@ -242,7 +258,30 @@ struct PayView: View {
         // › Voices › Thai, sounds far more natural than the compact Kanya that `AVSpeechSynthesisVoice(language:)` returns.
         utterance.voice = AVSpeechSynthesisVoice.speechVoices().filter { $0.language == "th-TH" }
             .max { $0.quality.rawValue < $1.quality.rawValue } ?? AVSpeechSynthesisVoice(language: "th-TH")
-        speech.stopSpeaking(at: .immediate)
-        speech.speak(utterance)
+        synthesizer.stopSpeaking(at: .immediate)
+        synthesizer.speak(utterance)
+    }
+
+    /// Ducking lasts while the session is active, so it ends by deactivating (other audio told to come back up).
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        guard !synthesizer.isSpeaking else { return }
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("audio session: \(error)")
+        }
+        AudioMode.mixed()
+    }
+}
+
+/// Chimes and speech play even with the Silent switch on (the iPad has no haptics; sound is the feedback), mixed
+/// over whatever the shop is playing.
+enum AudioMode {
+    static func mixed() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, options: .mixWithOthers)
+        } catch {
+            print("audio session: \(error)")
+        }
     }
 }

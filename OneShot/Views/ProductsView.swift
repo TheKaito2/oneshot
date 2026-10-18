@@ -32,8 +32,12 @@ struct ProductsView: View {
             .sheet(item: $selected) { product in
                 ProductDetail(product: product, catalog: app.catalog, gallery: app.gallery, stock: app.stock[product.id],
                               onSaved: { app.reloadCatalog() },
-                              onStock: { count, reorderAt in
-                                  app.stock.set(product.id, count: count, reorderAt: reorderAt)
+                              onStock: { level in
+                                  if let level {
+                                      app.stock.set(product.id, count: level.count, reorderAt: level.reorderAt)
+                                  } else {
+                                      app.stock.untrack(product.id)
+                                  }
                                   app.saveStock()
                               })
             }
@@ -81,7 +85,7 @@ private struct ProductCard: View {
                     if let stock {
                         Text("\(stock.count) left")
                             .font(.seed(.caption, .bold))
-                            .foregroundStyle(stock.isLow ? .orange : Brand.muted)
+                            .foregroundStyle(stock.isLow ? Brand.warning : Brand.muted)
                     }
                 }
                 Text(product.nameTH).font(.seed(.subheadline)).foregroundStyle(Brand.body).lineLimit(1)
@@ -110,7 +114,8 @@ private struct ProductDetail: View {
     let gallery: Gallery
     let stock: StockLevel?
     let onSaved: () -> Void
-    let onStock: (_ count: Int, _ reorderAt: Int) -> Void
+    /// nil = stop tracking this product's stock.
+    let onStock: ((count: Int, reorderAt: Int)?) -> Void
 
     @State private var price = ""
     @State private var cost = ""
@@ -123,8 +128,7 @@ private struct ProductDetail: View {
 
     /// Live as the owner types: what one unit earns.
     private var marginText: String? {
-        guard let sell = Decimal(string: price.trimmingCharacters(in: .whitespaces)), sell > 0,
-              let paid = Decimal(string: cost.trimmingCharacters(in: .whitespaces)), paid >= 0 else { return nil }
+        guard let sell = Decimal(baht: price), sell > 0, let paid = Decimal(baht: cost) else { return nil }
         let margin = ((sell - paid) / sell).double.formatted(.percent.precision(.fractionLength(0)))
         return String(localized: "Profit \((sell - paid).baht) a unit · margin \(margin)")
     }
@@ -148,7 +152,7 @@ private struct ProductDetail: View {
                     TextField("Price ฿", text: $price).keyboardType(.decimalPad)
                     TextField("Cost ฿ (what you pay)", text: $cost).keyboardType(.decimalPad)
                     if let marginText { Text(marginText).font(.seed(.caption)).foregroundStyle(Brand.muted) }
-                    if let error { Text(error).foregroundStyle(.red).font(.seed(.caption)) }
+                    if let error { Text(error).foregroundStyle(Brand.negative).font(.seed(.caption)) }
                 } header: {
                     Text("Price")
                 } footer: {
@@ -236,20 +240,20 @@ private struct ProductDetail: View {
     }
 
     private func save() {
-        guard let value = Decimal(string: price.trimmingCharacters(in: .whitespaces)), value > 0 else {
-            error = String(localized: "Enter a price above zero.")
+        guard let value = Decimal(baht: price), value > 0 else {
+            error = String(localized: "Enter a price above zero, like 25 or 59.50.")
             return
         }
         let costText = cost.trimmingCharacters(in: .whitespaces)
-        let unitCost = Decimal(string: costText)
-        guard costText.isEmpty || unitCost.map({ $0 >= 0 }) == true else {
-            error = String(localized: "Enter a cost of zero or more, or leave it empty.")
+        let unitCost = Decimal(baht: costText)
+        guard costText.isEmpty || unitCost != nil else {
+            error = String(localized: "Enter a cost like 18 or 18.50, or leave it empty.")
             return
         }
         do {
             try Catalog.savePrice(value, for: product.id)
             try Catalog.saveCost(costText.isEmpty ? nil : unitCost, for: product.id)
-            if tracked { onStock(count, reorderAt) }
+            onStock(tracked ? (count, reorderAt) : nil)
             onSaved()
             dismiss()
         } catch {

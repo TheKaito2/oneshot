@@ -61,7 +61,7 @@ struct HomeView: View {
                     Label("The saved books wouldn't open, so they were set aside and new books started. Tell the owner.",
                           systemImage: "exclamationmark.triangle.fill")
                         .font(.seed(.headline))
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Brand.warning)
                         .card(padding: 18)
                 }
                 hero
@@ -250,7 +250,7 @@ struct HomeView: View {
                             Text(paceText(sku: item.sku, level: item.level)).font(.seed(.caption)).foregroundStyle(Brand.muted)
                         }
                         Spacer()
-                        Text("\(item.level.count) left").font(.seed(.subheadline, .bold)).foregroundStyle(item.level.count == 0 ? .red : Brand.accent)
+                        Text("\(item.level.count) left").font(.seed(.subheadline, .bold)).foregroundStyle(item.level.count == 0 ? Brand.negative : Brand.accent)
                     }
                 }
             }

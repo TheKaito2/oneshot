@@ -24,11 +24,12 @@ struct StockBook: Equatable {
         }
     }
 
-    /// Writes every level into the store, updating rows that exist.
+    /// Writes every level into the store, updating rows that exist and deleting untracked ones.
     @MainActor
     func save(to context: ModelContext) throws {
         let rows = try context.fetch(FetchDescriptor<StockRecord>())
-        let bySKU = Dictionary(rows.map { ($0.sku, $0) }, uniquingKeysWith: { first, _ in first })
+        for row in rows where levels[row.sku] == nil { context.delete(row) }
+        let bySKU = Dictionary(rows.filter { levels[$0.sku] != nil }.map { ($0.sku, $0) }, uniquingKeysWith: { first, _ in first })
         for (sku, level) in levels {
             if let row = bySKU[sku] {
                 row.count = level.count
@@ -49,6 +50,11 @@ struct StockBook: Equatable {
 
     mutating func set(_ sku: String, count: Int, reorderAt: Int) {
         levels[sku] = StockLevel(count: max(0, count), reorderAt: max(0, reorderAt))
+    }
+
+    /// Stops tracking a product: it leaves Running low and sales stop counting it down.
+    mutating func untrack(_ sku: String) {
+        levels[sku] = nil
     }
 
     mutating func receive(_ sku: String, _ quantity: Int) {

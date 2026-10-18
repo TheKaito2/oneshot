@@ -57,16 +57,16 @@ struct SalesHistoryView: View {
     private func row(_ sale: Sale) -> some View {
         HStack(spacing: 12) {
             Image(systemName: sale.isRefund ? "arrow.uturn.backward.circle.fill" : (sale.method == .cash ? "banknote" : "qrcode"))
-                .foregroundStyle(sale.isRefund ? .red : Brand.accent)
+                .foregroundStyle(sale.isRefund ? Brand.negative : Brand.accent)
                 .frame(width: 28)
             Text(sale.date, style: .time).monospacedDigit().foregroundStyle(Brand.muted)
             Text(sale.lines.map { abs($0.quantity) > 1 ? "\($0.name) ×\(abs($0.quantity))" : $0.name }.joined(separator: ", "))
                 .lineLimit(1)
             Spacer()
             if let id = sale.id, refundedIDs.contains(id) {
-                Text("Refunded").font(.seed(.caption, .bold)).foregroundStyle(.red)
+                Text("Refunded").font(.seed(.caption, .bold)).foregroundStyle(Brand.negative)
             }
-            Text(sale.total.baht).bold().monospacedDigit().foregroundStyle(sale.isRefund ? .red : .primary)
+            Text(sale.total.baht).bold().monospacedDigit().foregroundStyle(sale.isRefund ? Brand.negative : Brand.ink)
         }
         .contentShape(.rect)
     }
@@ -123,7 +123,7 @@ private struct SaleDetail: View {
                         .clipShape(.rect(cornerRadius: 16))
                         .shadow(color: .black.opacity(0.12), radius: 16, y: 6)
                     if refunded {
-                        Label("Refunded", systemImage: "arrow.uturn.backward.circle.fill").foregroundStyle(.red)
+                        Label("Refunded", systemImage: "arrow.uturn.backward.circle.fill").foregroundStyle(Brand.negative)
                     }
                     HStack {
                         if let image = ReceiptView.image(sale, shopName: shopName) {
@@ -142,7 +142,7 @@ private struct SaleDetail: View {
                     }
                     .controlSize(.large)
                     if wrongPIN {
-                        Label("Wrong PIN. Nothing was refunded.", systemImage: "lock.fill").foregroundStyle(.red)
+                        Label("Wrong PIN. Nothing was refunded.", systemImage: "lock.fill").foregroundStyle(Brand.negative)
                     }
                 }
                 .padding(28)

@@ -38,10 +38,10 @@ struct SettingsView: View {
                 Section("Payment") {
                     TextField("PromptPay: mobile, 13-digit ID or e-wallet", text: $draftID)
                         .keyboardType(.numberPad)
-                    if !draftID.isEmpty, !PromptPay.isValidTarget(draftID) {
+                    if PromptPay.looksFinished(draftID), !PromptPay.isValidTarget(draftID) {
                         Text("Not a Thai mobile number, 13-digit ID or 15-digit e-wallet ID.")
                             .font(.seed(.caption))
-                            .foregroundStyle(.red)
+                            .foregroundStyle(Brand.negative)
                     }
                     Button("Save") { promptPayID = draftID }
                         .disabled(!PromptPay.isValidTarget(draftID) || draftID == promptPayID)
@@ -57,7 +57,7 @@ struct SettingsView: View {
                             .disabled(!RefundPIN.isValid(newPIN))
                     }
                     if let pinProblem {
-                        Text(pinProblem).font(.seed(.caption)).foregroundStyle(.red)
+                        Text(pinProblem).font(.seed(.caption)).foregroundStyle(Brand.negative)
                     }
                 } header: {
                     Text("Refunds")
@@ -72,7 +72,7 @@ struct SettingsView: View {
                         ShareLink(items: backup) { Label("Back up the books", systemImage: "externaldrive") }
                     }
                     if let backupProblem {
-                        Text("Backup failed: \(backupProblem)").font(.seed(.caption)).foregroundStyle(.red)
+                        Text("Backup failed: \(backupProblem)").font(.seed(.caption)).foregroundStyle(Brand.negative)
                     }
                 } header: {
                     Text("Books")

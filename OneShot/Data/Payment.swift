@@ -33,6 +33,9 @@ enum PromptPay {
 
     static func isValidTarget(_ target: String) -> Bool { (try? merchantAccount(target)) != nil }
 
+    /// Long enough to judge: a "not valid" warning after 3 typed digits read as a mistake that hadn't happened yet.
+    static func looksFinished(_ target: String) -> Bool { target.filter(\.isNumber).count >= 10 }
+
     private static func merchantAccount(_ target: String) throws -> (tag: String, value: String) {
         let digits = String(target.unicodeScalars.filter { ("0"..."9").contains($0) })
         switch digits.count {

@@ -202,7 +202,7 @@ struct TicketPanel: View {
             if !unsure.isEmpty {
                 Label("\(unsure.count) item(s) to check before paying", systemImage: "exclamationmark.triangle.fill")
                     .font(.seed(.callout))
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Brand.warning)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             HStack {

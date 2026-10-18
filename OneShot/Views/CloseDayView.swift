@@ -20,8 +20,8 @@ struct CloseDayView: View {
 
     private var summary: DaySummary { DaySummary.of(today.map(\.sale)) }
 
-    private var float: Decimal { Decimal(string: floatText) ?? 0 }
-    private var counted: Decimal? { Decimal(string: countedText.trimmingCharacters(in: .whitespaces)) }
+    private var float: Decimal { Decimal(baht: floatText) ?? 0 }
+    private var counted: Decimal? { Decimal(baht: countedText) }
     private var expected: Decimal { float + summary.cash }
 
     var body: some View {
@@ -52,7 +52,7 @@ struct CloseDayView: View {
                 if let closed {
                     Section("Day closed") {
                         Label("Saved \(closed.date.formatted(date: .omitted, time: .shortened))", systemImage: "checkmark.seal.fill")
-                            .foregroundStyle(.green)
+                            .foregroundStyle(Brand.positive)
                         ShareLink(item: report(closed)) { Label("Share the day report", systemImage: "square.and.arrow.up") }
                     }
                     .frostedRows()
@@ -60,6 +60,8 @@ struct CloseDayView: View {
                     Section {
                         Button("Close the day", systemImage: "moon.stars.fill") { close() }
                             .disabled(counted == nil)
+                    } footer: {
+                        Text("Count the cash in the drawer first. Closing saves today's totals.")
                     }
                     .frostedRows()
                 }
@@ -67,8 +69,16 @@ struct CloseDayView: View {
             .gridList()
             .navigationTitle("Close the day")
             .navigationBarTitleDisplayMode(.inline)
+            // The bold top-right slot commits, like every iOS sheet: it used to be 'Done' that closed without saving.
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+                if closed == nil {
+                    ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Close the day") { close() }.disabled(counted == nil)
+                    }
+                } else {
+                    ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+                }
             }
         }
     }
@@ -77,7 +87,7 @@ struct CloseDayView: View {
         LabeledContent {
             Text(difference == 0 ? "Even" : (difference > 0 ? "Over \(difference.baht)" : "Short \((-difference).baht)"))
                 .bold()
-                .foregroundStyle(difference == 0 ? .green : (difference > 0 ? .orange : .red))
+                .foregroundStyle(difference == 0 ? Brand.positive : (difference > 0 ? Brand.warning : Brand.negative))
         } label: {
             Text("Difference")
         }

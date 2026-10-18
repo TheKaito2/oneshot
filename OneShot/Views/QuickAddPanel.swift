@@ -30,7 +30,7 @@ struct QuickAddPanel: View {
     @FocusState private var typing: Bool
 
     private var parsedPrice: Decimal? {
-        Decimal(string: price.trimmingCharacters(in: .whitespaces)).flatMap { $0 > 0 ? $0 : nil }
+        Decimal(baht: price).flatMap { $0 > 0 ? $0 : nil }
     }
 
     var body: some View {

@@ -134,6 +134,14 @@ struct Catalog {
 }
 
 extension Decimal {
+    /// A typed amount: "25", "59.90", "1,250", "฿1,250.5". Nil for anything else, including more than 2 decimals.
+    /// `Decimal(string:)` stopped at the first comma, so "1,250" saved as ฿1 (19 Oct).
+    init?(baht text: String) {
+        let cleaned = text.filter { !$0.isWhitespace && $0 != "," && $0 != "฿" }
+        guard cleaned.wholeMatch(of: /\d+(\.\d{1,2})?/) != nil, let value = Decimal(string: cleaned) else { return nil }
+        self = value
+    }
+
     /// "฿25" or "฿59.90", the way Thai shops write prices.
     var baht: String {
         var whole = Decimal(), value = self
