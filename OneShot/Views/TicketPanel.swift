@@ -210,7 +210,7 @@ struct TicketPanel: View {
                     .animation(.snappy, value: total)
             }
             if !unsure.isEmpty {
-                Label("\(unsure.count) item(s) to check before paying", systemImage: "exclamationmark.triangle.fill")
+                Label("^[\(unsure.count) item](inflect: true) to check before paying", systemImage: "exclamationmark.triangle.fill")
                     .font(.seed(.callout))
                     .foregroundStyle(Brand.warning)
                     .frame(maxWidth: .infinity, alignment: .leading)

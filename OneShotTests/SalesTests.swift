@@ -25,6 +25,8 @@ struct SalesTests {
         #expect(summary.topSellers == [.init(name: "Lay's", quantity: 3), .init(name: "Pocky", quantity: 1)])
         #expect(summary.template.hasPrefix("Today: 2 sales, 4 items"))
         #expect(summary.template.hasSuffix("Best seller: Lay's (3)."))
+        let one = DaySummary.of([sale([("Lay's", 1, "32")], at: day.addingTimeInterval(3600))], on: day, calendar: calendar)
+        #expect(one.template.hasPrefix("Today: 1 sale, 1 item"))   // was "1 sales, 1 items"
     }
 
     @Test func splitsCashFromPromptPayAndBucketsByHour() {

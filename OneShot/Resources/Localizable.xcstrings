@@ -2795,6 +2795,22 @@
         }
       }
     },
+    "Sells %@/day · about ^[%lld day](inflect: true) left" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Sells %1$@/day · about ^[%2$lld day](inflect: true) left"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขายวันละ %@ · เหลืออีกราว %lld วัน"
+          }
+        }
+      }
+    },
     "Send the money back by PromptPay. The items go back into stock." : {
       "localizations" : {
         "th" : {
@@ -3301,6 +3317,22 @@
         }
       }
     },
+    "Today: ^[%lld sale](inflect: true), ^[%lld item](inflect: true), %@. Average sale %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Today: ^[%1$lld sale](inflect: true), ^[%2$lld item](inflect: true), %3$@. Average sale %4$@."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "วันนี้: ขาย %lld บิล %lld ชิ้น รวม %@ ยอดเฉลี่ยต่อบิล %@"
+          }
+        }
+      }
+    },
     "Top products" : {
       "localizations" : {
         "th" : {
@@ -3511,12 +3543,96 @@
         }
       }
     },
+    "^[%lld basket](inflect: true)" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld บิล"
+          }
+        }
+      }
+    },
     "^[%lld item](inflect: true)" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld ชิ้น"
+          }
+        }
+      }
+    },
+    "^[%lld item](inflect: true) in %@ s" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "^[%1$lld item](inflect: true) in %2$@ s"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ชิ้น ใน %@ วิ."
+          }
+        }
+      }
+    },
+    "^[%lld item](inflect: true) in %@ s · %@ s an item" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "^[%1$lld item](inflect: true) in %2$@ s · %3$@ s an item"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ชิ้น ใน %@ วินาที · ชิ้นละ %@ วินาที"
+          }
+        }
+      }
+    },
+    "^[%lld item](inflect: true) to check before paying" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "มี %lld ชิ้นต้องตรวจก่อนชำระเงิน"
+          }
+        }
+      }
+    },
+    "^[%lld item](inflect: true) · %@ s an item" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "^[%1$lld item](inflect: true) · %2$@ s an item"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ชิ้น · ชิ้นละ %@ วินาที"
+          }
+        }
+      }
+    },
+    "^[%lld sale](inflect: true) · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "^[%1$lld sale](inflect: true) · %2$@"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld บิล · %2$@"
           }
         }
       }

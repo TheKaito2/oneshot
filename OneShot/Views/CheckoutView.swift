@@ -182,7 +182,7 @@ struct CheckoutView: View {
                 Label("Teach mode", systemImage: "plus.viewfinder")
             } else if let scan = app.scan, !app.scanningMore, let elapsed = scan.elapsed {
                 // The last frame's count and time; after Scan more the bill also holds earlier frames.
-                Label("\(scan.regions.count { !$0.earlier }) items in \(String(format: "%.2f", elapsed.inSeconds)) s",
+                Label("^[\(scan.regions.count { !$0.earlier }) item](inflect: true) in \(String(format: "%.2f", elapsed.inSeconds)) s",
                       systemImage: "bolt.fill")
             } else if app.demo {
                 Label("DEMO", systemImage: "photo")

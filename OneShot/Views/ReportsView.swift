@@ -174,7 +174,7 @@ struct ReportsView: View {
                 HStack {
                     Text("\(pair.first) + \(pair.second)").lineLimit(2).fixedSize(horizontal: false, vertical: true)
                     Spacer()
-                    Text("\(pair.baskets) baskets").font(.seed(.body, .bold))
+                    Text("^[\(pair.baskets) basket](inflect: true)").font(.seed(.body, .bold))
                     Text((Double(pair.baskets) / Double(max(r.sales, 1))).formatted(.percent.precision(.fractionLength(0))))
                         .foregroundStyle(Brand.muted)
                 }

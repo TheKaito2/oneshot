@@ -146,7 +146,8 @@ struct DaySummary: Equatable {
     /// The plain summary: always shown, and the whole summary on iPads without Apple Intelligence.
     var template: String {
         guard sales > 0 else { return String(localized: "No sales yet today.") }
-        var text = String(localized: "Today: \(sales) sales, \(items) items, \(revenue.baht). Average sale \(averageBasket.baht).")
+        // Inflected: "1 sales, 1 items" read wrong on a quiet morning.
+        var text = String(AttributedString(localized: "Today: ^[\(sales) sale](inflect: true), ^[\(items) item](inflect: true), \(revenue.baht). Average sale \(averageBasket.baht).").characters)
         if let best = topSellers.first { text += " " + String(localized: "Best seller: \(best.name) (\(best.quantity)).") }
         return text
     }

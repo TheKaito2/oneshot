@@ -226,7 +226,7 @@ struct PaymentsDonutCard: View {
                                     .font(.seed(.callout, .bold))
                                     .foregroundStyle(Brand.ink)
                             }
-                            Text("\(payment.sales) sales · \(payment.net.baht)").font(.seed(.caption)).foregroundStyle(Brand.muted).padding(.leading, 16)
+                            Text("^[\(payment.sales) sale](inflect: true) · \(payment.net.baht)").font(.seed(.caption)).foregroundStyle(Brand.muted).padding(.leading, 16)
                         }
                     }
                 }

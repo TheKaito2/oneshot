@@ -44,7 +44,7 @@ final class Race {
 
     var summary: String? {
         guard let time, let perItem = secondsPerItem else { return nil }
-        return String(localized: "\(items) items in \(String(format: "%.1f", time.inSeconds)) s · \(String(format: "%.2f", perItem)) s an item")
+        return String(AttributedString(localized: "^[\(items) item](inflect: true) in \(String(format: "%.1f", time.inSeconds)) s · \(String(format: "%.2f", perItem)) s an item").characters)
     }
 }
 

@@ -280,7 +280,7 @@ struct HomeView: View {
         let rate = Restock.dailyRate(sku, sales: sales)
         if level.count == 0 { return String(localized: "Sold out") }
         guard let days = Restock.daysLeft(level, rate: rate) else { return String(localized: "Not selling this week") }
-        return String(localized: "Sells \(String(format: "%.1f", rate))/day · about \(Int(days.rounded(.up))) day(s) left")
+        return String(AttributedString(localized: "Sells \(String(format: "%.1f", rate))/day · about ^[\(Int(days.rounded(.up))) day](inflect: true) left").characters)
     }
 
     private var insightCard: some View {

@@ -32,7 +32,7 @@ struct RaceBanner: View {
                     .font(.seed(size: 72, .extraBold))
                     .foregroundStyle(Brand.accent)
                 if let perItem = race.secondsPerItem {
-                    Text("\(race.items) items · \(String(format: "%.2f", perItem)) s an item")
+                    Text("^[\(race.items) item](inflect: true) · \(String(format: "%.2f", perItem)) s an item")
                         .font(.seed(.title3, .bold))
                 }
                 Button("Close") { race.reset() }.padding(.top, 6)
