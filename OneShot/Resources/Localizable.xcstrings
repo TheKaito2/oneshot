@@ -323,6 +323,16 @@
         }
       }
     },
+    "Add one %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่ม %@ หนึ่งชิ้น"
+          }
+        }
+      }
+    },
     "Add sample sales" : {
       "localizations" : {
         "th" : {
@@ -921,6 +931,16 @@
         }
       }
     },
+    "Couldn't ring up" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คิดเงินไม่ได้"
+          }
+        }
+      }
+    },
     "Couldn't save the item: %@" : {
       "localizations" : {
         "th" : {
@@ -947,6 +967,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เขียนสรุปไม่ได้ (%@) ตัวเลขด้านบนคือสรุปยอด"
+          }
+        }
+      }
+    },
+    "Couldn't write an AI read of the day." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เขียนสรุปวันนี้ด้วย AI ไม่ได้"
+          }
+        }
+      }
+    },
+    "Count the cash in the drawer first. Closing saves today's totals." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "นับเงินในลิ้นชักก่อน การปิดยอดจะบันทึกยอดรวมของวันนี้"
           }
         }
       }
@@ -1051,12 +1091,42 @@
         }
       }
     },
+    "Delete %@?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลบ %@ ไหม"
+          }
+        }
+      }
+    },
     "Delete photo" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ลบรูป"
+          }
+        }
+      }
+    },
+    "Delete product" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลบสินค้า"
+          }
+        }
+      }
+    },
+    "Delete this product" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลบสินค้านี้"
           }
         }
       }
@@ -1111,6 +1181,16 @@
         }
       }
     },
+    "Down" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลง"
+          }
+        }
+      }
+    },
     "Drawer: expected" : {
       "localizations" : {
         "th" : {
@@ -1131,12 +1211,32 @@
         }
       }
     },
+    "Enter a cost like 18 or 18.50, or leave it empty." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใส่ต้นทุน เช่น 18 หรือ 18.50 หรือเว้นว่างไว้"
+          }
+        }
+      }
+    },
     "Enter a cost of zero or more, or leave it empty." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ใส่ต้นทุนตั้งแต่ 0 ขึ้นไป หรือเว้นว่างไว้"
+          }
+        }
+      }
+    },
+    "Enter a price above zero, like 25 or 59.50." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใส่ราคามากกว่าศูนย์ เช่น 25 หรือ 59.50"
           }
         }
       }
@@ -1253,6 +1353,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ฟอนต์"
+          }
+        }
+      }
+    },
+    "For a test or duplicate teach. Past sales keep their lines." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สำหรับสินค้าที่สอนไว้ทดลองหรือซ้ำ ยอดขายเดิมยังอยู่ครบ"
           }
         }
       }
@@ -1437,6 +1547,16 @@
         }
       }
     },
+    "Known from %lld training photos. Each time you pick it from a yellow item, that photo is added here." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รู้จักจากรูปฝึก %lld รูป ทุกครั้งที่เลือกสินค้านี้จากกรอบสีเหลือง รูปนั้นจะถูกเพิ่มที่นี่"
+          }
+        }
+      }
+    },
     "LIVE" : {
       "localizations" : {
         "th" : {
@@ -1567,6 +1687,26 @@
         }
       }
     },
+    "Name in English" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ชื่อภาษาอังกฤษ"
+          }
+        }
+      }
+    },
+    "Name in Thai" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ชื่อภาษาไทย"
+          }
+        }
+      }
+    },
     "Named by the AI" : {
       "localizations" : {
         "th" : {
@@ -1689,6 +1829,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ไม่พบกล้องหลัง"
+          }
+        }
+      }
+    },
+    "No items found. Move closer, or add them by hand." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ไม่พบสินค้า ขยับเข้าใกล้ขึ้น หรือเพิ่มเอง"
           }
         }
       }
@@ -1893,6 +2043,16 @@
         }
       }
     },
+    "OneShot stops recognising it, and its photos are removed." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OneShot จะไม่จดจำสินค้านี้อีก และรูปของสินค้าจะถูกลบ"
+          }
+        }
+      }
+    },
     "Other" : {
       "localizations" : {
         "th" : {
@@ -1949,6 +2109,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ชำระแล้ว %@"
+          }
+        }
+      }
+    },
+    "Paid, but not saved to the books" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รับเงินแล้ว แต่ยังไม่ได้บันทึกยอด"
           }
         }
       }
@@ -2249,6 +2419,16 @@
         }
       }
     },
+    "Refund not saved" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บันทึกการคืนเงินไม่สำเร็จ"
+          }
+        }
+      }
+    },
     "Refunded" : {
       "localizations" : {
         "th" : {
@@ -2285,6 +2465,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ลบหนึ่งชิ้น"
+          }
+        }
+      }
+    },
+    "Remove one %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลด %@ หนึ่งชิ้น"
           }
         }
       }
@@ -2835,6 +3025,16 @@
         }
       }
     },
+    "Stock in" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รับสินค้าเข้า"
+          }
+        }
+      }
+    },
     "Summary" : {
       "localizations" : {
         "th" : {
@@ -2925,6 +3125,26 @@
         }
       }
     },
+    "Teaching needs the iPad's camera. In the simulator, show it with the products already taught." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การสอนสินค้าต้องใช้กล้องของ iPad ในซิมูเลเตอร์ให้สาธิตด้วยสินค้าที่สอนไว้แล้ว"
+          }
+        }
+      }
+    },
+    "The AI took too long; here are the numbers." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI ใช้เวลานานเกินไป นี่คือตัวเลขของวันนี้"
+          }
+        }
+      }
+    },
     "The camera is still starting. Try again in a second." : {
       "localizations" : {
         "th" : {
@@ -2945,6 +3165,16 @@
         }
       }
     },
+    "The on-device model is still downloading." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "โมเดลในเครื่องยังดาวน์โหลดไม่เสร็จ"
+          }
+        }
+      }
+    },
     "The saved books wouldn't open, so they were set aside and new books started. Tell the owner." : {
       "localizations" : {
         "th" : {
@@ -2961,6 +3191,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เสียงบอกยอดรวมเป็นภาษาไทยเสมอ"
+          }
+        }
+      }
+    },
+    "This iPad doesn't run Apple Intelligence." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iPad เครื่องนี้ไม่รองรับ Apple Intelligence"
           }
         }
       }
@@ -3131,6 +3371,16 @@
         }
       }
     },
+    "Turn on Apple Intelligence in Settings for an AI read of the day." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เปิด Apple Intelligence ในการตั้งค่า เพื่อให้ AI สรุปวันนี้"
+          }
+        }
+      }
+    },
     "Turn to customer" : {
       "localizations" : {
         "th" : {
@@ -3151,6 +3401,16 @@
         }
       }
     },
+    "Up" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขึ้น"
+          }
+        }
+      }
+    },
     "Update stock in Products" : {
       "localizations" : {
         "th" : {
@@ -3167,6 +3427,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "สินค้านี้คืออะไร"
+          }
+        }
+      }
+    },
+    "Write this sale down (%@) and add it later. Stock was not changed." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "จดบิลนี้ไว้ (%@) แล้วค่อยเพิ่มทีหลัง สต็อกยังไม่ถูกตัด"
           }
         }
       }

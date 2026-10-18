@@ -1,4 +1,5 @@
 import Observation
+import TipKit
 
 /// State the tabs share: one camera, one catalog, one gallery, the race, and the sale in progress.
 @Observable
@@ -61,6 +62,7 @@ final class AppModel {
     /// Opens Teach a product. An open bill stays: teach the unknown pack, then pick it on the bill (it used to be
     /// wiped without a word).
     func startTeaching() {
+        QuickAddTip().invalidate(reason: .actionPerformed)
         scanningMore = false
         teaching = true
         tab = .checkout

@@ -22,6 +22,7 @@ struct PayView: View {
     /// Made once per PromptPay number, not on every render (it built a new CIContext up to 3 times a pass).
     @State private var qr: CGImage?
     @State private var receipt: Sale?
+    @State private var notSaved = false
     /// A field has the keyboard: scroll so it and Paid sit above it.
     @FocusState private var typing: Bool
     @AppStorage(SettingsKey.shopName) private var shopName = ""
@@ -44,6 +45,11 @@ struct PayView: View {
             }
         }
         .onAppear { voice.say(ThaiVoice.totalPhrase(total)) }
+        .alert("Paid, but not saved to the books", isPresented: $notSaved) {
+            Button("OK", action: onDone)
+        } message: {
+            Text("Write this sale down (\(total.baht)) and add it later. Stock was not changed.")
+        }
         .task(id: promptPayID) {
             qr = (try? PromptPay.payload(target: promptPayID, amount: total)).flatMap { PromptPay.qrImage($0) }
         }
@@ -141,7 +147,7 @@ struct PayView: View {
         if let sale {
             withAnimation(.spring) { receipt = sale }
         } else {
-            onDone()
+            notSaved = true
         }
     }
 

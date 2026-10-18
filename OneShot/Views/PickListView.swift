@@ -59,7 +59,11 @@ struct PickListView: View {
                             }
                         }
                     }
+                    if let onNotAnItem {
+                        Button("Not an item", systemImage: "xmark.bin", role: .destructive, action: onNotAnItem)
+                    }
                 }
+                .frostedRows()
                 Section(query.isEmpty ? "All items" : "Results") {
                     ForEach(results) { product in
                         Button { choose(product.id) } label: {
@@ -75,6 +79,7 @@ struct PickListView: View {
                         }
                     }
                 }
+                .frostedRows()
             }
             .searchable(text: $query, prompt: "Search items")
             .navigationTitle(region == nil ? Text("Add an item") : Text("Which item is this?"))

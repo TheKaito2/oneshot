@@ -44,8 +44,18 @@ enum SalesLog {
             SaleLine(sku: $0.product.id, name: $0.product.nameEN, quantity: $0.quantity, amount: $0.amount)
         }, total: total, method: method, received: received, ringUp: ringUp, autoUnits: autoUnits)
         context.insert(SaleRecord(sale))
-        try context.save()
+        try saveOrRollBack(context)
         return sale
+    }
+
+    /// A failed save is undone, not left pending: it used to be written by the next save, without its stock change.
+    private static func saveOrRollBack(_ context: ModelContext) throws {
+        do {
+            try context.save()
+        } catch {
+            context.rollback()
+            throw error
+        }
     }
 
     /// Logs the reverse of `sale` (same method, so cash refunds leave the drawer). One refund per sale.
@@ -56,7 +66,7 @@ enum SalesLog {
         guard try context.fetchCount(earlier) == 0 else { throw AlreadyRefunded() }
         let refund = reversal(of: sale, id: id, at: date)
         context.insert(SaleRecord(refund))
-        try context.save()
+        try saveOrRollBack(context)
         return refund
     }
 
@@ -116,10 +126,11 @@ struct DaySummary: Equatable {
 
     var averageBasket: Decimal { sales > 0 ? revenue / Decimal(sales) : 0 }
 
-    static func of(_ sales: [Sale], on day: Date = .now, calendar: Calendar = .current) -> DaySummary {
+    /// `catalog` names the best sellers in the app's language; the log keeps English.
+    static func of(_ sales: [Sale], on day: Date = .now, calendar: Calendar = .current, catalog: Catalog? = nil) -> DaySummary {
         let today = sales.filter { calendar.isDate($0.date, inSameDayAs: day) }
         var quantities: [String: Int] = [:]
-        for line in today.flatMap(\.lines) { quantities[line.name, default: 0] += line.quantity }
+        for line in today.flatMap(\.lines) { quantities[catalog?[line.sku]?.name ?? line.name, default: 0] += line.quantity }
         let top = quantities.filter { $0.value > 0 }
             .sorted { $0.value != $1.value ? $0.value > $1.value : $0.key < $1.key }
             .prefix(3).map { Seller(name: $0.key, quantity: $0.value) }

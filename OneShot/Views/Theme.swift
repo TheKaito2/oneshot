@@ -195,7 +195,10 @@ struct ChangeLabel: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
             if let change {
-                Image(systemName: change >= 0 ? "arrowtriangle.up.fill" : "arrowtriangle.down.fill").font(.system(size: 8))
+                if change != 0 {
+                    Image(systemName: change > 0 ? "arrowtriangle.up.fill" : "arrowtriangle.down.fill").font(.system(size: 8))
+                        .accessibilityLabel(change > 0 ? Text("Up") : Text("Down"))
+                }
                 Text(abs(change), format: .percent.precision(.fractionLength(0))).font(.seed(.caption, .bold))
             } else {
                 Text(verbatim: "–")

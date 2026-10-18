@@ -68,7 +68,7 @@ struct TicketPanel: View {
                     app.applyToStock(sale)
                     return sale
                 } catch {
-                    // The customer has paid; losing the log entry must not block the next customer.
+                    // The customer has paid: PayView says so, and the next customer isn't blocked.
                     print("sale not logged: \(error)")
                     return nil
                 }

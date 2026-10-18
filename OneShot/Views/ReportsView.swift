@@ -113,6 +113,9 @@ struct ReportsView: View {
             KPITile(title: "Gross profit", value: profit.baht, symbol: "chart.line.uptrend.xyaxis",
                     change: before.profit.flatMap { Report.change(profit, from: $0) }, versus: period.versus, tint: Brand.sage,
                     note: r.netWithoutCost > 0 ? "Leaves out \(r.netWithoutCost.baht) of sales with no cost yet" : nil)
+        } else if r.items.isEmpty {
+            // Nothing sold yet: no cost to ask for.
+            KPITile(title: "Gross profit", value: "–", symbol: "chart.line.uptrend.xyaxis", versus: period.versus, tint: Brand.sage)
         } else {
             Button { app.tab = .products } label: {
                 KPITile(title: "Gross profit", value: "–", symbol: "chart.line.uptrend.xyaxis", tint: Brand.sage,
@@ -171,7 +174,7 @@ struct ReportsView: View {
                 HStack {
                     Text("\(pair.first) + \(pair.second)").lineLimit(2).fixedSize(horizontal: false, vertical: true)
                     Spacer()
-                    Text("\(pair.baskets) baskets").bold()
+                    Text("\(pair.baskets) baskets").font(.seed(.body, .bold))
                     Text((Double(pair.baskets) / Double(max(r.sales, 1))).formatted(.percent.precision(.fractionLength(0))))
                         .foregroundStyle(Brand.muted)
                 }
@@ -193,13 +196,14 @@ struct ReportsView: View {
                 Text("Ring-up times start with sales made in this version.").foregroundStyle(Brand.muted)
             } else {
                 LabeledContent("Average ring-up") {
-                    Text("\(r.speed.averageSeconds.formatted(.number.precision(.fractionLength(1)))) s").bold()
+                    Text("\(r.speed.averageSeconds.formatted(.number.precision(.fractionLength(1)))) s").font(.seed(.body, .bold)).foregroundStyle(Brand.ink)
                 }
                 LabeledContent("Named by the AI") {
-                    Text(r.speed.autoShare.formatted(.percent.precision(.fractionLength(0)))).bold()
+                    Text(r.speed.autoShare.formatted(.percent.precision(.fractionLength(0)))).font(.seed(.body, .bold)).foregroundStyle(Brand.ink)
                 }
                 LabeledContent("Time saved vs barcodes") {
-                    Text(Duration.seconds(saved).formatted(.units(allowed: [.hours, .minutes, .seconds], width: .abbreviated))).bold()
+                    Text(Duration.seconds(saved).formatted(.units(allowed: [.hours, .minutes, .seconds], width: .abbreviated)))
+                        .font(.seed(.body, .bold)).foregroundStyle(Brand.ink)
                 }
                 Text("Against 22 barcode scans a minute, a staffed lane's pace.")
                     .font(.seed(.caption))

@@ -40,7 +40,7 @@ struct HomeView: View {
     }
 
     private var sales: [Sale] { records.map(\.sale) }
-    private var summary: DaySummary { DaySummary.of(sales) }
+    private var summary: DaySummary { DaySummary.of(sales, catalog: app.catalog) }
 
     private var restockNotes: [String] { Restock.notes(stock: app.stock, sales: sales, catalog: app.catalog) }
 
@@ -233,7 +233,7 @@ struct HomeView: View {
                     Spacer()
                     NavigationLink(value: "history") { Text("See all").font(.seed(.subheadline, .bold)) }
                 }
-                let events = ActivityFeed.events(sales: sales, closes: closeRecords.map(\.close))
+                let events = ActivityFeed.events(sales: sales, closes: closeRecords.map(\.close), catalog: app.catalog)
                 if events.isEmpty {
                     Text("Sales, refunds and day closes show up here.").font(.seed(.subheadline)).foregroundStyle(Brand.muted)
                 } else {

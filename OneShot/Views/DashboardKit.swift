@@ -271,12 +271,12 @@ struct ActivityFeed: View {
         }
     }
 
-    static func events(sales: [Sale], closes: [DayClose], limit: Int = 6) -> [Event] {
+    static func events(sales: [Sale], closes: [DayClose], catalog: Catalog? = nil, limit: Int = 6) -> [Event] {
         let fromSales = sales.suffix(limit).map { sale in
-            let names = sale.lines.map(\.name)
+            let names = sale.lines.map { catalog?[$0.sku]?.name ?? $0.name }
             let detail = names.prefix(2).joined(separator: ", ") + (names.count > 2 ? " +\(names.count - 2)" : "")
             return sale.isRefund
-                ? Event(id: "\(sale.date.timeIntervalSince1970)-r", date: sale.date, symbol: "arrow.uturn.backward", tint: .red,
+                ? Event(id: "\(sale.date.timeIntervalSince1970)-r", date: sale.date, symbol: "arrow.uturn.backward", tint: Brand.negative,
                         title: String(localized: "Refund \((-sale.total).baht)"), detail: detail)
                 : Event(id: "\(sale.date.timeIntervalSince1970)-s", date: sale.date, symbol: sale.method == .cash ? "banknote" : "qrcode",
                         tint: Brand.accent, title: String(localized: "Sale \(sale.total.baht)"), detail: detail)
