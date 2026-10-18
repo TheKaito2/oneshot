@@ -32,13 +32,13 @@ enum SampleSales {
                 let cash = rng.below(5) < 2
                 let sale = Sale(id: UUID(), date: date, lines: lines.map {
                     SaleLine(sku: $0.product.id, name: $0.product.nameEN, quantity: $0.quantity, amount: $0.amount)
-                }, total: total, method: cash ? .cash : .promptPay, received: cash ? Cash.suggestions(for: total).last : nil,
+                }, total: total, method: cash ? .cash : .promptPay, received: cash ? Cash.suggestions(for: total).dropFirst().first : nil,
                     ringUp: 2 + Double(rng.below(40)) / 10, autoUnits: units - (rng.below(6) == 0 ? 1 : 0))
                 context.insert(SaleRecord(sale))
                 count += 1
             }
         }
-        try context.save()   // once: a save per sale froze the screen for ~270 of them
+        try SalesLog.saveOrRollBack(context)   // once: a save per sale froze the screen for ~270 of them
         return count
     }
 }

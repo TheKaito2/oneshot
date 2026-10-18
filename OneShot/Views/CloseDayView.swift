@@ -20,9 +20,10 @@ struct CloseDayView: View {
 
     private var summary: DaySummary { DaySummary.of(today.map(\.sale)) }
 
-    private var float: Decimal { Decimal(baht: floatText) ?? 0 }
+    /// Empty means no float; anything else must be an amount (a typo used to count as ฿0 and skew the difference).
+    private var float: Decimal? { floatText.trimmingCharacters(in: .whitespaces).isEmpty ? 0 : Decimal(baht: floatText) }
     private var counted: Decimal? { Decimal(baht: countedText) }
-    private var expected: Decimal { float + summary.cash }
+    private var expected: Decimal? { float.map { $0 + summary.cash } }
 
     var body: some View {
         NavigationStack {
@@ -30,8 +31,8 @@ struct CloseDayView: View {
                 Section("Today") {
                     LabeledContent("Sales", value: "\(summary.sales)")
                     if summary.refunds > 0 { LabeledContent("Refunds", value: "\(summary.refunds)") }
-                    LabeledContent("Items", value: "\(summary.items)")
-                    LabeledContent("Revenue", value: summary.revenue.baht)
+                    LabeledContent("Items sold", value: "\(summary.items)")
+                    LabeledContent("Net sales", value: summary.revenue.baht)
                     LabeledContent("Cash", value: summary.cash.baht)
                     LabeledContent("PromptPay", value: (summary.revenue - summary.cash).baht)
                 }
@@ -40,11 +41,14 @@ struct CloseDayView: View {
                     LabeledContent("Float at opening") {
                         TextField("0", text: $floatText).keyboardType(.decimalPad).multilineTextAlignment(.trailing)
                     }
-                    LabeledContent("Expected in drawer", value: expected.baht)
+                    LabeledContent("Expected in drawer", value: expected?.baht ?? "–")
+                    if float == nil {
+                        Text("Enter the float as an amount, like 500 or 500.50.").font(.seed(.caption)).foregroundStyle(Brand.negative)
+                    }
                     LabeledContent("Counted cash") {
                         TextField("Count the drawer", text: $countedText).keyboardType(.decimalPad).multilineTextAlignment(.trailing)
                     }
-                    if let counted {
+                    if let counted, let expected {
                         differenceRow(counted - expected)
                     }
                 }
@@ -59,7 +63,7 @@ struct CloseDayView: View {
                 } else {
                     Section {
                         Button("Close the day", systemImage: "moon.stars.fill") { close() }
-                            .disabled(counted == nil)
+                            .disabled(counted == nil || float == nil)
                     } footer: {
                         Text("Count the cash in the drawer first. Closing saves today's totals.")
                     }
@@ -74,7 +78,7 @@ struct CloseDayView: View {
                 if closed == nil {
                     ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Close the day") { close() }.disabled(counted == nil)
+                        Button("Close the day") { close() }.disabled(counted == nil || float == nil)
                     }
                 } else {
                     ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
@@ -94,7 +98,7 @@ struct CloseDayView: View {
     }
 
     private func close() {
-        guard let counted else { return }
+        guard let counted, let float else { return }
         let day = DayClose(date: .now, float: float, cashSales: summary.cash, counted: counted,
                            sales: summary.sales, revenue: summary.revenue)
         do {
@@ -111,7 +115,7 @@ struct CloseDayView: View {
             : (day.difference > 0 ? String(localized: "over \(day.difference.baht)") : String(localized: "short \((-day.difference).baht)"))
         return """
         OneShot · \(shopName.isEmpty ? String(localized: "Your shop") : shopName) · \(day.date.formatted(date: .abbreviated, time: .shortened))
-        \(String(localized: "Sales")) \(day.sales) · \(String(localized: "Revenue")) \(day.revenue.baht)
+        \(String(localized: "Sales")) \(day.sales) · \(String(localized: "Net sales")) \(day.revenue.baht)
         \(String(localized: "Cash")) \(summary.cash.baht) · \(String(localized: "PromptPay")) \((summary.revenue - summary.cash).baht)
         \(String(localized: "Drawer: expected")) \(day.expected.baht), \(String(localized: "counted")) \(day.counted.baht) (\(difference))
         """

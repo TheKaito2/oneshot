@@ -144,6 +144,8 @@ struct BillTests {
         #expect(Decimal(baht: "12abc") == nil)
         #expect(Decimal(baht: "") == nil)
         #expect(Decimal(baht: "-5") == nil)
+        #expect(Decimal(baht: "1,5") == nil)                // a decimal comma is refused, not read as 15
+        #expect(Decimal(baht: "12,345.50") == Decimal(string: "12345.5")!)
     }
 
     @Test func cropRectFlipsVisionOrigin() {

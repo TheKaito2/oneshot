@@ -38,8 +38,19 @@ final class AppModel {
     /// or teaching a product the bill is waiting on).
     var cameraIdle: Bool { tab != .checkout || (demo && !teaching) || (scan != nil && !scanningMore && !teaching) }
 
-    /// Picks up barcodes, prices and quick-adds saved since launch.
-    func reloadCatalog() { catalog = Catalog.load() }
+    /// Picks up barcodes, prices and quick-adds saved since launch. A product that's gone (a deleted teach) can't stay
+    /// billed at its old price: its boxes turn yellow again and its hand-added units go, so Charge waits for a pick.
+    func reloadCatalog() {
+        catalog = Catalog.load()
+        guard var open = scan else { return }
+        open.manual.removeAll { catalog[$0] == nil }
+        for index in open.regions.indices {
+            if let sku = open.regions[index].verdict.sku, catalog[sku] == nil {
+                open.regions[index].verdict = .unsure(candidates: [])
+            }
+        }
+        scan = open
+    }
 
     @MainActor
     init() { stock = StockBook.load(from: Store.context) }
@@ -77,8 +88,8 @@ final class AppModel {
 
     /// The speed race starts on an empty counter, or Ring up would be blocked while the clock runs.
     func startRace() {
+        guard scan == nil, !teaching else { return }   // callers disable it then; never wipe a sale for a race
         clearSale()
-        teaching = false
         race.start()
         tab = .checkout
     }

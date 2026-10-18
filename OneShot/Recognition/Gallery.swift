@@ -23,6 +23,8 @@ final class Gallery: @unchecked Sendable {
     private let url: URL
     /// Writes go one at a time and each writes the newest state, so an older snapshot can never land last.
     private let writes = DispatchQueue(label: "oneshot.gallery.writes")
+    /// Products deleted this session: a photo-delete rebuild still running for one must not bring it back.
+    private let removed = OSAllocatedUnfairLock<Set<String>>(initialState: [])
 
     init(url: URL = URL.documentsDirectory.appending(path: "gallery.json")) {
         self.url = url
@@ -47,6 +49,7 @@ final class Gallery: @unchecked Sendable {
 
     /// A deleted product stops voting.
     func remove(_ sku: String) {
+        removed.withLock { _ = $0.insert(sku) }
         views.withLock { $0[sku] = nil }
         persist()
     }
@@ -56,7 +59,10 @@ final class Gallery: @unchecked Sendable {
     /// `embed` is swappable because Vision's FeaturePrint doesn't run in the simulator, where the tests do.
     func rebuild(_ sku: String, embed: (URL) -> [Float]? = Gallery.embed(contentsOf:)) {
         let vectors = (Self.bundledSeeds()[sku, default: []] + CropStore.photos(for: sku)).compactMap(embed)
-        views.withLock { $0[sku] = vectors.isEmpty ? nil : vectors }
+        views.withLock { views in
+            guard !removed.withLock({ $0.contains(sku) }) else { return }   // deleted while this ran: stays deleted
+            views[sku] = vectors.isEmpty ? nil : vectors
+        }
         persist()
     }
 

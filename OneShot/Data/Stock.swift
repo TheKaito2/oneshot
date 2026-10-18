@@ -12,6 +12,13 @@ struct StockLevel: Codable, Equatable {
 /// How many of each product are on the shelf. Products never counted aren't tracked (no badge, no alert).
 struct StockBook: Equatable {
     private(set) var levels: [String: StockLevel]
+    /// Products the owner stopped tracking since the last save: only these rows are deleted (a book that failed to
+    /// load is empty, and saving it must not wipe every row).
+    private var untracked: Set<String> = []
+
+    init(levels: [String: StockLevel]) {
+        self.levels = levels
+    }
 
     @MainActor
     static func load(from context: ModelContext) -> StockBook {
@@ -28,7 +35,7 @@ struct StockBook: Equatable {
     @MainActor
     func save(to context: ModelContext) throws {
         let rows = try context.fetch(FetchDescriptor<StockRecord>())
-        for row in rows where levels[row.sku] == nil { context.delete(row) }
+        for row in rows where untracked.contains(row.sku) && levels[row.sku] == nil { context.delete(row) }
         let bySKU = Dictionary(rows.filter { levels[$0.sku] != nil }.map { ($0.sku, $0) }, uniquingKeysWith: { first, _ in first })
         for (sku, level) in levels {
             if let row = bySKU[sku] {
@@ -50,11 +57,13 @@ struct StockBook: Equatable {
 
     mutating func set(_ sku: String, count: Int, reorderAt: Int) {
         levels[sku] = StockLevel(count: max(0, count), reorderAt: max(0, reorderAt))
+        untracked.remove(sku)
     }
 
     /// Stops tracking a product: it leaves Running low and sales stop counting it down.
     mutating func untrack(_ sku: String) {
         levels[sku] = nil
+        untracked.insert(sku)
     }
 
     mutating func receive(_ sku: String, _ quantity: Int) {

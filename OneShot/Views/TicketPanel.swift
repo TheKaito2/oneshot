@@ -133,21 +133,22 @@ struct TicketPanel: View {
                 Text("\(line.product.price.baht) each").font(.seed(.subheadline)).foregroundStyle(Brand.muted).lineLimit(1)
             }
             Spacer(minLength: 4)
-            // 44 pt targets: at ~21 pt, 12 pt apart, a + on stage hit the − (or missed).
-            Button("Remove one", systemImage: "minus.circle.fill") { app.scan?.removeOne(line.product.id) }
-                .labelStyle(.iconOnly)
+            // 44 pt targets inside the labels (a frame outside a Button doesn't grow what it hits); one tight group,
+            // so the name keeps its width in the 400 pt ticket. At ~21 pt, 12 pt apart, a + on stage hit the −.
+            HStack(spacing: 0) {
+                Button { app.scan?.removeOne(line.product.id) } label: {
+                    Image(systemName: "minus.circle.fill").frame(width: 44, height: 44).contentShape(.rect)
+                }
                 .foregroundStyle(Brand.muted)
-                .frame(minWidth: 44, minHeight: 44)
-                .contentShape(.rect)
                 .accessibilityLabel(Text("Remove one \(line.product.name)"))
-            Text("\(line.quantity)").font(.seed(.headline)).foregroundStyle(Brand.ink).frame(minWidth: 22)
-            // A pack hidden under another one: the camera can't see it, the cashier can.
-            Button("Add one", systemImage: "plus.circle.fill") { app.scan?.manual.append(line.product.id) }
-                .labelStyle(.iconOnly)
-                .frame(minWidth: 44, minHeight: 44)
-                .contentShape(.rect)
+                Text("\(line.quantity)").font(.seed(.headline)).foregroundStyle(Brand.ink).frame(minWidth: 22)
+                // A pack hidden under another one: the camera can't see it, the cashier can.
+                Button { app.scan?.manual.append(line.product.id) } label: {
+                    Image(systemName: "plus.circle.fill").frame(width: 44, height: 44).contentShape(.rect)
+                }
                 .accessibilityLabel(Text("Add one \(line.product.name)"))
-            Text(line.amount.baht).font(.seed(.headline)).foregroundStyle(Brand.ink).frame(minWidth: 70, alignment: .trailing)
+            }
+            Text(line.amount.baht).font(.seed(.headline)).foregroundStyle(Brand.ink).frame(minWidth: 56, alignment: .trailing)
         }
         .font(.seed(.title3))
         .buttonStyle(.borderless)

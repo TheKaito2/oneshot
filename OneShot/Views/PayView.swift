@@ -45,6 +45,7 @@ struct PayView: View {
             }
         }
         .onAppear { voice.say(ThaiVoice.totalPhrase(total)) }
+        .onDisappear { voice.stop() }   // closed mid-sentence, the music came back only after the next payment
         .alert("Paid, but not saved to the books", isPresented: $notSaved) {
             Button("OK", action: onDone)
         } message: {
@@ -65,7 +66,7 @@ struct PayView: View {
                     .symbolEffect(.bounce, value: sale.id)
                 Text("Paid \(sale.total.baht)").font(.seed(.largeTitle, .bold))
                 if let change = sale.change, change > 0 {
-                    Text("Change \(change.baht)").font(.seed(.title2, .bold)).foregroundStyle(Brand.accent)
+                    Text("Change \(change.baht)").font(.seed(.title2, .bold)).foregroundStyle(Brand.positive)
                 }
                 ReceiptView(sale: sale, shopName: shopName, catalog: catalog)
                     .clipShape(.rect(cornerRadius: 16))
@@ -201,7 +202,9 @@ struct PayView: View {
                 .frame(maxWidth: 240)
                 // Counts as it's typed: Paid used to stay grey until Return, or record an earlier chip amount.
                 .onChange(of: receivedText) { _, text in
-                    if let amount = Decimal(baht: text), amount >= total { received = amount }
+                    guard !text.isEmpty else { return }   // a chip clears the field; its amount stays
+                    // Too little or not a number: no amount, so Paid waits (a corrected '20' used to keep an earlier 100).
+                    received = Decimal(baht: text).flatMap { $0 >= total ? $0 : nil }
                 }
                 .onSubmit {
                     if let amount = Decimal(baht: receivedText), amount >= total { take(amount) }
@@ -271,8 +274,17 @@ final class CounterVoice: NSObject, AVSpeechSynthesizerDelegate {
     }
 
     /// Ducking lasts while the session is active, so it ends by deactivating (other audio told to come back up).
+    func stop() {
+        synthesizer.stopSpeaking(at: .immediate)
+        release()
+    }
+
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         guard !synthesizer.isSpeaking else { return }
+        release()
+    }
+
+    private func release() {
         do {
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         } catch {

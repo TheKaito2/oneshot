@@ -129,6 +129,10 @@ struct HomeView: View {
                     .font(.seed(.subheadline))
                     .foregroundStyle(Brand.muted)
             }
+            // Settings lives in the sidebar; this reaches it in Split View too, where the sidebar isn't offered.
+            Button("Settings", systemImage: "gearshape") { app.tab = .settings }
+                .labelStyle(.iconOnly)
+                .buttonStyle(.glass)
         }
     }
 
@@ -183,6 +187,7 @@ struct HomeView: View {
     @ViewBuilder
     private var heroActions: some View {
         Button("Speed race", systemImage: "flag.checkered") { app.startRace() }
+            .disabled(app.scan != nil || app.teaching)   // like Checkout's: never wipes an open bill or a teach
         Button("Teach a product", systemImage: "plus.viewfinder") { app.startTeaching() }
         Button("Close the day", systemImage: "moon.stars.fill") { closingDay = true }
     }
@@ -345,6 +350,7 @@ struct HomeView: View {
         } catch is CancellationError {
             return   // the day changed underneath (a new sale); the next run writes it
         } catch {
+            guard !Task.isCancelled else { return }   // a newer run owns the card now
             aiStatus = error is TimedOut ? String(localized: "The AI took too long; here are the numbers.")
                 : String(localized: "Couldn't write an AI read of the day.")
         }

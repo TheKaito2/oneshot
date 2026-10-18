@@ -142,7 +142,9 @@ struct CheckoutView: View {
         }
         .overlay(alignment: .bottomTrailing) {
             Group {
-                if app.scanningMore {
+                if app.teaching {
+                    EmptyView()   // the bill waits under Teach; its controls come back with it
+                } else if app.scanningMore {
                     Button("Back to the bill", systemImage: "xmark") { app.scanningMore = false }
                 } else if app.scan != nil {
                     HStack(spacing: 10) {
@@ -227,10 +229,12 @@ struct CheckoutView: View {
         // The model may still be loading right after launch; the boxes are decoration, so a miss just leaves none.
         for _ in 0..<20 {
             do {
-                demoBoxes = try await camera.detect(frame)
+                let boxes = try await camera.detect(frame)
+                guard !Task.isCancelled else { return }   // Next photo was tapped meanwhile
+                demoBoxes = boxes
                 return
             } catch {
-                try? await Task.sleep(for: .milliseconds(250))
+                guard (try? await Task.sleep(for: .milliseconds(250))) != nil else { return }
             }
         }
     }
@@ -238,8 +242,10 @@ struct CheckoutView: View {
     /// What the detector sees before Ring up: the product's name (not its SKU id) and the detector's confidence.
     private func liveMarks(_ boxes: [Box]) -> [Mark] {
         boxes.enumerated().map { index, box in
-            Mark(id: index, rect: box.rect, label: "\(app.catalog[box.label]?.name ?? box.label) \(Int(box.confidence * 100))%",
-                 color: .white)
+            // Names only: with a dozen packs, "99%" on every label crowded them into each other. The HUD shows scores.
+            let name = app.catalog[box.label]?.name ?? box.label
+            return Mark(id: index, rect: box.rect, label: debugOverlay ? "\(name) \(Int(box.confidence * 100))%" : name,
+                        color: .white)
         }
     }
 
@@ -305,7 +311,7 @@ struct CheckoutView: View {
             } label: {
                 Label("Speed race", systemImage: "flag.checkered")
             }
-            .disabled(billOpen)   // GO would run a clock that Ring up can't stop
+            .disabled(app.scan != nil)   // GO would run a clock that Ring up can't stop, or wipe the bill
             PhotosPicker(selection: $photo, matching: .images) {
                 Label("Photo", systemImage: "photo")
             }

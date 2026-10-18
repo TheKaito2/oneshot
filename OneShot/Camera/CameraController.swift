@@ -146,6 +146,7 @@ final class CameraController: NSObject, @unchecked Sendable {
             self.videoQueue.async {
                 self.latestFrame = nil
                 self.smoother = BoxSmoother()   // boxes from before the pause would otherwise pop back
+                DispatchQueue.main.async { self.boxes = [] }   // after any box update posted before the stop
             }
         }
         boxes = []

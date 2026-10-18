@@ -147,8 +147,10 @@ extension Decimal {
     /// A typed amount: "25", "59.90", "1,250", "฿1,250.5". Nil for anything else, including more than 2 decimals.
     /// `Decimal(string:)` stopped at the first comma, so "1,250" saved as ฿1 (19 Oct).
     init?(baht text: String) {
-        let cleaned = text.filter { !$0.isWhitespace && $0 != "," && $0 != "฿" }
-        guard cleaned.wholeMatch(of: /\d+(\.\d{1,2})?/) != nil, let value = Decimal(string: cleaned) else { return nil }
+        // Commas only as thousands groups: "1,5" (a decimal comma) is refused rather than read as 15.
+        let trimmed = text.filter { !$0.isWhitespace && $0 != "฿" }
+        guard trimmed.wholeMatch(of: /(\d+|\d{1,3}(,\d{3})+)(\.\d{1,2})?/) != nil,
+              let value = Decimal(string: trimmed.replacingOccurrences(of: ",", with: "")) else { return nil }
         self = value
     }
 

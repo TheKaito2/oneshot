@@ -49,7 +49,7 @@ enum SalesLog {
     }
 
     /// A failed save is undone, not left pending: it used to be written by the next save, without its stock change.
-    private static func saveOrRollBack(_ context: ModelContext) throws {
+    static func saveOrRollBack(_ context: ModelContext) throws {
         do {
             try context.save()
         } catch {
@@ -146,7 +146,7 @@ struct DaySummary: Equatable {
     /// The plain summary: always shown, and the whole summary on iPads without Apple Intelligence.
     var template: String {
         guard sales > 0 else { return String(localized: "No sales yet today.") }
-        var text = String(localized: "Today: \(sales) sales, \(items) items, \(revenue.baht). Average basket \(averageBasket.baht).")
+        var text = String(localized: "Today: \(sales) sales, \(items) items, \(revenue.baht). Average sale \(averageBasket.baht).")
         if let best = topSellers.first { text += " " + String(localized: "Best seller: \(best.name) (\(best.quantity)).") }
         return text
     }

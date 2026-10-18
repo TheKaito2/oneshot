@@ -93,6 +93,12 @@ struct SettingsView: View {
                     Toggle("Demo camera: table photos instead of the camera", isOn: $app.demo)
                     Button("Add two weeks of sample sales") { addingSamples = true }
                         .disabled(!sales.isEmpty)
+                        // On the button, so the iPad popover points at it (it hung from the top of the screen).
+                        .confirmationDialog("Add two weeks of sample sales?", isPresented: $addingSamples, titleVisibility: .visible) {
+                            Button("Add sample sales") { addSamples() }
+                        } message: {
+                            Text("Made-up sales fill Home and Reports for a demo. Delete the app to remove them.")
+                        }
                     if let sampleNote {
                         Text(sampleNote).font(.seed(.caption)).foregroundStyle(Brand.muted)
                     }
@@ -117,11 +123,6 @@ struct SettingsView: View {
             }
             .gridList()
             .navigationTitle("Settings")
-            .confirmationDialog("Add two weeks of sample sales?", isPresented: $addingSamples, titleVisibility: .visible) {
-                Button("Add sample sales") { addSamples() }
-            } message: {
-                Text("Made-up sales fill Home and Reports for a demo. Delete the app to remove them.")
-            }
             .alert("Turn off the refund PIN?", isPresented: $turningOffPIN) {
                 SecureField("Current PIN", text: $pinEntry).keyboardType(.numberPad)
                 Button("Turn off", role: .destructive) {

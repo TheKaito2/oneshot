@@ -38,6 +38,19 @@ struct StoreTests {
         #expect(SalesLog.all(in: again.mainContext).map(\.total) == sales.map(\.total))   // seeded: same books every demo
     }
 
+    @Test func untrackDeletesOnlyThatRowAndAnEmptyBookDeletesNothing() throws {
+        var stock = StockBook(levels: [:])
+        stock.set("lays", count: 10, reorderAt: 4)
+        stock.set("pocky", count: 3, reorderAt: 1)
+        try stock.save(to: context)
+        try StockBook(levels: [:]).save(to: context)   // a book that failed to load must not wipe the rows
+        #expect(try context.fetchCount(FetchDescriptor<StockRecord>()) == 2)
+        stock.untrack("pocky")
+        try stock.save(to: context)
+        #expect(StockBook.load(from: context)["pocky"] == nil)
+        #expect(StockBook.load(from: context)["lays"] == StockLevel(count: 10, reorderAt: 4))
+    }
+
     @Test func stockAndClosesPersist() throws {
         var stock = StockBook(levels: [:])
         stock.set("lays", count: 10, reorderAt: 4)

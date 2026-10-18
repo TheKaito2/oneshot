@@ -1251,6 +1251,16 @@
         }
       }
     },
+    "Enter the float as an amount, like 500 or 500.50." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใส่เงินทอนตั้งต้นเป็นจำนวนเงิน เช่น 500 หรือ 500.50"
+          }
+        }
+      }
+    },
     "Enter the shop's PromptPay number once" : {
       "localizations" : {
         "th" : {
@@ -3275,18 +3285,18 @@
         }
       }
     },
-    "Today: %lld sales, %lld items, %@. Average basket %@." : {
+    "Today: %lld sales, %lld items, %@. Average sale %@." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Today: %1$lld sales, %2$lld items, %3$@. Average basket %4$@."
+            "value" : "Today: %1$lld sales, %2$lld items, %3$@. Average sale %4$@."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "วันนี้: ขาย %lld บิล %lld ชิ้น รวม %@ เฉลี่ยบิลละ %@"
+            "value" : "วันนี้: ขาย %lld บิล %lld ชิ้น รวม %@ ยอดเฉลี่ยต่อบิล %@"
           }
         }
       }
