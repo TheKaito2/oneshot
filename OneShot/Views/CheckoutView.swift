@@ -50,7 +50,7 @@ struct CheckoutView: View {
         .background(GridBackground())
         .animation(.easeOut(duration: 0.3), value: flash)
         .animation(.spring, value: app.teaching)
-        .alert("Couldn't lock", isPresented: Binding(get: { lockError != nil }, set: { if !$0 { lockError = nil } })) {
+        .alert("Couldn't ring up", isPresented: Binding(get: { lockError != nil }, set: { if !$0 { lockError = nil } })) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(lockError ?? "")
@@ -87,7 +87,7 @@ struct CheckoutView: View {
     private var scanZone: some View {
         ZStack {
             Color.black
-            if let scan = app.scan, !app.scanningMore {
+            if let scan = app.scan, !app.scanningMore, !app.teaching {
                 Image(decorative: scan.image, scale: 1)
                     .resizable()
                     .scaledToFit()
@@ -119,6 +119,7 @@ struct CheckoutView: View {
             Color.white.opacity(shutter ? 0.85 : 0).allowsHitTesting(false)
         }
         .clipShape(.rect(cornerRadius: 28, style: .continuous))
+        .onGeometryChange(for: CGSize.self) { $0.size } action: { camera.setVisibleAspect($0.width / $0.height) }
         .overlay {
             RoundedRectangle(cornerRadius: 28, style: .continuous)
                 .strokeBorder(Brand.hairline, lineWidth: 1)
@@ -154,7 +155,7 @@ struct CheckoutView: View {
                         } label: {
                             Label("Add items", systemImage: "plus")
                         }
-                        Button("Start over", systemImage: "arrow.counterclockwise") { app.scan = nil }
+                        Button("Start over", systemImage: "arrow.counterclockwise", role: .destructive) { app.clearSale() }
                     }
                 }
             }
@@ -175,10 +176,12 @@ struct CheckoutView: View {
         Group {
             if let error = camera.detectorError {
                 Text(error)
-            } else if let scan = app.scan, !app.scanningMore, let elapsed = scan.elapsed {
-                Label("\(scan.regions.count) items in \(String(format: "%.2f", elapsed.inSeconds)) s", systemImage: "bolt.fill")
             } else if app.teaching {
                 Label("Teach mode", systemImage: "plus.viewfinder")
+            } else if let scan = app.scan, !app.scanningMore, let elapsed = scan.elapsed {
+                // The last frame's count and time; after Scan more the bill also holds earlier frames.
+                Label("\(scan.regions.count { !$0.earlier }) items in \(String(format: "%.2f", elapsed.inSeconds)) s",
+                      systemImage: "bolt.fill")
             } else if app.demo {
                 Label("DEMO", systemImage: "photo")
             } else if debugOverlay {
@@ -302,9 +305,11 @@ struct CheckoutView: View {
             } label: {
                 Label("Stage timer", systemImage: "stopwatch")
             }
+            .disabled(billOpen)   // GO would run a clock that Ring up can't stop
             PhotosPicker(selection: $photo, matching: .images) {
                 Label("Photo", systemImage: "photo")
             }
+            .disabled(locking || billOpen)   // it used to replace the bill on the counter without a word
             // Presenting without the snacks, or from the simulator: table photos stand in for the camera.
             Toggle(isOn: $app.demo) {
                 Label("Demo", systemImage: "photo.on.rectangle.angled")
@@ -338,26 +343,46 @@ struct CheckoutView: View {
                 .padding(.vertical, 10)
         }
         .primaryButton()
-        .disabled(locking || camera.detectorError != nil || (app.scan != nil && !app.scanningMore) || app.teaching)
-        .opacity((app.scan != nil && !app.scanningMore) || app.teaching ? 0.4 : 1)
+        .disabled(locking || !canRingUp || billOpen || app.teaching)
+        .opacity(billOpen || app.teaching ? 0.4 : 1)
         .accessibilityLabel("Ring up the items in view")
     }
 
+    /// A frozen bill is on the counter (not reopened with Scan more).
+    private var billOpen: Bool { app.scan != nil && !app.scanningMore }
+
+    /// Something to ring up from: the demo photos, or a camera that is actually running.
+    private var canRingUp: Bool {
+        guard camera.detectorError == nil else { return false }
+        if app.demo { return true }
+        if case .running = camera.state { return true }
+        return false
+    }
+
     // MARK: - Ring up
+
+    /// Where a ring-up's items go, fixed at the tap: a new bill, or the bill that Scan more reopened.
+    /// Anything that changes the sale while the frame is in recognition (Back, Start over, Teach) wins over it.
+    private struct Target {
+        let adding: Bool
+        let saleID: UUID?
+        let tapped = Date.now
+    }
 
     private func lock() async {
         LockTip().invalidate(reason: .actionPerformed)
         locking = true
         defer { locking = false }
+        let target = Target(adding: app.scanningMore, saleID: app.scan?.id)
         let clock = ContinuousClock()
         let start = clock.now
         do {
             if app.demo, let frame = demoFrame {
-                await bill(image: frame, boxes: try await camera.detect(frame), start: start, clock: clock)
+                await bill(image: frame, boxes: try await camera.detect(frame), target: target, start: start, clock: clock)
                 return
             }
             let (image, boxes) = try await camera.lock()
-            await bill(image: image, boxes: boxes, start: start, clock: clock)
+            await bill(image: image, boxes: boxes, target: target, start: start, clock: clock)
         } catch {
             lockError = error.localizedDescription
         }
@@ -367,6 +392,7 @@ struct CheckoutView: View {
     private func billPhoto(_ item: PhotosPickerItem) async {
         locking = true
         defer { locking = false }
+        let target = Target(adding: app.scanningMore, saleID: app.scan?.id)
         let clock = ContinuousClock()
         let start = clock.now
         do {
@@ -374,7 +400,7 @@ struct CheckoutView: View {
                 lockError = String(localized: "Couldn't open that photo.")
                 return
             }
-            await bill(image: image, boxes: try await camera.detect(image), start: start, clock: clock)
+            await bill(image: image, boxes: try await camera.detect(image), target: target, start: start, clock: clock)
         } catch {
             lockError = error.localizedDescription
         }
@@ -390,14 +416,23 @@ struct CheckoutView: View {
         return UIGraphicsImageRenderer(size: size, format: format).image { _ in photo.draw(in: CGRect(origin: .zero, size: size)) }.cgImage
     }
 
-    private func bill(image: CGImage, boxes: [Box], start: ContinuousClock.Instant, clock: ContinuousClock) async {
+    private func bill(image: CGImage, boxes: [Box], target: Target, start: ContinuousClock.Instant,
+                      clock: ContinuousClock) async {
         LockTip().invalidate(reason: .actionPerformed)
         let gallery = app.gallery
         let detections = await Task.detached(priority: .userInitiated) {
             gallery.detections(in: image, boxes: boxes)
         }.value
+        // The sale moved on while this frame was being recognised: drop the frame, keep what the cashier did.
+        guard !app.teaching, app.scan?.id == target.saleID, app.scanningMore == target.adding else { return }
         var locked = LockedScan(image: image, detections: detections, catalog: app.catalog, resolver: Resolver())
         locked.elapsed = clock.now - start
+        locked.lockedAt = target.tapped   // ring-up time runs from the tap, not from when recognition finished
+        // An empty table: say so instead of freezing a bill with nothing on it.
+        guard !locked.regions.isEmpty else {
+            lockError = String(localized: "No items found. Move closer, or add them by hand.")
+            return
+        }
         app.race.billShown(items: locked.regions.count)
         if let summary = app.race.summary, app.race.phase == .done { print("race", summary) }
         let ms = (clock.now - start) / .milliseconds(1)
@@ -411,7 +446,7 @@ struct CheckoutView: View {
                       .joined(separator: ",")
                   return "\(l1)|\(l2)"
               })
-        if app.scanningMore, let earlier = app.scan {
+        if target.adding, let earlier = app.scan {
             app.scan = earlier.adding(locked)
         } else {
             app.scan = locked

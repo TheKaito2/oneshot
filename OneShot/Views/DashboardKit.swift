@@ -61,11 +61,21 @@ struct KPIRows<Content: View>: View {
 
 extension View {
     /// Chart axes in the type scale: Seed captions in muted ink on hairline grid lines, values as baht.
-    func bahtAxes() -> some View {
+    /// A time axis labels its own bucket: hours by hour, days by date. Left to Charts, two days of data read
+    /// "Oct 18 at 12 AM, Oct 18 at 12 PM…" (19 Oct).
+    func bahtAxes(time bucket: Calendar.Component? = nil, every count: Int = 1) -> some View {
         chartXAxis {
-            AxisMarks { _ in
-                AxisGridLine().foregroundStyle(Brand.hairline)
-                AxisValueLabel().font(.seed(.caption)).foregroundStyle(Brand.muted)
+            if let bucket {
+                AxisMarks(values: .stride(by: bucket, count: count)) { _ in
+                    AxisGridLine().foregroundStyle(Brand.hairline)
+                    AxisValueLabel(format: bucket == .hour ? .dateTime.hour() : .dateTime.day().month(.abbreviated))
+                        .font(.seed(.caption)).foregroundStyle(Brand.muted)
+                }
+            } else {
+                AxisMarks { _ in
+                    AxisGridLine().foregroundStyle(Brand.hairline)
+                    AxisValueLabel().font(.seed(.caption)).foregroundStyle(Brand.muted)
+                }
             }
         }
         .chartYAxis {
@@ -96,27 +106,29 @@ struct TrendCard: View {
                 legend("This period", color: Brand.accent)
                 legend("Period before", color: Brand.muted)
             }
+            // Monotone curves: Catmull-Rom overshot below ฿0 between a quiet day and a busy one (19 Oct).
             Chart {
                 ForEach(before.bars) { bar in
                     LineMark(x: .value("Time", bar.start.addingTimeInterval(shift), unit: bucket),
                              y: .value("Baht", bar.net.double), series: .value("Series", "before"))
-                        .interpolationMethod(.catmullRom)
+                        .interpolationMethod(.monotone)
                         .foregroundStyle(Brand.muted)
                         .lineStyle(StrokeStyle(lineWidth: 2, lineCap: .round, dash: [5, 6]))
                 }
                 ForEach(report.bars) { bar in
                     AreaMark(x: .value("Time", bar.start, unit: bucket), yStart: .value("Baht", 0), yEnd: .value("Baht", bar.net.double))
-                        .interpolationMethod(.catmullRom)
+                        .interpolationMethod(.monotone)
                         .foregroundStyle(Brand.accent.opacity(0.08))
                 }
                 ForEach(report.bars) { bar in
                     LineMark(x: .value("Time", bar.start, unit: bucket), y: .value("Baht", bar.net.double), series: .value("Series", "now"))
-                        .interpolationMethod(.catmullRom)
+                        .interpolationMethod(.monotone)
                         .foregroundStyle(Brand.accent)
                         .lineStyle(StrokeStyle(lineWidth: 3, lineCap: .round))
                 }
             }
-            .bahtAxes()
+            // About seven labels whatever the period: every 3 hours today, every day this week, every 5 this month.
+            .bahtAxes(time: bucket, every: bucket == .hour ? 3 : max(1, (report.bars.count + 6) / 7))
             .frame(height: 240)
         }
         .card(padding: 20)

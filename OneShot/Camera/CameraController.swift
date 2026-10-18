@@ -33,6 +33,8 @@ final class CameraController: NSObject, @unchecked Sendable {
     @ObservationIgnored private let videoQueue = DispatchQueue(label: "oneshot.camera.video")
     @ObservationIgnored private let videoOutput = AVCaptureVideoDataOutput()
     @ObservationIgnored private let orientation = OSAllocatedUnfairLock(initialState: CGImagePropertyOrientation.up)
+    /// Width / height of the scan zone. The preview fills the zone (aspect fill), so this is the part of the frame on screen.
+    @ObservationIgnored private let visibleAspect = OSAllocatedUnfairLock<CGFloat?>(initialState: nil)
     // Touched only on videoQueue.
     @ObservationIgnored private var frameCount = 0
     @ObservationIgnored private var windowStart = CACurrentMediaTime()
@@ -59,6 +61,12 @@ final class CameraController: NSObject, @unchecked Sendable {
     /// and phones still turn yellow. Packs the detector misses still reach the Resolver through the Splitter.
     private static let lockFloor = 0.25
     private static let liveFloor: Float = 0.25
+
+    /// Fed from the scan zone's size, so a lock bills what the cashier sees and nothing past the zone's edges.
+    func setVisibleAspect(_ aspect: CGFloat) {
+        guard aspect.isFinite, aspect > 0 else { return }
+        visibleAspect.withLock { $0 = aspect }
+    }
 
     /// Fed from the preview's rotation, so the model sees the frame the way the screen shows it.
     func setPreviewAngle(_ angle: CGFloat) {
@@ -130,12 +138,17 @@ final class CameraController: NSObject, @unchecked Sendable {
 
     /// Frees the camera for the barcode scanner, and saves power while a bill is open. The kept frame is dropped
     /// so a lock right after `resume()` can never bill a stale picture.
+    /// The clear is queued after stopRunning returns, so a frame delivered during the stop can't survive it (a quick
+    /// Scan more used to bill the previous frame's items a second time).
     func pause() {
-        sessionQueue.async { self.session.stopRunning() }
-        videoQueue.async {
-            self.latestFrame = nil
-            self.smoother = BoxSmoother()   // boxes from before the pause would otherwise pop back
+        sessionQueue.async {
+            self.session.stopRunning()
+            self.videoQueue.async {
+                self.latestFrame = nil
+                self.smoother = BoxSmoother()   // boxes from before the pause would otherwise pop back
+            }
         }
+        boxes = []
     }
 
     func resume() {
@@ -171,10 +184,20 @@ final class CameraController: NSObject, @unchecked Sendable {
             throw Failure(message: String(localized: "The camera is still starting. Try again in a second."))
         }
         let upright = CIImage(cvPixelBuffer: frame).oriented(orientation.withLock { $0 })
-        guard let image = ciContext.createCGImage(upright, from: upright.extent) else {
+        // What you see is what you bill: the preview crops the frame to the zone, so the lock does too. Billing the
+        // full frame used to box packs past the zone's edges, and the frozen frame shrank into a letterbox.
+        let shown = visibleAspect.withLock { $0 }.map { Self.centred(aspect: $0, in: upright.extent) } ?? upright.extent
+        guard let image = ciContext.createCGImage(upright, from: shown) else {
             throw Failure(message: String(localized: "Couldn't freeze the camera frame."))
         }
         return image
+    }
+
+    /// The largest rect of `aspect` (width / height) centred in `extent`, on whole pixels: what aspect fill shows.
+    static func centred(aspect: CGFloat, in extent: CGRect) -> CGRect {
+        let width = min(extent.width, extent.height * aspect), height = width / aspect
+        return CGRect(x: extent.midX - width / 2, y: extent.midY - height / 2, width: width, height: height).integral
+            .intersection(extent)
     }
 
     /// Camera stalls show up in the console with their cause (multitasking, another app, thermal…).
@@ -233,7 +256,8 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 self.detectMs = ms
             }
         } catch {
-            publishDetectorError(error)
+            // One bad frame is skipped. Only a model that fails to load disables Ring up (it used to stay off until relaunch).
+            print("live detect failed: \(error)")
         }
     }
 

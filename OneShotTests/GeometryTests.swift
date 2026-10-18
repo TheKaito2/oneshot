@@ -31,3 +31,14 @@ struct GeometryTests {
         [a.minX - b.minX, a.minY - b.minY, a.width - b.width, a.height - b.height].allSatisfy { abs($0) < 0.05 }
     }
 }
+
+struct VisibleCropTests {
+    @Test func aspectFillCropIsCentredAndInside() {
+        let frame = CGRect(x: 0, y: 0, width: 1080, height: 1920)   // portrait camera frame
+        let wide = CameraController.centred(aspect: 2, in: frame)     // a wide, short scan zone
+        #expect(wide == CGRect(x: 0, y: 690, width: 1080, height: 540))
+        let tall = CameraController.centred(aspect: 0.25, in: frame)  // taller than the frame: full height, narrower
+        #expect(tall == CGRect(x: 300, y: 0, width: 480, height: 1920))
+        #expect(CameraController.centred(aspect: 1080.0 / 1920.0, in: frame) == frame)
+    }
+}

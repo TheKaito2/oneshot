@@ -213,6 +213,8 @@ struct ProductPhoto: View {
     @State private var image: UIImage?
     /// A transparent packshot: shown whole on a card swatch rather than cropped to fill.
     @State private var isCutout = false
+    /// The badge scales with the picture: at a fixed 12 pt it covered a 26 pt table thumbnail (19 Oct).
+    @State private var side: CGFloat = 64
 
     var body: some View {
         // Sized by the clear base: a filled photo reports a bigger size than its slot, which put the badge off-screen.
@@ -235,15 +237,16 @@ struct ProductPhoto: View {
             // The two Nori bags look the same in a thumbnail; the name truncates before "(M)".
             if let size = product.size {
                 Text(verbatim: size)
-                    .font(.seed(.caption, .heavy))
+                    .font(.seed(size: min(12, max(7, side * 0.2)), .heavy, relativeTo: .caption))
                     .foregroundStyle(Brand.canvas)
-                    .padding(.horizontal, 6)
+                    .padding(.horizontal, side < 40 ? 3 : 6)
                     .padding(.vertical, 1)
                     .background(Brand.ink, in: .capsule)
-                    .padding(4)
+                    .padding(side < 40 ? 1 : 4)
                     .accessibilityLabel(Text("Size \(size)"))
             }
         }
+        .onGeometryChange(for: CGFloat.self) { min($0.size.width, $0.size.height) } action: { side = $0 }
         .task(id: product.id) {
             let sku = product.id
             (image, isCutout) = await Task.detached(priority: .utility) {

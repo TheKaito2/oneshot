@@ -171,11 +171,7 @@ struct HomeView: View {
     /// The hero's secondary actions: one row when they fit, else stacked (large text, Thai, a docked sidebar).
     @ViewBuilder
     private var heroActions: some View {
-        Button("Speed race", systemImage: "flag.checkered") {
-            app.reloadCatalog()
-            app.race.start()
-            app.tab = .checkout
-        }
+        Button("Speed race", systemImage: "flag.checkered") { app.startRace() }
         Button("Teach a product", systemImage: "plus.viewfinder") { app.startTeaching() }
         Button("Close the day", systemImage: "moon.stars") { closingDay = true }
     }

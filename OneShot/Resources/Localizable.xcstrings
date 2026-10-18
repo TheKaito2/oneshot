@@ -67,17 +67,6 @@
         }
       }
     },
-    "%lld items" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld ชิ้น"
-          }
-        }
-      }
-    },
     "%lld items in %@ s" : {
       "localizations" : {
         "en" : {
@@ -158,17 +147,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เหลือบนชั้น %lld"
-          }
-        }
-      }
-    },
-    "%lld sales" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld บิล"
           }
         }
       }
@@ -345,6 +323,36 @@
         }
       }
     },
+    "Add sample sales" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่มยอดขายตัวอย่าง"
+          }
+        }
+      }
+    },
+    "Add two weeks of sample sales" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่มยอดขายตัวอย่าง 2 สัปดาห์"
+          }
+        }
+      }
+    },
+    "Add two weeks of sample sales?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่มยอดขายตัวอย่าง 2 สัปดาห์ไหม"
+          }
+        }
+      }
+    },
     "Add what you pay for each product in Products to see profit." : {
       "localizations" : {
         "th" : {
@@ -355,34 +363,22 @@
         }
       }
     },
+    "Added %lld sample sales." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่มยอดขายตัวอย่าง %lld รายการแล้ว"
+          }
+        }
+      }
+    },
     "Against 22 barcode scans a minute, a staffed lane's pace." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "เทียบกับการสแกนบาร์โค้ดนาทีละ 22 ชิ้น ความเร็วของแคชเชียร์ทั่วไป"
-          }
-        }
-      }
-    },
-    "Against 22 barcode scans a minute, a staffed lane's pace. Run a speed race for your own." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เทียบกับการสแกนบาร์โค้ดนาทีละ 22 ชิ้น ความเร็วของแคชเชียร์ทั่วไป ลองแข่งความเร็วเพื่อวัดของร้านคุณเอง"
-          }
-        }
-      }
-    },
-    "Against your race's barcode pace: %@ s an item." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เทียบกับความเร็วบาร์โค้ดจากการแข่งของคุณ: ชิ้นละ %@ วินาที"
           }
         }
       }
@@ -1075,6 +1071,16 @@
         }
       }
     },
+    "Demo camera: table photos instead of the camera" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กล้องเดโม: ใช้รูปโต๊ะแทนกล้อง"
+          }
+        }
+      }
+    },
     "Didn't sell" : {
       "localizations" : {
         "th" : {
@@ -1251,6 +1257,16 @@
         }
       }
     },
+    "For presenting without the snacks, or from the simulator. Sample sales can only be added while the books are empty, so they never mix with real ones." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สำหรับนำเสนอเมื่อไม่มีขนม หรือจากซิมูเลเตอร์ เพิ่มยอดขายตัวอย่างได้เฉพาะตอนที่ยังไม่มียอดขายจริง จึงไม่ปนกัน"
+          }
+        }
+      }
+    },
     "From the sales recorded by OneShot on the shop's iPad. PromptPay amounts can be matched with the shop's bank statement." : {
       "localizations" : {
         "th" : {
@@ -1317,17 +1333,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ถือ iPad เหนือสินค้า แล้วแตะคิดเงิน"
-          }
-        }
-      }
-    },
-    "Hold over the items, then tap 🔒" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ถือ iPad เหนือสินค้า แล้วแตะ 🔒"
           }
         }
       }
@@ -1462,6 +1467,16 @@
         }
       }
     },
+    "Learned from %lld photos" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เรียนรู้จาก %lld รูป"
+          }
+        }
+      }
+    },
     "Learned from ^[%lld photo](inflect: true)" : {
       "localizations" : {
         "th" : {
@@ -1498,6 +1513,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "สร้างเมื่อ %@"
+          }
+        }
+      }
+    },
+    "Made-up sales fill Home and Reports for a demo. Delete the app to remove them." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขายสมมติจะแสดงในหน้าหลักและรายงานเพื่อการสาธิต ลบแอปเพื่อล้างข้อมูลนี้"
           }
         }
       }
@@ -2028,17 +2053,6 @@
         }
       }
     },
-    "Prices and learned photos" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ราคาและรูปที่เรียนรู้"
-          }
-        }
-      }
-    },
     "Products" : {
       "localizations" : {
         "th" : {
@@ -2265,17 +2279,6 @@
         }
       }
     },
-    "Refunds ask for this PIN. To change it, turn it off and set a new one. Forgot it? Back up the books, reinstall OneShot, then put them back." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "การคืนเงินต้องใส่ PIN นี้ หากต้องการเปลี่ยน ให้ปิดแล้วตั้งใหม่ ลืม PIN? สำรองข้อมูลบัญชี ติดตั้ง OneShot ใหม่ แล้วนำข้อมูลกลับมา"
-          }
-        }
-      }
-    },
     "Remove one" : {
       "localizations" : {
         "th" : {
@@ -2436,17 +2439,6 @@
         }
       }
     },
-    "Sales by payment type" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ยอดขายตามวิธีชำระเงิน"
-          }
-        }
-      }
-    },
     "Sales statement" : {
       "localizations" : {
         "th" : {
@@ -2483,17 +2475,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ยอดขาย การคืนเงิน การปิดยอด และสต็อก เป็นไฟล์ 3 ไฟล์ ควรเก็บไว้นอกโฟลเดอร์ OneShot เช่นใน iCloud Drive หากจะนำกลับมา ให้คัดลอกไฟล์ไปไว้ในโฟลเดอร์ OneShot ในแอปไฟล์ แล้วปิด OneShot จากตัวสลับแอปแล้วเปิดใหม่"
-          }
-        }
-      }
-    },
-    "Sales, refunds, day closes and stock as 3 files. To put them back, copy them into OneShot's folder in the Files app and reopen OneShot." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ยอดขาย การคืนเงิน การปิดยอดรายวัน และสต็อก เป็นไฟล์ 3 ไฟล์ หากต้องการนำกลับมา ให้คัดลอกไปไว้ในโฟลเดอร์ของ OneShot ในแอปไฟล์ แล้วเปิด OneShot ใหม่"
           }
         }
       }
@@ -2544,6 +2525,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "พูดอีกครั้ง"
+          }
+        }
+      }
+    },
+    "Scan again" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สแกนใหม่"
           }
         }
       }
@@ -3024,17 +3015,6 @@
         }
       }
     },
-    "Time a ring-up next to the cashier video" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "จับเวลาการคิดเงินเทียบกับวิดีโอแคชเชียร์"
-          }
-        }
-      }
-    },
     "Time saved vs barcodes" : {
       "localizations" : {
         "th" : {
@@ -3311,34 +3291,12 @@
         }
       }
     },
-    "vs last month so far" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เทียบช่วงเดียวกันของเดือนที่แล้ว"
-          }
-        }
-      }
-    },
     "vs last week" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "เทียบสัปดาห์ที่แล้ว"
-          }
-        }
-      }
-    },
-    "vs last week so far" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เทียบช่วงเดียวกันของสัปดาห์ที่แล้ว"
           }
         }
       }
@@ -3359,17 +3317,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เทียบเมื่อวาน"
-          }
-        }
-      }
-    },
-    "vs yesterday at this time" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เทียบกับเมื่อวานเวลาเดียวกัน"
           }
         }
       }

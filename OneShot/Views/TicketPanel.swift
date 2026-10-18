@@ -72,7 +72,7 @@ struct TicketPanel: View {
                 }
             }, onDone: {
                 paying = false
-                clearSale()
+                app.clearSale()
             })
         }
     }
@@ -206,7 +206,7 @@ struct TicketPanel: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             HStack {
-                Button("Clear", role: .destructive) { clearSale() }
+                Button("Start over", role: .destructive) { app.clearSale() }
                     .buttonStyle(.glass)
                     .disabled(app.scan == nil)
                 // Never a QR for a sale with unchecked items.
@@ -217,18 +217,12 @@ struct TicketPanel: View {
                     Label("Charge \(total.baht)", systemImage: "qrcode").frame(maxWidth: .infinity)
                 }
                 .primaryButton()
-                .disabled(!unsure.isEmpty || total <= 0)
+                // Not mid Scan more: a frame still on its way would change the total under the QR.
+                .disabled(!unsure.isEmpty || total <= 0 || app.scanningMore)
             }
             .controlSize(.large)
         }
         .padding(16)
-    }
-
-    /// Back to a live scan zone for the next customer.
-    private func clearSale() {
-        app.scan = nil
-        app.reloadCatalog()   // barcodes assigned in the pick list
-        if app.race.phase == .done { app.race.reset() }
     }
 
     private func pick(_ region: Region, as sku: String) {

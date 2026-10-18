@@ -33,8 +33,9 @@ final class AppModel {
     let gallery = Gallery()
     let race = Race()
 
-    /// The camera rests whenever nothing needs it live: another tab or a frozen sale (unless scanning more into it).
-    var cameraIdle: Bool { tab != .checkout || (demo && !teaching) || (scan != nil && !scanningMore) }
+    /// The camera rests whenever nothing needs it live: another tab or a frozen sale (unless scanning more into it,
+    /// or teaching a product the bill is waiting on).
+    var cameraIdle: Bool { tab != .checkout || (demo && !teaching) || (scan != nil && !scanningMore && !teaching) }
 
     /// Picks up barcodes, prices and quick-adds saved since launch.
     func reloadCatalog() { catalog = Catalog.load() }
@@ -57,9 +58,26 @@ final class AppModel {
         }
     }
 
+    /// Opens Teach a product. An open bill stays: teach the unknown pack, then pick it on the bill (it used to be
+    /// wiped without a word).
     func startTeaching() {
-        scan = nil
+        scanningMore = false
         teaching = true
+        tab = .checkout
+    }
+
+    /// Back to a live scan zone for the next customer: Start over, New sale and the speed race all come here.
+    func clearSale() {
+        scan = nil
+        reloadCatalog()   // barcodes assigned in the pick list
+        if race.phase == .done { race.reset() }
+    }
+
+    /// The speed race starts on an empty counter, or Ring up would be blocked while the clock runs.
+    func startRace() {
+        clearSale()
+        teaching = false
+        race.start()
         tab = .checkout
     }
 }

@@ -41,9 +41,11 @@ struct RootView: View {
             Tab("Reports", systemImage: "chart.bar.xaxis", value: AppModel.Tab.reports) {
                 ReportsView(app: app)
             }
+            // Sidebar only: five titles overflow the portrait tab bar and hid Settings behind a chevron (19 Oct).
             Tab("Settings", systemImage: "gearshape.fill", value: AppModel.Tab.settings) {
                 SettingsView(app: app)
             }
+            .tabPlacement(.sidebarOnly)
         }
         .tabViewStyle(.sidebarAdaptable)
         .environment(\.font, .seed(.body))
