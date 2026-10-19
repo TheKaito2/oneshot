@@ -3746,6 +3746,16 @@
           }
         }
       }
+    },
+    "The simulator has no camera here. Turn on Demo to ring up table photos." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ซิมูเลเตอร์ไม่มีกล้อง เปิดเดโมเพื่อคิดเงินจากรูปโต๊ะ"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
