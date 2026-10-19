@@ -40,9 +40,14 @@ final class Detector {
         guard let url = Bundle.main.url(forResource: "Detector", withExtension: "mlmodelc") else {
             throw Failure(errorDescription: "Detector.mlmodelc is missing from the app bundle.")
         }
-        let model = try VNCoreMLModel(for: MLModel(contentsOf: url, configuration: MLModelConfiguration()))
+        let configuration = MLModelConfiguration()
+        #if targetEnvironment(simulator)
+        configuration.computeUnits = .cpuOnly   // the simulator's GPU path aborts the app (see onCPUInSimulator)
+        #endif
+        let model = try VNCoreMLModel(for: MLModel(contentsOf: url, configuration: configuration))
         model.featureProvider = Thresholds(confidence: floor)
         request = VNCoreMLRequest(model: model)
+        request.onCPUInSimulator()
         // Letterbox like Ultralytics training does; a centre crop would cut items at the frame edges.
         request.imageCropAndScaleOption = .scaleFit
     }
@@ -64,6 +69,23 @@ final class Detector {
             Box(rect: observation.boundingBox,
                 guesses: observation.labels.prefix(3).map { Guess(label: $0.identifier, confidence: $0.confidence) })
         }
+    }
+}
+
+extension VNRequest {
+    /// In the simulator, Vision's GPU (MPSGraph) backend throws a C++ exception on this macOS ("MpsGraph backend
+    /// validation on incompatible OS"); out of the detector's `perform` it aborted the app (SIGABRT, 19 Oct).
+    /// Only the detector uses this: FeaturePrint on the simulator's CPU returns identical vectors for every image,
+    /// so the gallery is left to fail cleanly there (the detector alone names the demo tables).
+    func onCPUInSimulator() {
+        #if targetEnvironment(simulator)
+        guard let stages = try? supportedComputeStageDevices else { return }
+        for (stage, devices) in stages {
+            if let cpu = devices.first(where: { if case .cpu = $0 { true } else { false } }) {
+                setComputeDevice(cpu, for: stage)
+            }
+        }
+        #endif
     }
 }
 
