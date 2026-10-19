@@ -43,6 +43,11 @@ final class Detector {
         let configuration = MLModelConfiguration()
         #if targetEnvironment(simulator)
         configuration.computeUnits = .cpuOnly   // the simulator's GPU path aborts the app (see onCPUInSimulator)
+        #else
+        // GPU, not the Neural Engine: on the hackathon's iPad Pro, perform aborted inside Vision on live frames
+        // (SIGABRT from captureOutput, 19 Oct) while the iPad Air ran fine; the ANE compile differs per chip and its
+        // failures can't be caught. The GPU keeps 15 Hz detection with room to spare.
+        configuration.computeUnits = .cpuAndGPU
         #endif
         let model = try VNCoreMLModel(for: MLModel(contentsOf: url, configuration: configuration))
         model.featureProvider = Thresholds(confidence: floor)
