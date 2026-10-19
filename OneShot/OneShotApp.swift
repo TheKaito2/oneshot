@@ -56,11 +56,13 @@ struct RootView: View {
             // Load the on-device model now, so Home's first insight doesn't pay for it (Foundation Lab "BasicPrewarming").
             if SystemLanguageModel.default.availability == .available { LanguageModelSession().prewarm() }
             let gallery = app.gallery
-            Task.detached(priority: .utility) {
+            // On the camera's queue, after the detector: the first launch after an install compiles every model for
+            // this iPad, and compiling them on two threads at once froze the app (fine again after a relaunch).
+            await app.camera.start()   // queues the detector load first
+            app.camera.afterModelLoad {
                 Splitter.warmUp()
                 gallery.seedFromBundle()
             }
-            await app.camera.start()
             if app.cameraIdle { app.camera.pause() }
         }
         .onChange(of: app.cameraIdle) { _, idle in

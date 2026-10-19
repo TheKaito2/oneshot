@@ -73,6 +73,12 @@ final class CameraController: NSObject, @unchecked Sendable {
         orientation.withLock { $0 = CGImagePropertyOrientation(rotationAngle: angle) }
     }
 
+    /// Runs `work` on the camera's queue once the detector has loaded, so no two models ever load at the same time.
+    /// Frames that arrive meanwhile are dropped (alwaysDiscardsLateVideoFrames).
+    func afterModelLoad(_ work: @escaping @Sendable () -> Void) {
+        videoQueue.async(execute: work)
+    }
+
     @MainActor
     func start() async {
         guard state == .idle else { return }
