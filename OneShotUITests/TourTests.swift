@@ -70,6 +70,7 @@ final class TourTests: XCTestCase {
                 sleep(3)
                 shot("\(o)-06-scan-more")
                 ringUp.tap()
+                if !addItems.waitForExistence(timeout: 15), ringUp.isEnabled { ringUp.tap() }   // swallowed, like the tabs
                 XCTAssertTrue(addItems.waitForExistence(timeout: 30), "no merged bill after the second Ring up")
                 sleep(1)
                 shot("\(o)-07-bill-merged")
@@ -140,8 +141,8 @@ final class TourTests: XCTestCase {
         target.tap()
         sleep(2)
         // A tap during the previous page's scroll momentum is swallowed (seen on a loaded Mac, 20 Oct): once more.
-        if candidates[0].exists, !candidates[0].isSelected {
-            candidates[0].tap()
+        if target.exists, target.isHittable, !target.isSelected {
+            target.tap()
             sleep(2)
         }
     }
