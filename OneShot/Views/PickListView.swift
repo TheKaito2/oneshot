@@ -110,7 +110,7 @@ struct PickListView: View {
                 try Catalog.assignBarcode(pendingBarcode, to: sku)
             } catch {
                 // The pick still goes through; only the shortcut for next time is lost.
-                print("barcode assign failed: \(error)")
+                Log.error("barcode assign failed: \(error)")
             }
         }
         onPick(sku)

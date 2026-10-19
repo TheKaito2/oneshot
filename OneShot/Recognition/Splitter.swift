@@ -69,9 +69,9 @@ enum Splitter {
         do {
             _ = try instances(in: blank)
             _ = try Gallery.embed(blank)
-            print(String(format: "warmup ms=%.0f", (CACurrentMediaTime() - start) * 1000))
+            Log.info(String(format: "warmup ms=%.0f", (CACurrentMediaTime() - start) * 1000))
         } catch {
-            print("warmup failed: \(error)")
+            Log.error("warmup failed: \(error)")
         }
     }
 }

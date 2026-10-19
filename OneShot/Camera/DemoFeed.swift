@@ -11,7 +11,7 @@ enum DemoFeed {
     static func frame(_ index: Int) -> CGImage? {
         let name = "demo-\(index % count + 1)"
         guard let url = Bundle.main.url(forResource: name, withExtension: "jpg") else {
-            print("missing \(name).jpg")
+            Log.error("missing \(name).jpg")
             return nil
         }
         return UIImage(contentsOfFile: url.path())?.cgImage

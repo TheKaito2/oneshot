@@ -28,15 +28,23 @@ final class Gallery: @unchecked Sendable {
 
     init(url: URL = URL.documentsDirectory.appending(path: "gallery.json")) {
         self.url = url
-        var stored: [String: [[Float]]] = [:]
-        if FileManager.default.fileExists(atPath: url.path()) {
-            do {
-                stored = try JSONDecoder().decode([String: [[Float]]].self, from: Data(contentsOf: url))
-            } catch {
-                print("gallery.json unreadable, starting empty: \(error)")
-            }
+        views = OSAllocatedUnfairLock(initialState: Self.read(url))
+    }
+
+    /// After a restore replaced gallery.json.
+    func reload() {
+        let stored = Self.read(url)
+        views.withLock { $0 = stored }
+    }
+
+    private static func read(_ url: URL) -> [String: [[Float]]] {
+        guard FileManager.default.fileExists(atPath: url.path()) else { return [:] }
+        do {
+            return try JSONDecoder().decode([String: [[Float]]].self, from: Data(contentsOf: url))
+        } catch {
+            Log.error("gallery.json unreadable, starting empty: \(error)")
+            return [:]
         }
-        views = OSAllocatedUnfairLock(initialState: stored)
     }
 
     var isEmpty: Bool { views.withLock { $0.isEmpty } }
@@ -75,7 +83,7 @@ final class Gallery: @unchecked Sendable {
             do {
                 try JSONEncoder().encode(snapshot).write(to: url, options: .atomic)
             } catch {
-                print("gallery save failed: \(error)")
+                Log.error("gallery save failed: \(error)")
             }
         }
     }
@@ -88,7 +96,7 @@ final class Gallery: @unchecked Sendable {
         for (sku, urls) in files {
             add(urls.compactMap(Self.embed(contentsOf:)), to: sku)
         }
-        if !files.isEmpty { print("gallery seeded: \(files.count) products") }
+        if !files.isEmpty { Log.info("gallery seeded: \(files.count) products") }
     }
 
     /// The bundled seed photos by SKU.
@@ -109,7 +117,7 @@ final class Gallery: @unchecked Sendable {
         do {
             return try embed(image)
         } catch {
-            print("embed failed (\(url.lastPathComponent)): \(error)")
+            Log.error("embed failed (\(url.lastPathComponent)): \(error)")
             return nil
         }
     }
@@ -129,7 +137,7 @@ final class Gallery: @unchecked Sendable {
             }
             candidates += missed.map { (rect: $0, detector: []) }
         } catch {
-            print("splitter failed: \(error)")
+            Log.error("splitter failed: \(error)")
         }
         let galleryEmpty = isEmpty
         return candidates.compactMap { candidate in
@@ -140,7 +148,7 @@ final class Gallery: @unchecked Sendable {
                 do {
                     gallery = nearest(to: try Self.embed(crop))
                 } catch {
-                    print("embed failed: \(error)")
+                    Log.error("embed failed: \(error)")
                 }
             }
             return Detection(rect: candidate.rect, crop: crop, detector: candidate.detector, gallery: gallery)

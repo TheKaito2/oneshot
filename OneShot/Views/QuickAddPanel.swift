@@ -125,7 +125,7 @@ struct QuickAddPanel: View {
                 else { return nil }
                 return Shot(frame: image, item: item, crop: crop, vector: try Gallery.embed(crop))
             }.value
-            print(String(format: "quickadd shot ms=%.0f found=%d", (ContinuousClock.now - start) / .milliseconds(1), shot == nil ? 0 : 1))
+            Log.info(String(format: "quickadd shot ms=%.0f found=%d", (ContinuousClock.now - start) / .milliseconds(1), shot == nil ? 0 : 1))
             if let shot {
                 shots.append(shot)
                 note = nil

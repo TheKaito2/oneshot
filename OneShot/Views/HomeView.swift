@@ -202,8 +202,6 @@ struct HomeView: View {
     /// The hero's secondary actions: one row when they fit, else stacked (large text, Thai, a docked sidebar).
     @ViewBuilder
     private var heroActions: some View {
-        Button("Speed race", systemImage: "flag.checkered") { app.startRace() }
-            .disabled(app.scan != nil || app.teaching)   // like Checkout's: never wipes an open bill or a teach
         Button("Teach a product", systemImage: "plus.viewfinder") { app.startTeaching() }
         Button("Close the day", systemImage: "moon.stars.fill") { closingDay = true }
     }

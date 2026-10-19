@@ -69,7 +69,7 @@ struct TicketPanel: View {
                     return sale
                 } catch {
                     // The customer has paid: PayView says so, and the next customer isn't blocked.
-                    print("sale not logged: \(error)")
+                    Log.error("sale not logged: \(error)")
                     return nil
                 }
             }, onDone: {
@@ -101,12 +101,6 @@ struct TicketPanel: View {
 
     private var items: some View {
         LazyVStack(alignment: .leading, spacing: 10) {
-            if app.race.phase == .done, let summary = app.race.summary {
-                Label(summary, systemImage: "flag.checkered")
-                    .font(.seed(.headline))
-                    .foregroundStyle(Brand.accent)
-                    .card(padding: 12)
-            }
             if !unsure.isEmpty {
                 Text("Check these").eyebrow().padding(.top, 4)
                 TipView(UnsureTip())
@@ -268,7 +262,7 @@ struct TicketPanel: View {
             do {
                 gallery.add([try Gallery.embed(crop)], to: sku)
             } catch {
-                print("pick embed failed: \(error)")
+                Log.error("pick embed failed: \(error)")
             }
         }
         picking = nil

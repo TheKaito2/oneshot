@@ -212,7 +212,7 @@ enum Store {
         do {
             return (try make(), nil)
         } catch {
-            print("store not opened, setting it aside: \(error)")
+            Log.error("store not opened, setting it aside: \(error)")
         }
         let store = configuration.url
         let folder = store.deletingLastPathComponent()
@@ -258,7 +258,7 @@ enum Store {
                 try FileManager.default.moveItem(at: url, to: done)
             } catch {
                 context.rollback()
-                print("\(name) not imported: \(error)")
+                Log.error("\(name) not imported: \(error)")
             }
         }
         take("sales.json", as: [Sale].self) { sales in
@@ -280,10 +280,16 @@ enum Store {
         }
     }
 
-    /// Writes the books as the three files `importLegacyJSON` reads, so restoring is: put them in OneShot's folder in
-    /// the Files app (Documents) and reopen the app. Throws rather than write a backup with anything missing.
+    /// The shop's own files beside the books, in Documents: taught products, price and cost changes, barcodes, the
+    /// gallery's vectors and the photos they came from. A backup without them loses every taught product.
+    nonisolated static let shopFiles = ["quickadd.json", "prices.json", "costs.json", "barcodes.json", "gallery.json", "Crops"]
+
+    /// Writes the books as the three files `importLegacyJSON` reads, plus a copy of the shop files that exist.
+    /// Restore with `restore(from:)`, or by hand: put them in OneShot's folder in the Files app and reopen the app.
+    /// Throws rather than write a backup with anything missing.
     /// Nonisolated, on its own context: a big shop's books take seconds, so call it off the main actor.
-    nonisolated static func backUp(_ container: ModelContainer, to folder: URL) throws -> [URL] {
+    nonisolated static func backUp(_ container: ModelContainer, to folder: URL,
+                                   documents: URL = .documentsDirectory) throws -> [URL] {
         let context = ModelContext(container)
         let sales = try context.fetch(FetchDescriptor<SaleRecord>(sortBy: [SortDescriptor(\.date)])).map(\.sale)
         let closes = try context.fetch(FetchDescriptor<CloseRecord>(sortBy: [SortDescriptor(\.date)])).map(\.close)
@@ -292,10 +298,50 @@ enum Store {
                      ("closings.json", try JSONEncoder().encode(closes)),
                      ("stock.json", try JSONEncoder().encode(Dictionary(stock, uniquingKeysWith: { first, _ in first })))]
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        return try files.map { name, data in
+        let books = try files.map { name, data in
             let url = folder.appending(path: name)
             try data.write(to: url, options: .atomic)
             return url
+        }
+        return books + (try copyShopFiles(from: documents, to: folder))
+    }
+
+    /// What a backup folder holds, for the restore preview.
+    struct BackupSummary: Equatable {
+        var sales = 0, closes = 0, products = 0, photos = 0
+    }
+
+    nonisolated static func summary(of backup: URL) -> BackupSummary {
+        func count<T: Decodable>(_ name: String, _ type: [T].Type) -> Int {
+            (try? JSONDecoder().decode(type, from: Data(contentsOf: backup.appending(path: name))).count) ?? 0
+        }
+        let crops = FileManager.default.enumerator(at: backup.appending(path: "Crops"), includingPropertiesForKeys: nil)
+        return BackupSummary(sales: count("sales.json", [Sale].self), closes: count("closings.json", [DayClose].self),
+                             products: count("quickadd.json", [Product].self),
+                             photos: (crops?.allObjects as? [URL])?.filter { $0.pathExtension == "jpg" }.count ?? 0)
+    }
+
+    /// Puts a backup folder back: the shop files replace this iPad's, and the books are merged in by
+    /// `importLegacyJSON` (nothing already in the store is doubled). Works on a copy, because the import renames the
+    /// files it reads and the backup must stay as it is. The caller reloads the catalog and gallery afterwards.
+    static func restore(from backup: URL, into context: ModelContext, documents: URL = .documentsDirectory) throws {
+        let work = FileManager.default.temporaryDirectory.appending(path: "Restore-\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: work) }
+        try FileManager.default.copyItem(at: backup, to: work)
+        _ = try copyShopFiles(from: work, to: documents)
+        importLegacyJSON(into: context, folder: work)
+    }
+
+    /// Copies each shop file that exists in `source` over the one in `destination`.
+    nonisolated private static func copyShopFiles(from source: URL, to destination: URL) throws -> [URL] {
+        let manager = FileManager.default
+        try manager.createDirectory(at: destination, withIntermediateDirectories: true)
+        return try shopFiles.compactMap { name in
+            let from = source.appending(path: name), to = destination.appending(path: name)
+            guard manager.fileExists(atPath: from.path(percentEncoded: false)) else { return nil }
+            if manager.fileExists(atPath: to.path(percentEncoded: false)) { try manager.removeItem(at: to) }
+            try manager.copyItem(at: from, to: to)
+            return to
         }
     }
 }

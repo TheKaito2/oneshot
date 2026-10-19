@@ -81,7 +81,7 @@ struct SalesHistoryView: View {
             try SalesLog.csv(sales).write(to: url, atomically: true, encoding: .utf8)
             csvURL = url
         } catch {
-            print("csv not written: \(error)")
+            Log.error("csv not written: \(error)")
             csvURL = nil
         }
     }

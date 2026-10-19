@@ -133,9 +133,6 @@ struct CheckoutView: View {
         }
         // Dash Cart-style light: green = all logged, amber = check something.
         .overlay { RoundedRectangle(cornerRadius: 28, style: .continuous).stroke(flash ?? .clear, lineWidth: 10) }
-        .overlay(alignment: .top) {
-            RaceBanner(race: app.race).padding(.top, 14)
-        }
         // Bottom centre, between the corner marks: it never covers the label of a box at the top of the frame.
         .overlay(alignment: .bottom) {
             statusChip.padding(.bottom, 14)
@@ -197,7 +194,7 @@ struct CheckoutView: View {
                 Label("Teach mode", systemImage: "plus.viewfinder")
             } else if let scan = app.scan, !app.scanningMore, let elapsed = scan.elapsed {
                 // The last frame's count and time; after Scan more the bill also holds earlier frames.
-                Label("^[\(scan.regions.count { !$0.earlier }) item](inflect: true) in \(String(format: "%.2f", elapsed.inSeconds)) s",
+                Label("^[\(scan.regions.count { !$0.earlier }) item](inflect: true) in \(String(format: "%.2f", elapsed / .seconds(1))) s",
                       systemImage: "bolt.fill")
             } else if app.demo {
                 Label("DEMO", systemImage: "photo")
@@ -331,12 +328,6 @@ struct CheckoutView: View {
 
     private var secondaryControls: some View {
         HStack(spacing: 10) {
-            Button {
-                app.race.start()
-            } label: {
-                Label("Speed race", systemImage: "flag.checkered")
-            }
-            .disabled(app.scan != nil)   // GO would run a clock that Ring up can't stop, or wipe the bill
             PhotosPicker(selection: $photo, matching: .images) {
                 Label("Photo", systemImage: "photo")
             }
@@ -464,19 +455,18 @@ struct CheckoutView: View {
             lockError = String(localized: "No items found. Move closer, or add them by hand.")
             return
         }
-        app.race.billShown(items: locked.regions.count)
-        if let summary = app.race.summary, app.race.phase == .done { print("race", summary) }
         let ms = (clock.now - start) / .milliseconds(1)
         if debugOverlay { dumpForCalibration(image: image, detections: detections) }
         // Both voters' top pick per region, to measure where the thresholds belong.
-        print(String(format: "lock ms=%.0f boxes=%d regions=%d unsure=%d", ms, boxes.count, locked.regions.count, locked.unsure.count),
-              detections.map { d in
-                  let l1 = d.detector.first.map { "\($0.label):\(Int($0.confidence * 100))" } ?? "-"
-                  // Top-2 too: the margin between look-alikes (Lay's flavours) needs measuring.
-                  let l2 = d.gallery.prefix(2).map { "\($0.label):\(String(format: "%.3f", $0.confidence))" }
-                      .joined(separator: ",")
-                  return "\(l1)|\(l2)"
-              })
+        let votes = detections.map { d in
+            let l1 = d.detector.first.map { "\($0.label):\(Int($0.confidence * 100))" } ?? "-"
+            // Top-2 too: the margin between look-alikes (Lay's flavours) needs measuring.
+            let l2 = d.gallery.prefix(2).map { "\($0.label):\(String(format: "%.3f", $0.confidence))" }
+                .joined(separator: ",")
+            return "\(l1)|\(l2)"
+        }
+        Log.info(String(format: "lock ms=%.0f boxes=%d regions=%d unsure=%d ", ms, boxes.count, locked.regions.count,
+                        locked.unsure.count) + votes.joined(separator: " "))
         if target.adding, let earlier = app.scan {
             app.scan = earlier.adding(locked)
         } else {
@@ -521,13 +511,13 @@ enum Chime: String {
     @MainActor static func play(_ chime: Chime) {
         if players[chime] == nil {
             guard let url = Bundle.main.url(forResource: chime.rawValue, withExtension: "wav") else {
-                print("missing \(chime.rawValue).wav")
+                Log.error("missing \(chime.rawValue).wav")
                 return
             }
             do {
                 players[chime] = try AVAudioPlayer(contentsOf: url)
             } catch {
-                print("chime: \(error)")
+                Log.error("chime: \(error)")
                 return
             }
         }

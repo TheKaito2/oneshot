@@ -134,7 +134,7 @@ struct StatementView: View {
             pdf.closePDF()
             written = true
         }
-        if !written { print("statement pdf not written") }
+        if !written { Log.error("statement pdf not written") }
         return written ? url : nil
     }
 }

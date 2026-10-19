@@ -81,7 +81,7 @@ enum SalesLog {
         do {
             return try context.fetch(FetchDescriptor<SaleRecord>(sortBy: [SortDescriptor(\.date)])).map(\.sale)
         } catch {
-            print("sales not read: \(error)")
+            Log.error("sales not read: \(error)")
             return []
         }
     }
@@ -175,7 +175,7 @@ enum DayCloseLog {
         do {
             return try context.fetch(FetchDescriptor<CloseRecord>(sortBy: [SortDescriptor(\.date)])).map(\.close)
         } catch {
-            print("closings not read: \(error)")
+            Log.error("closings not read: \(error)")
             return []
         }
     }

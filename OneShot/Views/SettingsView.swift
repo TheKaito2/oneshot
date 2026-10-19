@@ -1,6 +1,7 @@
 import SwiftData
 import SwiftUI
 import TipKit
+import UniformTypeIdentifiers
 
 enum SettingsKey {
     static let promptPayID = "promptPayID"
@@ -19,8 +20,13 @@ struct SettingsView: View {
     @State private var turningOffPIN = false
     @State private var pinEntry = ""
     @State private var pinProblem: String?
-    @State private var backup: [URL] = []
+    @State private var backup: URL?
     @State private var backupProblem: String?
+    @State private var exporting = false
+    @State private var importing = false
+    /// The picked backup folder and what it holds, waiting for the owner's OK.
+    @State private var restoring: (url: URL, summary: Store.BackupSummary)?
+    @State private var restoreNote: String?
     @State private var addingSamples = false
     @State private var sampleNote: String?
     /// Sample sales are only offered on empty books.
@@ -69,16 +75,19 @@ struct SettingsView: View {
                 }
                 .frostedRows()
                 Section {
-                    if !backup.isEmpty {
-                        ShareLink(items: backup) { Label("Back up the books", systemImage: "externaldrive") }
-                    }
+                    Button("Back up…", systemImage: "externaldrive") { exporting = true }
+                        .disabled(backup == nil)
+                    Button("Restore from a backup…", systemImage: "arrow.counterclockwise") { importing = true }
                     if let backupProblem {
                         Text("Backup failed: \(backupProblem)").font(.seed(.caption)).foregroundStyle(Brand.negative)
                     }
+                    if let restoreNote {
+                        Text(restoreNote).font(.seed(.caption)).foregroundStyle(Brand.muted)
+                    }
                 } header: {
-                    Text("Books")
+                    Text("Backup")
                 } footer: {
-                    Text("Sales, refunds, day closes and stock as 3 files. Keep them outside OneShot, e.g. in iCloud Drive. To put them back, copy them into OneShot's folder in the Files app, then close OneShot in the app switcher and open it again.")
+                    Text("One folder with sales, refunds, day closes, stock, taught products, prices, barcodes and product photos. Keep it outside OneShot, e.g. in iCloud Drive. Restoring adds the backup's sales to these books and replaces products, prices and photos with the backup's.")
                 }
                 .frostedRows()
                 Section {
@@ -115,8 +124,24 @@ struct SettingsView: View {
                     Button("Show tips again") { Tips.showAllTipsForTesting() }
                 }
                 .frostedRows()
+                Section {
+                    let reports = Diagnostics.files()
+                    if reports.isEmpty {
+                        Text("No reports yet.").foregroundStyle(Brand.muted)
+                    } else {
+                        ShareLink(items: reports) {
+                            Label("Share \(reports.count) reports", systemImage: "stethoscope")
+                        }
+                    }
+                } header: {
+                    Text("Diagnostics")
+                } footer: {
+                    Text("Crash and hang reports from iOS, kept on this device. Share them when asking for help.")
+                }
+                .frostedRows()
                 // The OFL asks for the notice to travel with the font; the full licence is in the app bundle too.
                 Section("About") {
+                    Link("Privacy and support", destination: URL(string: "https://oneshot-pos.pages.dev")!)
                     LabeledContent("Font", value: "LINE Seed Sans TH")
                     Text("© LY Corporation. SIL Open Font License 1.1.").font(.seed(.caption)).foregroundStyle(Brand.muted)
                 }
@@ -127,6 +152,31 @@ struct SettingsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+            }
+            .fileExporter(isPresented: $exporting, document: backup.map(BackupFolder.init), contentType: .folder,
+                          defaultFilename: String(localized: "OneShot Backup \(Date.now.formatted(.iso8601.year().month().day()))")) { result in
+                if case .failure(let error) = result { backupProblem = error.localizedDescription }
+            }
+            .fileImporter(isPresented: $importing, allowedContentTypes: [.folder]) { result in
+                switch result {
+                case .success(let url):
+                    let access = url.startAccessingSecurityScopedResource()
+                    defer { if access { url.stopAccessingSecurityScopedResource() } }
+                    let summary = Store.summary(of: url)
+                    if summary == Store.BackupSummary() {
+                        restoreNote = String(localized: "That folder isn't a OneShot backup.")
+                    } else {
+                        restoring = (url, summary)
+                    }
+                case .failure(let error):
+                    restoreNote = error.localizedDescription
+                }
+            }
+            .confirmationDialog("Restore this backup?", isPresented: Binding(get: { restoring != nil }, set: { if !$0 { restoring = nil } }),
+                                titleVisibility: .visible, presenting: restoring) { pending in
+                Button("Restore") { restore(pending.url) }
+            } message: { pending in
+                Text("\(pending.summary.sales) sales, \(pending.summary.closes) day closes, \(pending.summary.products) taught products, \(pending.summary.photos) photos. Products, prices and photos on this device are replaced.")
             }
             .alert("Turn off the refund PIN?", isPresented: $turningOffPIN) {
                 SecureField("Current PIN", text: $pinEntry).keyboardType(.numberPad)
@@ -168,12 +218,42 @@ struct SettingsView: View {
     /// Written on every visit (nothing changes the books while Settings is showing), off the main thread.
     private func writeBackup() async {
         let container = context.container
+        let folder = URL.temporaryDirectory.appending(path: "Backup", directoryHint: .isDirectory)
         do {
-            backup = try await Task.detached { try Store.backUp(container, to: .temporaryDirectory.appending(path: "Backup")) }.value
+            try await Task.detached {
+                try? FileManager.default.removeItem(at: folder)   // last visit's: a deleted photo must not come back
+                _ = try Store.backUp(container, to: folder)
+            }.value
+            backup = folder
             backupProblem = nil
         } catch {
-            backup = []
+            backup = nil
             backupProblem = error.localizedDescription
         }
     }
+
+    private func restore(_ url: URL) {
+        let access = url.startAccessingSecurityScopedResource()
+        defer { if access { url.stopAccessingSecurityScopedResource() } }
+        do {
+            try Store.restore(from: url, into: context)
+            app.reloadCatalog()
+            app.gallery.reload()
+            restoreNote = String(localized: "Backup restored.")
+            Task { await writeBackup() }
+        } catch {
+            restoreNote = error.localizedDescription
+        }
+    }
+}
+
+/// A backup folder, for `fileExporter`: written as it is, wherever the owner picks.
+struct BackupFolder: FileDocument {
+    static let readableContentTypes: [UTType] = [.folder]
+    let url: URL
+
+    init(url: URL) { self.url = url }
+    init(configuration: ReadConfiguration) throws { throw CocoaError(.featureUnsupported) }   // export only
+
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper { try FileWrapper(url: url) }
 }

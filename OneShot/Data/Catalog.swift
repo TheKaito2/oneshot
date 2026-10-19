@@ -137,7 +137,7 @@ struct Catalog {
         do {
             return try JSONDecoder().decode(type, from: Data(contentsOf: url))
         } catch {
-            print("\(url.lastPathComponent) unreadable: \(error)")
+            Log.error("\(url.lastPathComponent) unreadable: \(error)")
             return nil
         }
     }

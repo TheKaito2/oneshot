@@ -285,7 +285,7 @@ struct ReportsView: View {
             try ("\u{FEFF}" + rows.joined(separator: "\n") + "\n").write(to: url, atomically: true, encoding: .utf8)
             return url
         } catch {
-            print("items csv not written: \(error)")
+            Log.error("items csv not written: \(error)")
             return nil
         }
     }

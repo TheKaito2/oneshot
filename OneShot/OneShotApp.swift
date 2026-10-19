@@ -9,10 +9,11 @@ struct OneShotApp: App {
     init() {
         SeedAppearance.apply()
         AudioMode.mixed()   // the first ring-up chime was silent in Silent Mode until a payment set the session
+        Diagnostics.shared.start()
         do {
             try Tips.configure([.displayFrequency(.immediate)])
         } catch {
-            print("tips: \(error)")
+            Log.error("tips: \(error)")
         }
     }
 

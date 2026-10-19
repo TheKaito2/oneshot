@@ -158,12 +158,12 @@ enum CropStore {
             let url = URL.documentsDirectory.appending(path: relativePath)
             try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
             guard let data = UIImage(cgImage: image).jpegData(compressionQuality: 0.9) else {
-                print("photo save failed: JPEG encode (\(relativePath))")
+                Log.error("photo save failed: JPEG encode (\(relativePath))")
                 return
             }
             try data.write(to: url)
         } catch {
-            print("photo save failed: \(error)")
+            Log.error("photo save failed: \(error)")
         }
     }
 }

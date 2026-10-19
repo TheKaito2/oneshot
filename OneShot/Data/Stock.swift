@@ -26,7 +26,7 @@ struct StockBook: Equatable {
             let rows = try context.fetch(FetchDescriptor<StockRecord>())
             return StockBook(levels: Dictionary(rows.map { ($0.sku, $0.level) }, uniquingKeysWith: { first, _ in first }))
         } catch {
-            print("stock not read: \(error)")
+            Log.error("stock not read: \(error)")
             return StockBook(levels: [:])
         }
     }

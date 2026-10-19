@@ -34,7 +34,6 @@ final class AppModel {
 
     let camera = CameraController()
     let gallery = Gallery()
-    let race = Race()
 
     /// The camera rests whenever nothing needs it live: another tab or a frozen sale (unless scanning more into it,
     /// or teaching a product the bill is waiting on).
@@ -68,7 +67,7 @@ final class AppModel {
         do {
             try stock.save(to: Store.context)
         } catch {
-            print("stock not saved: \(error)")
+            Log.error("stock not saved: \(error)")
         }
     }
 
@@ -81,18 +80,9 @@ final class AppModel {
         tab = .checkout
     }
 
-    /// Back to a live scan zone for the next customer: Start over, New sale and the speed race all come here.
+    /// Back to a live scan zone for the next customer: Start over and New sale both come here.
     func clearSale() {
         scan = nil
         reloadCatalog()   // barcodes assigned in the pick list
-        if race.phase == .done { race.reset() }
-    }
-
-    /// The speed race starts on an empty counter, or Ring up would be blocked while the clock runs.
-    func startRace() {
-        guard scan == nil, !teaching else { return }   // callers disable it then; never wipe a sale for a race
-        clearSale()
-        race.start()
-        tab = .checkout
     }
 }

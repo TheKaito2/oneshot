@@ -105,7 +105,7 @@ struct CloseDayView: View {
             try DayCloseLog.save(day, in: context)
             closed = day
         } catch {
-            print("day close not saved: \(error)")
+            Log.error("day close not saved: \(error)")
         }
     }
 

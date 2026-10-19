@@ -264,7 +264,7 @@ final class CounterVoice: NSObject, AVSpeechSynthesizerDelegate {
             try AVAudioSession.sharedInstance().setCategory(.playback, options: .duckOthers)
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
-            print("audio session: \(error)")
+            Log.error("audio session: \(error)")
         }
         let utterance = AVSpeechUtterance(string: text)
         // The best Thai voice installed: Kanya (Enhanced), a free download in Settings › Accessibility › Spoken Content
@@ -292,7 +292,7 @@ final class CounterVoice: NSObject, AVSpeechSynthesizerDelegate {
         do {
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         } catch {
-            print("audio session: \(error)")
+            Log.error("audio session: \(error)")
         }
         AudioMode.mixed()
     }
@@ -305,7 +305,7 @@ enum AudioMode {
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, options: .mixWithOthers)
         } catch {
-            print("audio session: \(error)")
+            Log.error("audio session: \(error)")
         }
     }
 }

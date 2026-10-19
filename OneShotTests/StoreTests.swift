@@ -146,7 +146,8 @@ struct StoreTests {
         try DayCloseLog.save(DayClose(date: t0, float: 500, cashSales: 0, counted: 500, sales: 2, revenue: 20), in: context)
         let sales = SalesLog.all(in: context), closes = DayCloseLog.all(in: context)
 
-        let files = try Store.backUp(container, to: folder)
+        let noShopFiles = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        let files = try Store.backUp(container, to: folder, documents: noShopFiles)
         #expect(files.map(\.lastPathComponent) == ["sales.json", "closings.json", "stock.json"])
         stock.receive("lays", 5)   // a delivery after the backup
         try stock.save(to: context)
@@ -162,10 +163,39 @@ struct StoreTests {
         #expect(SalesLog.all(in: context) == sales)
 
         let restored = try Store.inMemory()   // the real restore: books lost, backup put into a new store
-        _ = try Store.backUp(container, to: folder)
+        _ = try Store.backUp(container, to: folder, documents: noShopFiles)
         Store.importLegacyJSON(into: restored.mainContext, folder: folder)   // also over last import's *.imported
         #expect(SalesLog.all(in: restored.mainContext) == sales)   // Decimals, ringUp and autoUnits exact through JSON
         #expect(DayCloseLog.all(in: restored.mainContext) == closes && StockBook.load(from: restored.mainContext)["lays"]?.count == 14)
         #expect(!FileManager.default.fileExists(atPath: folder.appending(path: "sales.json").path(percentEncoded: false)))
+    }
+
+    @Test func restoreBringsBackTheShopFilesAndLeavesTheBackupAsItWas() throws {
+        let temp = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: temp) }
+        let shop = temp.appending(path: "shop"), backup = temp.appending(path: "backup"), newShop = temp.appending(path: "new")
+        try FileManager.default.createDirectory(at: shop.appending(path: "Crops/pocky"), withIntermediateDirectories: true)
+        try JSONEncoder().encode([pocky]).write(to: shop.appending(path: "quickadd.json"))
+        try Data("{\"lays\":\"25\"}".utf8).write(to: shop.appending(path: "prices.json"))
+        try Data([0xFF, 0xD8]).write(to: shop.appending(path: "Crops/pocky/1.jpg"))
+        try SalesLog.record([BillLine(product: lays, quantity: 1)], total: 20, method: .cash, received: 20, at: t0, in: context)
+
+        let written = try Store.backUp(container, to: backup, documents: shop)
+        #expect(Set(written.map(\.lastPathComponent)) == ["sales.json", "closings.json", "stock.json", "quickadd.json", "prices.json", "Crops"])
+        #expect(Store.summary(of: backup) == Store.BackupSummary(sales: 1, closes: 0, products: 1, photos: 1))
+
+        // A new device: empty books, an old prices file that the backup's must replace.
+        try FileManager.default.createDirectory(at: newShop, withIntermediateDirectories: true)
+        try Data("{}".utf8).write(to: newShop.appending(path: "prices.json"))
+        let fresh = try Store.inMemory()
+        try Store.restore(from: backup, into: fresh.mainContext, documents: newShop)
+        #expect(SalesLog.all(in: fresh.mainContext) == SalesLog.all(in: context))
+        #expect(try Data(contentsOf: newShop.appending(path: "prices.json")) == Data("{\"lays\":\"25\"}".utf8))
+        #expect(FileManager.default.fileExists(atPath: newShop.appending(path: "Crops/pocky/1.jpg").path(percentEncoded: false)))
+        #expect(try JSONDecoder().decode([Product].self, from: Data(contentsOf: newShop.appending(path: "quickadd.json"))) == [pocky])
+        // The backup itself is untouched (the import renames what it reads, so it works on a copy).
+        #expect(FileManager.default.fileExists(atPath: backup.appending(path: "sales.json").path(percentEncoded: false)))
+        try Store.restore(from: backup, into: fresh.mainContext, documents: newShop)   // twice: nothing doubled
+        #expect(SalesLog.all(in: fresh.mainContext).count == 1)
     }
 }

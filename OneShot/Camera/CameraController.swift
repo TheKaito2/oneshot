@@ -218,13 +218,13 @@ final class CameraController: NSObject, @unchecked Sendable {
         let center = NotificationCenter.default
         _ = center.addObserver(forName: AVCaptureSession.wasInterruptedNotification, object: session, queue: nil) { note in
             let raw = note.userInfo?[AVCaptureSessionInterruptionReasonKey] as? Int ?? -1
-            print("camera interrupted reason=\(raw)")  // AVCaptureSession.InterruptionReason raw value
+            Log.error("camera interrupted reason=\(raw)")  // AVCaptureSession.InterruptionReason raw value
         }
         _ = center.addObserver(forName: AVCaptureSession.interruptionEndedNotification, object: session, queue: nil) { _ in
-            print("camera interruption ended")
+            Log.info("camera interruption ended")
         }
         _ = center.addObserver(forName: AVCaptureSession.runtimeErrorNotification, object: session, queue: nil) { note in
-            print("camera runtime error \(String(describing: note.userInfo?[AVCaptureSessionErrorKey]))")
+            Log.error("camera runtime error \(String(describing: note.userInfo?[AVCaptureSessionErrorKey]))")
         }
     }
 
@@ -270,7 +270,7 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate {
             }
         } catch {
             // One bad frame is skipped. Only a model that fails to load disables Ring up (it used to stay off until relaunch).
-            print("live detect failed: \(error)")
+            Log.error("live detect failed: \(error)")
         }
     }
 
@@ -280,7 +280,7 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate {
         let value = Double(frameCount) / (now - windowStart)
         // Same numbers as the HUD, readable on the Mac with `devicectl device process launch --console`.
         let avg = window.detects > 0 ? window.msSum / Double(window.detects) : 0
-        print(String(format: "hud fps=%.1f detects=%d detect_ms_avg=%.1f max=%.1f boxes=%d",
+        Log.info(String(format: "hud fps=%.1f detects=%d detect_ms_avg=%.1f max=%.1f boxes=%d",
                      value, window.detects, avg, window.msMax, window.boxes))
         frameCount = 0
         windowStart = now
