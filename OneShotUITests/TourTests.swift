@@ -34,7 +34,9 @@ final class TourTests: XCTestCase {
 
     func testTour() throws {
         addSampleSalesIfOffered()
-        for orientation in [UIDeviceOrientation.portrait, .landscapeLeft] {
+        // iPhone is portrait only.
+        let orientations: [UIDeviceOrientation] = UIDevice.current.userInterfaceIdiom == .pad ? [.portrait, .landscapeLeft] : [.portrait]
+        for orientation in orientations {
             XCUIDevice.shared.orientation = orientation
             sleep(3)
             let frame = app.windows.firstMatch.frame
@@ -57,9 +59,12 @@ final class TourTests: XCTestCase {
             let addItems = button(label("Add items"))
             if addItems.waitForExistence(timeout: 3) {
                 addItems.tap()
-                sleep(1)
+                let scanMore = button(label("Scan more items"))
+                // On a loaded Mac the first tap can land before the menu is ready.
+                if !scanMore.waitForExistence(timeout: 3) { addItems.tap() }
+                XCTAssertTrue(scanMore.waitForExistence(timeout: 5), "Add items menu didn't open")
                 shot("\(o)-05-add-items-menu")
-                button(label("Scan more items")).tap()
+                scanMore.tap()
                 sleep(3)
                 shot("\(o)-06-scan-more")
                 ringUp.tap()

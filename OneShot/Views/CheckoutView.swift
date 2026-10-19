@@ -41,7 +41,11 @@ struct CheckoutView: View {
                     scanZone.frame(maxHeight: wide ? .infinity : geometry.size.height * 0.36)
                         .frame(minHeight: wide ? nil : geometry.size.height * 0.3)
                     // Tips only where they fit: on a short stacked screen they pushed Charge off the bottom.
-                    controls(tipsFit: wide || geometry.size.height > 1000)
+                    // iPhone with a bill open: the greyed controls took the ticket's last rows (seen 19 Oct);
+                    // the bill's own Add items / Start over buttons cover what's left to do.
+                    if !(billOpen && geometry.size.height < 800) {
+                        controls(tipsFit: wide || geometry.size.height > 1000)
+                    }
                 }
                 sidePanel
                     .frame(width: wide ? 400 : nil)
@@ -150,17 +154,9 @@ struct CheckoutView: View {
                 } else if app.scanningMore {
                     Button("Back to the bill", systemImage: "xmark") { app.scanningMore = false }
                 } else if app.scan != nil {
-                    HStack(spacing: 10) {
-                        Menu {
-                            Button("Scan more items", systemImage: "viewfinder") {
-                                app.scanningMore = true
-                                if app.demo { app.demoIndex += 1 }   // the next table, not the one just billed
-                            }
-                            Button("Add an item by hand", systemImage: "hand.tap") { addingByHand = true }
-                        } label: {
-                            Label("Add items", systemImage: "plus")
-                        }
-                        Button("Start over", systemImage: "arrow.counterclockwise", role: .destructive) { app.clearSale() }
+                    ViewThatFits(in: .horizontal) {
+                        billButtons
+                        billButtons.labelStyle(.iconOnly)   // iPhone
                     }
                 }
             }
@@ -174,6 +170,22 @@ struct CheckoutView: View {
                 addingByHand = false
             })
         }
+    }
+
+    private var billButtons: some View {
+        HStack(spacing: 10) {
+            Menu {
+                Button("Scan more items", systemImage: "viewfinder") {
+                    app.scanningMore = true
+                    if app.demo { app.demoIndex += 1 }   // the next table, not the one just billed
+                }
+                Button("Add an item by hand", systemImage: "hand.tap") { addingByHand = true }
+            } label: {
+                Label("Add items", systemImage: "plus")
+            }
+            Button("Start over", systemImage: "arrow.counterclockwise", role: .destructive) { app.clearSale() }
+        }
+        .fixedSize()
     }
 
     @ViewBuilder
@@ -298,6 +310,16 @@ struct CheckoutView: View {
                             Spacer(minLength: 0)
                             teachButton
                         }
+                    }
+                    // iPhone: Ring up across the width, the rest as icons (the labelled row ran off the screen).
+                    VStack(spacing: 10) {
+                        ringUpButton.frame(maxWidth: .infinity)
+                        HStack(spacing: 10) {
+                            secondaryControls
+                            Spacer(minLength: 0)
+                            teachButton
+                        }
+                        .labelStyle(.iconOnly)
                     }
                 }
                 .buttonStyle(.glass)

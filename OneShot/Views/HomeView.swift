@@ -117,22 +117,39 @@ struct HomeView: View {
 
     // MARK: - Header and hero
 
+    /// Full on iPad; on iPhone just the wordmark, the shop and the gear (the breadcrumb crushed the wordmark).
     private var header: some View {
-        HStack(alignment: .center, spacing: 16) {
-            Wordmark()
-            Text(verbatim: "/").font(.seed(.title3, .regular)).foregroundStyle(Brand.mutedSoft)
-            Text("Overview").font(.seed(.title3, .regular)).foregroundStyle(Brand.muted)
-            Spacer()
-            VStack(alignment: .trailing, spacing: 2) {
-                Text(shopName.isEmpty ? String(localized: "Your shop") : shopName).font(.seed(.headline)).foregroundStyle(Brand.ink)
-                Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
-                    .font(.seed(.subheadline))
-                    .foregroundStyle(Brand.muted)
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .center, spacing: 16) {
+                Wordmark().fixedSize()
+                Text(verbatim: "/").font(.seed(.title3, .regular)).foregroundStyle(Brand.mutedSoft)
+                Text("Overview").font(.seed(.title3, .regular)).foregroundStyle(Brand.muted).fixedSize()
+                Spacer()
+                shopAndDate
+                settingsButton
             }
-            Button("Settings", systemImage: "gearshape") { app.showingSettings = true }
-                .labelStyle(.iconOnly)
-                .buttonStyle(.glass)
+            HStack(alignment: .center, spacing: 12) {
+                Wordmark().fixedSize()
+                Spacer(minLength: 8)
+                settingsButton
+            }
         }
+    }
+
+    private var shopAndDate: some View {
+        VStack(alignment: .trailing, spacing: 2) {
+            Text(shopName.isEmpty ? String(localized: "Your shop") : shopName).font(.seed(.headline)).foregroundStyle(Brand.ink)
+            Text(Date.now, format: .dateTime.weekday(.wide).day().month(.wide))
+                .font(.seed(.subheadline))
+                .foregroundStyle(Brand.muted)
+        }
+        .fixedSize()
+    }
+
+    private var settingsButton: some View {
+        Button("Settings", systemImage: "gearshape") { app.showingSettings = true }
+            .labelStyle(.iconOnly)
+            .buttonStyle(.glass)
     }
 
     /// The way into a sale, set like the site's headlines (eyebrow, display line, accent rule, lede), with the

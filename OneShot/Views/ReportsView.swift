@@ -130,38 +130,51 @@ struct ReportsView: View {
     private func itemTable(_ r: Report) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Sales by item").font(.seed(.title3))
-            Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 10) {
-                GridRow {
-                    Text("Item")
-                    Text("Sold").gridColumnAlignment(.trailing)
-                    Text("Refunded").gridColumnAlignment(.trailing)
-                    Text("Net").gridColumnAlignment(.trailing)
-                    Text("Share").gridColumnAlignment(.trailing)
-                    Text("Profit").gridColumnAlignment(.trailing)
-                }
-                .eyebrow()
-                Divider()
-                ForEach(r.items) { item in
-                    GridRow {
-                        HStack(spacing: 10) {
-                            if let product = app.catalog[item.sku] {
-                                ProductPhoto(product: product).frame(width: 32, height: 32).clipShape(.rect(cornerRadius: 6))
-                            }
-                            Text(item.name).foregroundStyle(Brand.ink).lineLimit(1)
-                        }
-                        Text(item.sold, format: .number).monospacedDigit()
-                        Text(verbatim: item.refunded > 0 ? "\(item.refunded)" : "–").foregroundStyle(item.refunded > 0 ? Brand.negative : Brand.muted)
-                        Text(item.net.baht).font(.seed(.callout, .bold)).foregroundStyle(Brand.ink)
-                        Text(r.net > 0 ? (item.net.double / r.net.double).formatted(.percent.precision(.fractionLength(0))) : "–")
-                            .monospacedDigit()
-                            .foregroundStyle(Brand.muted)
-                        Text(item.profit?.baht ?? "–").foregroundStyle(item.profit == nil ? Brand.muted : Brand.ink)
-                    }
-                    .font(.seed(.callout))
-                }
+            // All six columns on iPad; item, sold and net on iPhone, where six ran off the card.
+            ViewThatFits(in: .horizontal) {
+                itemGrid(r, compact: false)
+                itemGrid(r, compact: true)
             }
         }
         .card(padding: 18)
+    }
+
+    private func itemGrid(_ r: Report, compact: Bool) -> some View {
+        Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 10) {
+            GridRow {
+                Text("Item")
+                Text("Sold").gridColumnAlignment(.trailing)
+                if !compact { Text("Refunded").gridColumnAlignment(.trailing) }
+                Text("Net").gridColumnAlignment(.trailing)
+                if !compact {
+                    Text("Share").gridColumnAlignment(.trailing)
+                    Text("Profit").gridColumnAlignment(.trailing)
+                }
+            }
+            .eyebrow()
+            Divider()
+            ForEach(r.items) { item in
+                GridRow {
+                    HStack(spacing: 10) {
+                        if let product = app.catalog[item.sku] {
+                            ProductPhoto(product: product).frame(width: 32, height: 32).clipShape(.rect(cornerRadius: 6))
+                        }
+                        Text(item.name).foregroundStyle(Brand.ink).lineLimit(1)
+                    }
+                    Text(item.sold, format: .number)
+                    if !compact {
+                        Text(verbatim: item.refunded > 0 ? "\(item.refunded)" : "–").foregroundStyle(item.refunded > 0 ? Brand.negative : Brand.muted)
+                    }
+                    Text(item.net.baht).font(.seed(.callout, .bold)).foregroundStyle(Brand.ink)
+                    if !compact {
+                        Text(r.net > 0 ? (item.net.double / r.net.double).formatted(.percent.precision(.fractionLength(0))) : "–")
+                            .foregroundStyle(Brand.muted)
+                        Text(item.profit?.baht ?? "–").foregroundStyle(item.profit == nil ? Brand.muted : Brand.ink)
+                    }
+                }
+                .font(.seed(.callout))
+            }
+        }
     }
 
     private func together(_ r: Report) -> some View {

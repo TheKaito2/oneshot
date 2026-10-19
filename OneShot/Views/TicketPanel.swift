@@ -129,13 +129,37 @@ struct TicketPanel: View {
     }
 
     private func lineRow(_ line: BillLine) -> some View {
+        // iPhone: when the full name doesn't fit beside the stepper, the stepper and amount drop below it.
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 12) {
+                lineName(line)
+                Spacer(minLength: 4)
+                lineAmount(line)
+            }
+            VStack(alignment: .trailing, spacing: 0) {
+                lineName(line).frame(maxWidth: .infinity, alignment: .leading)
+                lineAmount(line)
+            }
+        }
+        .font(.seed(.title3))
+        .buttonStyle(.borderless)
+        .padding(10)
+        .background(Brand.card.opacity(0.7), in: .rect(cornerRadius: 16, style: .continuous))
+        .transition(.move(edge: .trailing).combined(with: .opacity))
+    }
+
+    private func lineName(_ line: BillLine) -> some View {
         HStack(spacing: 12) {
             thumbnail(for: line.product)
             VStack(alignment: .leading, spacing: 2) {
                 Text(line.product.name).font(.seed(.headline)).foregroundStyle(Brand.ink).lineLimit(1)
                 Text("\(line.product.price.baht) each").font(.seed(.subheadline)).foregroundStyle(Brand.muted).lineLimit(1)
             }
-            Spacer(minLength: 4)
+        }
+    }
+
+    private func lineAmount(_ line: BillLine) -> some View {
+        HStack(spacing: 12) {
             // 44 pt targets inside the labels (a frame outside a Button doesn't grow what it hits); one tight group,
             // so the name keeps its width in the 400 pt ticket. At ~21 pt, 12 pt apart, a + on stage hit the −.
             HStack(spacing: 0) {
@@ -153,11 +177,6 @@ struct TicketPanel: View {
             }
             Text(line.amount.baht).font(.seed(.headline)).foregroundStyle(Brand.ink).frame(minWidth: 56, alignment: .trailing)
         }
-        .font(.seed(.title3))
-        .buttonStyle(.borderless)
-        .padding(10)
-        .background(Brand.card.opacity(0.7), in: .rect(cornerRadius: 16, style: .continuous))
-        .transition(.move(edge: .trailing).combined(with: .opacity))
     }
 
     /// The item as the camera saw it, or its learned photo when it was added by hand.

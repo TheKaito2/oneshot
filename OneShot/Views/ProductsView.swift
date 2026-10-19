@@ -16,7 +16,7 @@ struct ProductsView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 190), spacing: 16)], spacing: 16) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 16)], spacing: 16) {   // 2 across on iPhone
                     Button { app.startTeaching() } label: { teachCard }
                         .buttonStyle(.plain)
                     ForEach(products) { product in
