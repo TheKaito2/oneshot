@@ -48,6 +48,8 @@ struct RootView: View {
         // sidebar-only tab it still joined the bar when selected and pushed Home behind a chevron (19 Oct).
         .sheet(isPresented: $app.showingSettings) { SettingsView(app: app) }
         .tabViewStyle(.sidebarAdaptable)
+        // Top tab bar by default in every orientation; the sidebar is one tap away (its button in the bar).
+        .defaultAdaptableTabBarPlacement(.tabBar)
         .environment(\.font, .seed(.body))
         .id(legibilityWeight == .bold)
         .task {
