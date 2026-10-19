@@ -11,6 +11,9 @@ enum Splitter {
 
     /// Normalised Vision rects (origin bottom-left), one per instance, largest first.
     static func instances(in image: CGImage) throws -> [CGRect] {
+        #if targetEnvironment(simulator)
+        return []   // no model for it in the simulator, and its GPU path can abort the app there (see onCPUInSimulator)
+        #else
         let request = VNGenerateForegroundInstanceMaskRequest()
         try VNImageRequestHandler(cgImage: image, orientation: .up).perform([request])
         guard let mask = request.results?.first?.instanceMask else { return [] }
@@ -21,6 +24,7 @@ enum Splitter {
         let rowBytes = CVPixelBufferGetBytesPerRow(mask)
         let labels = UnsafeBufferPointer(start: base.assumingMemoryBound(to: UInt8.self), count: rowBytes * height)
         return boundingBoxes(labels: labels, width: width, height: height, rowBytes: rowBytes)
+        #endif
     }
 
     /// The item being quick-added: the instance under the frame centre, else the largest.

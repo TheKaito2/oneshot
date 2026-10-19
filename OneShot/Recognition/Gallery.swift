@@ -203,6 +203,11 @@ final class Gallery: @unchecked Sendable {
 
     /// L2-normalised FeaturePrint, so a dot product is the cosine similarity.
     static func embed(_ image: CGImage) throws -> [Float] {
+        #if targetEnvironment(simulator)
+        // FeaturePrint doesn't work in the simulator (no inference context, or identical vectors on the CPU), and its
+        // GPU path can abort the app there; the detector alone names the demo tables.
+        throw CocoaError(.featureUnsupported)
+        #endif
         let request = VNGenerateImageFeaturePrintRequest()
         try VNImageRequestHandler(cgImage: image, orientation: .up).perform([request])
         guard let print = request.results?.first else { return [] }
