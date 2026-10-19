@@ -85,6 +85,11 @@ schemes:
         OneShotTests: [test]
     run:
       config: Release
+      # Metal API Validation (on by default when Xcode runs the app) asserts inside Apple's MPSGraph while Core ML
+      # runs the detector, aborting the app (SIGABRT, MTLDebugDevice newResidencySet, 19 Oct). Off the debugger it
+      # never runs, so it only ever broke Xcode launches.
+      enableGPUValidationMode: disabled
+      enableGPUFrameCaptureMode: disabled
     test:
       targets:
         - OneShotTests
