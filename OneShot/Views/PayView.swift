@@ -249,6 +249,8 @@ struct PayView: View {
 
 /// The spoken total and change, always Thai (Kanya, the best quality installed), whatever the screen language.
 /// Shop music dips while it speaks and comes back after (it used to stay quiet after the first payment).
+/// Main-actor only; the delegate callback hops back to main before touching the synthesizer.
+@MainActor
 final class CounterVoice: NSObject, AVSpeechSynthesizerDelegate {
     private let synthesizer = AVSpeechSynthesizer()
 
@@ -279,9 +281,11 @@ final class CounterVoice: NSObject, AVSpeechSynthesizerDelegate {
         release()
     }
 
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        guard !synthesizer.isSpeaking else { return }
-        release()
+    nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        Task { @MainActor in
+            guard !self.synthesizer.isSpeaking else { return }
+            self.release()
+        }
     }
 
     private func release() {
