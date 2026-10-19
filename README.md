@@ -16,13 +16,21 @@ Built for the Swift Coding Club TH finals (Young iOS Developer Hackathon). iPadO
   from cashier picks, can be deleted again in Products.
 - **Pay.** A dynamic PromptPay QR (EMVCo, amount locked) or cash with change. The total and change are spoken in
   Thai, and the receipt can be shared or printed.
-- **Books.** A SwiftData store with sales, refunds (with an optional PIN), stock with reorder points, day close with
-  over/short, and a backup.
+- **Books.** A SwiftData store with sales, refunds (with an optional PIN), stock with reorder points, and day close
+  with over/short.
+- **Backup and restore.** Settings › Backup writes one folder (books, taught products, prices, costs, barcodes,
+  product photos) wherever the owner picks, e.g. iCloud Drive. Restore previews what the folder holds, then merges
+  the books without doubling them and puts the shop files back.
+- **Diagnostics.** iOS crash and hang reports (MetricKit) are kept on the device and can be shared from Settings.
+  Logs go to `os.Logger`, subsystem `com.krist.oneshot`. Nothing leaves the device unless the owner shares it.
 - **Reports.** Today, yesterday, this week and this month, each against the same span before: net, gross, refunds,
   profit, by item, category and payment, bought together, OneShot speed, and a monthly statement PDF for the bank.
 - **On-device AI summary** with Apple Intelligence (Foundation Models) where the iPad supports it. Elsewhere it shows
   the plain numbers.
 - **English and Thai** UI, in LINE Seed Sans TH.
+- **iPad and iPhone.** iPad in any orientation, iPhone in portrait.
+- **Privacy.** No account, no server, no analytics: see `OneShot/PrivacyInfo.xcprivacy` and the policy at
+  <https://oneshot-pos.pages.dev> (source in `site/`, deploy with `npx wrangler pages deploy site --project-name oneshot-pos`).
 
 ## Build and run
 
@@ -48,7 +56,7 @@ Teaching a new product needs the iPad's camera.
 ## Tests
 
 ```bash
-# 77 unit tests: bill maths, PromptPay, reports, store, stock, gallery, fonts, localization
+# 74 unit tests: bill maths, PromptPay, reports, store, backup/restore, stock, gallery, fonts, localization
 xcodebuild test -scheme OneShot -destination 'platform=iOS Simulator,name=iPad Air 11-inch (M4)' \
   -testLanguage en -testRegion en_US
 
@@ -56,7 +64,15 @@ xcodebuild test -scheme OneShot -destination 'platform=iOS Simulator,name=iPad A
 xcodebuild test -scheme OneShotTour -destination 'platform=iOS Simulator,name=iPad Air 11-inch (M4)' \
   -resultBundlePath build/tour.xcresult
 python3 tools/tour_shots.py build/tour.xcresult docs/screens/en-dark   # half-size JPEGs
+# iPhone: the same scheme with -destination 'platform=iOS Simulator,name=iPhone 17' (portrait only)
+
+# Detector exam: the app's whole lock path on the Mac, against 42 real counters (needs data/, kept out of git)
+swiftc -O tools/grade/main.swift OneShot/Recognition/{Resolver,Detector,Splitter}.swift OneShot/Log.swift -o build/grade
+build/grade OneShot/Resources/Detector.mlpackage
 ```
+
+See `docs/MODEL-COMPARISON.md` for YOLO11n against the Create ML models, and `docs/PRODUCTION-PLAN.md` for the
+road to the App Store.
 
 Set `TEST_RUNNER_TOUR_LANG=th` for the Thai tour. The screenshots from the last run are in `docs/screens`
 (`en-dark`, `en-light`, `th-dark`).
@@ -77,5 +93,7 @@ The training data, runs and model sources are not in this package (several hundr
 ## Credits
 
 - Font: LINE Seed Sans TH © LY Corporation, SIL Open Font License 1.1 (`Resources/Fonts/OFL-LINE-Seed.txt`).
+- Detector: see `docs/MODEL-COMPARISON.md`. A model trained with Ultralytics YOLO is AGPL-3.0; shipping one in a
+  closed-source app needs an Ultralytics Enterprise licence. Create ML models are ours.
 - Product pictures: retailer and brand packshots (Lotus's, 7-Eleven 7Online, lactasoy.com, Gourmet Market) with the
   backgrounds cut away, used for this demo only. They belong to their owners.

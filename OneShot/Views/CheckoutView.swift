@@ -38,8 +38,10 @@ struct CheckoutView: View {
                 VStack(spacing: 14) {
                     // Stacked: the zone takes its 36 % first and the ticket's list scrolls in the rest. Without the
                     // priority, landscape with the sidebar docked squeezed the zone to ~200 pt (19 Oct).
-                    scanZone.frame(maxHeight: wide ? .infinity : geometry.size.height * 0.36)
-                        .frame(minHeight: wide ? nil : geometry.size.height * 0.3)
+                    // iPhone with a bill open: the frozen photo shrinks so the ticket shows more than one line.
+                    let zoneShare = billOpen && geometry.size.height < 800 ? 0.22 : 0.36
+                    scanZone.frame(maxHeight: wide ? .infinity : geometry.size.height * zoneShare)
+                        .frame(minHeight: wide ? nil : geometry.size.height * min(zoneShare, 0.3))
                     // Tips only where they fit: on a short stacked screen they pushed Charge off the bottom.
                     // iPhone with a bill open: the greyed controls took the ticket's last rows (seen 19 Oct);
                     // the bill's own Add items / Start over buttons cover what's left to do.

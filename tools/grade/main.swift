@@ -147,7 +147,7 @@ final class Thresholds: NSObject, MLFeatureProvider {
 var modelURL = URL(fileURLWithPath: modelArg, relativeTo: root)
 if modelURL.pathExtension != "mlmodelc" { modelURL = try await MLModel.compileModel(at: modelURL) }
 let coreML = try MLModel(contentsOf: modelURL)
-let tiled = Detector.inputSide(coreML) < 400   // as the app decides
+let tiled = Detector.inputSide(coreML) < 600   // as the app decides
 let vnModel = try VNCoreMLModel(for: coreML)
 vnModel.featureProvider = Thresholds()
 let request = VNCoreMLRequest(model: vnModel)

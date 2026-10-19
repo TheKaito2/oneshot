@@ -33,7 +33,7 @@ final class Detector {
     }
 
     private let request: VNCoreMLRequest
-    /// A model with a small input (Create ML transfer learning: 299 × 299) rings up from the frame plus 4 tiles.
+    /// A model with a small input (Create ML: 299 transfer learning, 416 full network) rings up from the frame plus 4 tiles.
     let tiled: Bool
 
     /// `floor`: the lowest box confidence returned. Kept low so weak boxes reach the Resolver and turn yellow
@@ -47,7 +47,7 @@ final class Detector {
         configuration.computeUnits = .cpuOnly   // the simulator's GPU path aborts the app (see onCPUInSimulator)
         #endif
         let coreML = try MLModel(contentsOf: url, configuration: configuration)
-        tiled = Self.inputSide(coreML) < 400
+        tiled = Self.inputSide(coreML) < 600
         let model = try VNCoreMLModel(for: coreML)
         model.featureProvider = Thresholds(confidence: floor)
         request = VNCoreMLRequest(model: model)

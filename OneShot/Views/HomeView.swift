@@ -159,7 +159,7 @@ struct HomeView: View {
             Text("One-tap checkout").eyebrow()
             Text("Start a sale").font(.seed(size: 44, .heavy)).foregroundStyle(Brand.ink)
             AccentRule()
-            Text("Hold the iPad over the items. One tap rings them all up.")
+            Text("Hold the camera over the items. One tap rings them all up.")
                 .font(.seed(.title3, .regular))
                 .foregroundStyle(Brand.body)
             GlassEffectContainer(spacing: 12) {
@@ -341,7 +341,7 @@ struct HomeView: View {
             aiStatus = String(localized: "The on-device model is still downloading.")
             return
         case .unavailable:
-            aiStatus = String(localized: "This iPad doesn't run Apple Intelligence.")
+            aiStatus = String(localized: "This device doesn't run Apple Intelligence.")
             return
         }
         var prompt = """

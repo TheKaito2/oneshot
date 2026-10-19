@@ -91,8 +91,8 @@ struct StatementView: View {
             }
             Divider()
             Text(promptPayID.isEmpty
-                 ? "From the sales recorded by OneShot on the shop's iPad. PromptPay amounts can be matched with the shop's bank statement."
-                 : "From the sales recorded by OneShot on the shop's iPad. PromptPay payments went to PromptPay ID \(promptPayID) and can be matched with the shop's bank statement.")
+                 ? "From the sales recorded by OneShot on the shop's device. PromptPay amounts can be matched with the shop's bank statement."
+                 : "From the sales recorded by OneShot on the shop's device. PromptPay payments went to PromptPay ID \(promptPayID) and can be matched with the shop's bank statement.")
                 .font(.seed(.caption))
                 .foregroundStyle(Brand.muted)
         }

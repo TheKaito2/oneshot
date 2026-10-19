@@ -88,7 +88,7 @@ struct QuickAddPanel: View {
                 .primaryButton()
                 .disabled(busy || !cameraRunning)
                 if !cameraRunning {
-                    Text("Teaching needs the iPad's camera. In the simulator, show it with the products already taught.")
+                    Text("Teaching needs the device's camera. In the simulator, show it with the products already taught.")
                         .font(.seed(.callout))
                         .foregroundStyle(Brand.muted)
                 }

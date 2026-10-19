@@ -47,74 +47,6 @@
         }
       }
     },
-    "%lld baskets" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld บิล"
-          }
-        }
-      }
-    },
-    "%lld item(s) to check before paying" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "มี %lld ชิ้นต้องตรวจก่อนชำระเงิน"
-          }
-        }
-      }
-    },
-    "%lld items in %@ s" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld items in %2$@ s"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld ชิ้น ใน %@ วิ."
-          }
-        }
-      }
-    },
-    "%lld items in %@ s · %@ s an item" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld items in %2$@ s · %3$@ s an item"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld ชิ้น ใน %@ วินาที · ชิ้นละ %@ วินาที"
-          }
-        }
-      }
-    },
-    "%lld items · %@ s an item" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld items · %2$@ s an item"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld ชิ้น · ชิ้นละ %@ วินาที"
-          }
-        }
-      }
-    },
     "%lld left" : {
       "localizations" : {
         "th" : {
@@ -151,18 +83,12 @@
         }
       }
     },
-    "%lld sales · %@" : {
+    "%lld sales, %lld day closes, %lld taught products, %lld photos. Products, prices and photos on this device are replaced." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld sales · %2$@"
-          }
-        },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$lld บิล · %2$@"
+            "value" : "ยอดขาย %lld รายการ ปิดยอด %lld วัน สินค้าที่สอน %lld รายการ รูป %lld รูป สินค้า ราคา และรูปในเครื่องนี้จะถูกแทนที่"
           }
         }
       }
@@ -313,16 +239,6 @@
         }
       }
     },
-    "Add one" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เพิ่มหนึ่งชิ้น"
-          }
-        }
-      }
-    },
     "Add one %@" : {
       "localizations" : {
         "th" : {
@@ -413,16 +329,6 @@
         }
       }
     },
-    "Average basket" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เฉลี่ยต่อบิล"
-          }
-        }
-      }
-    },
     "Average ring-up" : {
       "localizations" : {
         "th" : {
@@ -463,12 +369,22 @@
         }
       }
     },
-    "Back up the books" : {
+    "Back up…" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "สำรองข้อมูลร้าน"
+            "value" : "สำรองข้อมูล…"
+          }
+        }
+      }
+    },
+    "Backup" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สำรองข้อมูล"
           }
         }
       }
@@ -479,6 +395,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "สำรองข้อมูลไม่สำเร็จ: %@"
+          }
+        }
+      }
+    },
+    "Backup restored." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กู้คืนข้อมูลแล้ว"
           }
         }
       }
@@ -503,64 +429,12 @@
         }
       }
     },
-    "Barcode %@ s for %lld · OneShot %@ s for %lld · %@× faster" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Barcode %1$@ s for %2$lld · OneShot %3$@ s for %4$lld · %5$@× faster"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "บาร์โค้ด %@ วิ. %lld ชิ้น · OneShot %@ วิ. %lld ชิ้น · เร็วกว่า %@ เท่า"
-          }
-        }
-      }
-    },
     "Barcode scanning isn't available here" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "สแกนบาร์โค้ดบนเครื่องนี้ไม่ได้"
-          }
-        }
-      }
-    },
-    "Barcode vs OneShot, timed" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "บาร์โค้ด vs OneShot จับเวลา"
-          }
-        }
-      }
-    },
-    "Barcode, one by one" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "บาร์โค้ดทีละชิ้น"
-          }
-        }
-      }
-    },
-    "Barcode: %lld items in %@ s" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Barcode: %1$lld items in %2$@ s"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "บาร์โค้ด: %lld ชิ้น ใน %@ วิ."
           }
         }
       }
@@ -591,32 +465,12 @@
         }
       }
     },
-    "Bill" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "บิล"
-          }
-        }
-      }
-    },
     "Biscuits" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "บิสกิต"
-          }
-        }
-      }
-    },
-    "Books" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ข้อมูลร้าน"
           }
         }
       }
@@ -711,16 +565,6 @@
         }
       }
     },
-    "Cash in drawer" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เงินสดในลิ้นชัก"
-          }
-        }
-      }
-    },
     "Cash received" : {
       "localizations" : {
         "th" : {
@@ -811,26 +655,6 @@
         }
       }
     },
-    "Clear" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ล้าง"
-          }
-        }
-      }
-    },
-    "Close" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ปิด"
-          }
-        }
-      }
-    },
     "Close the day" : {
       "localizations" : {
         "th" : {
@@ -911,16 +735,6 @@
         }
       }
     },
-    "Couldn't lock" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ล็อกภาพไม่ได้"
-          }
-        }
-      }
-    },
     "Couldn't open that photo." : {
       "localizations" : {
         "th" : {
@@ -961,16 +775,6 @@
         }
       }
     },
-    "Couldn't write a summary (%@); the numbers above are the summary." : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เขียนสรุปไม่ได้ (%@) ตัวเลขด้านบนคือสรุปยอด"
-          }
-        }
-      }
-    },
     "Couldn't write an AI read of the day." : {
       "localizations" : {
         "th" : {
@@ -1001,22 +805,22 @@
         }
       }
     },
-    "Count the drawer, over or short" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "นับเงินในลิ้นชัก ขาดหรือเกิน"
-          }
-        }
-      }
-    },
     "Counted cash" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "เงินที่นับได้"
+          }
+        }
+      }
+    },
+    "Crash and hang reports from iOS, kept on this device. Share them when asking for help." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รายงานแอปค้างหรือปิดตัวจาก iOS เก็บไว้ในเครื่องนี้ แชร์เมื่อขอความช่วยเหลือ"
           }
         }
       }
@@ -1151,6 +955,16 @@
         }
       }
     },
+    "Diagnostics" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รายงานปัญหา"
+          }
+        }
+      }
+    },
     "Didn't sell" : {
       "localizations" : {
         "th" : {
@@ -1221,32 +1035,12 @@
         }
       }
     },
-    "Enter a cost of zero or more, or leave it empty." : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ใส่ต้นทุนตั้งแต่ 0 ขึ้นไป หรือเว้นว่างไว้"
-          }
-        }
-      }
-    },
     "Enter a price above zero, like 25 or 59.50." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ใส่ราคามากกว่าศูนย์ เช่น 25 หรือ 59.50"
-          }
-        }
-      }
-    },
-    "Enter a price above zero." : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ใส่ราคาที่มากกว่าศูนย์"
           }
         }
       }
@@ -1387,32 +1181,22 @@
         }
       }
     },
-    "From the sales recorded by OneShot on the shop's iPad. PromptPay amounts can be matched with the shop's bank statement." : {
+    "From the sales recorded by OneShot on the shop's device. PromptPay amounts can be matched with the shop's bank statement." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "จากยอดขายที่ OneShot บันทึกไว้ใน iPad ของร้าน ยอดพร้อมเพย์ตรวจสอบกับรายการเดินบัญชีธนาคารของร้านได้"
+            "value" : "จากยอดขายที่ OneShot บันทึกไว้ในเครื่องของร้าน ยอดพร้อมเพย์ตรวจสอบกับรายการเดินบัญชีธนาคารของร้านได้"
           }
         }
       }
     },
-    "From the sales recorded by OneShot on the shop's iPad. PromptPay payments went to PromptPay ID %@ and can be matched with the shop's bank statement." : {
+    "From the sales recorded by OneShot on the shop's device. PromptPay payments went to PromptPay ID %@ and can be matched with the shop's bank statement." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "จากยอดขายที่ OneShot บันทึกไว้ใน iPad ของร้าน เงินพร้อมเพย์เข้าพร้อมเพย์หมายเลข %@ และตรวจสอบกับรายการเดินบัญชีธนาคารของร้านได้"
-          }
-        }
-      }
-    },
-    "GO" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GO"
+            "value" : "จากยอดขายที่ OneShot บันทึกไว้ในเครื่องของร้าน เงินพร้อมเพย์เข้าพร้อมเพย์หมายเลข %@ และตรวจสอบกับรายการเดินบัญชีธนาคารของร้านได้"
           }
         }
       }
@@ -1467,22 +1251,22 @@
         }
       }
     },
-    "Hold the iPad over the items, then tap Ring up." : {
+    "Hold the camera over the items, then tap Ring up." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ถือ iPad เหนือสินค้า แล้วแตะคิดเงิน"
+            "value" : "ส่องกล้องเหนือสินค้า แล้วแตะคิดเงิน"
           }
         }
       }
     },
-    "Hold the iPad over the items. One tap rings them all up." : {
+    "Hold the camera over the items. One tap rings them all up." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ถือ iPad เหนือสินค้า แตะครั้งเดียวคิดเงินได้ทั้งหมด"
+            "value" : "ส่องกล้องเหนือสินค้า แตะครั้งเดียวคิดเงินได้ทั้งหมด"
           }
         }
       }
@@ -1493,16 +1277,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "หน้าหลัก"
-          }
-        }
-      }
-    },
-    "Hour" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ชั่วโมง"
           }
         }
       }
@@ -1547,16 +1321,6 @@
         }
       }
     },
-    "Items: %lld" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "จำนวน: %lld"
-          }
-        }
-      }
-    },
     "Known from %lld training photos. Each time you pick it from a yellow item, that photo is added here." : {
       "localizations" : {
         "th" : {
@@ -1597,16 +1361,6 @@
         }
       }
     },
-    "Learned from %lld photos" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เรียนรู้จาก %lld รูป"
-          }
-        }
-      }
-    },
     "Learned from ^[%lld photo](inflect: true)" : {
       "localizations" : {
         "th" : {
@@ -1623,16 +1377,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ยังไม่รวมยอดขาย %@ ที่ยังไม่มีต้นทุน"
-          }
-        }
-      }
-    },
-    "Lock and build the bill" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ล็อกภาพและสร้างบิล"
           }
         }
       }
@@ -1683,16 +1427,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "รายงานยอดขายรายเดือนสำหรับธนาคาร"
-          }
-        }
-      }
-    },
-    "Name (English)" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ชื่อ (ภาษาอังกฤษ)"
           }
         }
       }
@@ -1777,48 +1511,12 @@
         }
       }
     },
-    "New item" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เพิ่มสินค้า"
-          }
-        }
-      }
-    },
-    "New item · %lld/%lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "New item · %1$lld/%2$lld"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "สินค้าใหม่ · %lld/%lld"
-          }
-        }
-      }
-    },
     "New sale" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ขายบิลใหม่"
-          }
-        }
-      }
-    },
-    "New scan" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "สแกนใหม่"
           }
         }
       }
@@ -1853,22 +1551,22 @@
         }
       }
     },
-    "No items recognised" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ยังไม่พบสินค้า"
-          }
-        }
-      }
-    },
     "No photos yet. Teach it, or pick it once from a yellow item." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ยังไม่มีรูป สอนสินค้านี้ หรือเลือกจากรายการสีเหลืองสักครั้ง"
+          }
+        }
+      }
+    },
+    "No reports yet." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยังไม่มีรายงาน"
           }
         }
       }
@@ -1943,16 +1641,6 @@
         }
       }
     },
-    "Not on this iPad (%@); the numbers above are the summary." : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ใช้ไม่ได้บน iPad เครื่องนี้ (%@) ตัวเลขด้านบนคือสรุปยอด"
-          }
-        }
-      }
-    },
     "Not selling this week" : {
       "localizations" : {
         "th" : {
@@ -1969,16 +1657,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ยังไม่มีสินค้าที่ขายได้"
-          }
-        }
-      }
-    },
-    "Now OneShot: tap GO, then 🔒" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ต่อไป OneShot: แตะ GO แล้วแตะ 🔒"
           }
         }
       }
@@ -2013,6 +1691,16 @@
         }
       }
     },
+    "One folder with sales, refunds, day closes, stock, taught products, prices, barcodes and product photos. Keep it outside OneShot, e.g. in iCloud Drive. Restoring adds the backup's sales to these books and replaces products, prices and photos with the backup's." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "โฟลเดอร์เดียวที่มียอดขาย การคืนเงิน การปิดยอดรายวัน สต็อก สินค้าที่สอน ราคา บาร์โค้ด และรูปสินค้า เก็บไว้นอก OneShot เช่น ใน iCloud Drive การกู้คืนจะเพิ่มยอดขายจากข้อมูลสำรองเข้าบัญชีนี้ และแทนที่สินค้า ราคา และรูปด้วยของข้อมูลสำรอง"
+          }
+        }
+      }
+    },
     "One photo rings up the whole pile." : {
       "localizations" : {
         "th" : {
@@ -2033,12 +1721,12 @@
         }
       }
     },
-    "OneShot" : {
+    "OneShot Backup %@" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OneShot"
+            "value" : "ข้อมูลสำรอง OneShot %@"
           }
         }
       }
@@ -2233,6 +1921,16 @@
         }
       }
     },
+    "Privacy and support" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ความเป็นส่วนตัวและการช่วยเหลือ"
+          }
+        }
+      }
+    },
     "Products" : {
       "localizations" : {
         "th" : {
@@ -2319,16 +2017,6 @@
         }
       }
     },
-    "Race" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "แข่งความเร็ว"
-          }
-        }
-      }
-    },
     "Ready for the next customer" : {
       "localizations" : {
         "th" : {
@@ -2365,16 +2053,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "รับ %@"
-          }
-        }
-      }
-    },
-    "Recent sales" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ขายล่าสุด"
           }
         }
       }
@@ -2469,16 +2147,6 @@
         }
       }
     },
-    "Remove one" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ลบหนึ่งชิ้น"
-          }
-        }
-      }
-    },
     "Remove one %@" : {
       "localizations" : {
         "th" : {
@@ -2509,22 +2177,42 @@
         }
       }
     },
+    "Restore" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กู้คืน"
+          }
+        }
+      }
+    },
+    "Restore from a backup…" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กู้คืนจากข้อมูลสำรอง…"
+          }
+        }
+      }
+    },
+    "Restore this backup?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กู้คืนข้อมูลสำรองนี้?"
+          }
+        }
+      }
+    },
     "Results" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ผลการค้นหา"
-          }
-        }
-      }
-    },
-    "Revenue" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ยอดขาย"
           }
         }
       }
@@ -2619,16 +2307,6 @@
         }
       }
     },
-    "Sales by hour" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ยอดขายรายชั่วโมง"
-          }
-        }
-      }
-    },
     "Sales by item" : {
       "localizations" : {
         "th" : {
@@ -2665,16 +2343,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "การขาย การคืนเงิน และการปิดยอดจะขึ้นที่นี่"
-          }
-        }
-      }
-    },
-    "Sales, refunds, day closes and stock as 3 files. Keep them outside OneShot, e.g. in iCloud Drive. To put them back, copy them into OneShot's folder in the Files app, then close OneShot in the app switcher and open it again." : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ยอดขาย การคืนเงิน การปิดยอด และสต็อก เป็นไฟล์ 3 ไฟล์ ควรเก็บไว้นอกโฟลเดอร์ OneShot เช่นใน iCloud Drive หากจะนำกลับมา ให้คัดลอกไฟล์ไปไว้ในโฟลเดอร์ OneShot ในแอปไฟล์ แล้วปิด OneShot จากตัวสลับแอปแล้วเปิดใหม่"
           }
         }
       }
@@ -2729,16 +2397,6 @@
         }
       }
     },
-    "Scan again" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "สแกนใหม่"
-          }
-        }
-      }
-    },
     "Scan more items" : {
       "localizations" : {
         "th" : {
@@ -2775,22 +2433,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ดูทั้งหมด"
-          }
-        }
-      }
-    },
-    "Sells %@/day · about %lld day(s) left" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Sells %1$@/day · about %2$lld day(s) left"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ขายวันละ %@ · เหลืออีกราว %lld วัน"
           }
         }
       }
@@ -2867,6 +2509,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "สัดส่วน"
+          }
+        }
+      }
+    },
+    "Share %lld reports" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แชร์รายงาน %lld รายการ"
           }
         }
       }
@@ -2991,26 +2643,6 @@
         }
       }
     },
-    "Speed race" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "แข่งความเร็ว"
-          }
-        }
-      }
-    },
-    "Stage timer" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "จับเวลาบนเวที"
-          }
-        }
-      }
-    },
     "Start a sale" : {
       "localizations" : {
         "th" : {
@@ -3081,26 +2713,6 @@
         }
       }
     },
-    "Take shot" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ถ่ายรูป"
-          }
-        }
-      }
-    },
-    "Tap GO with the video, then Ring up" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "แตะ GO พร้อมวิดีโอ แล้วกดคิดเงิน"
-          }
-        }
-      }
-    },
     "Tap it and pick the right item. OneShot never guesses a price." : {
       "localizations" : {
         "th" : {
@@ -3151,12 +2763,22 @@
         }
       }
     },
-    "Teaching needs the iPad's camera. In the simulator, show it with the products already taught." : {
+    "Teaching needs the device's camera. In the simulator, show it with the products already taught." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "การสอนสินค้าต้องใช้กล้องของ iPad ในซิมูเลเตอร์ให้สาธิตด้วยสินค้าที่สอนไว้แล้ว"
+            "value" : "การสอนสินค้าต้องใช้กล้องของเครื่อง ในซิมูเลเตอร์ให้สาธิตด้วยสินค้าที่สอนไว้แล้ว"
+          }
+        }
+      }
+    },
+    "That folder isn't a OneShot backup." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "โฟลเดอร์นี้ไม่ใช่ข้อมูลสำรองของ OneShot"
           }
         }
       }
@@ -3211,6 +2833,16 @@
         }
       }
     },
+    "The simulator has no camera here. Turn on Demo to ring up table photos." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ซิมูเลเตอร์ไม่มีกล้อง เปิดเดโมเพื่อคิดเงินจากรูปโต๊ะ"
+          }
+        }
+      }
+    },
     "The spoken total is always Thai." : {
       "localizations" : {
         "th" : {
@@ -3221,12 +2853,12 @@
         }
       }
     },
-    "This iPad doesn't run Apple Intelligence." : {
+    "This device doesn't run Apple Intelligence." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iPad เครื่องนี้ไม่รองรับ Apple Intelligence"
+            "value" : "เครื่องนี้ไม่รองรับ Apple Intelligence"
           }
         }
       }
@@ -3301,22 +2933,6 @@
         }
       }
     },
-    "Today: %lld sales, %lld items, %@. Average sale %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Today: %1$lld sales, %2$lld items, %3$@. Average sale %4$@."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "วันนี้: ขาย %lld บิล %lld ชิ้น รวม %@ ยอดเฉลี่ยต่อบิล %@"
-          }
-        }
-      }
-    },
     "Today: ^[%lld sale](inflect: true), ^[%lld item](inflect: true), %@. Average sale %@." : {
       "localizations" : {
         "en" : {
@@ -3339,16 +2955,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "สินค้าขายดี"
-          }
-        }
-      }
-    },
-    "Top sellers" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ขายดี"
           }
         }
       }
@@ -3579,44 +3185,12 @@
         }
       }
     },
-    "^[%lld item](inflect: true) in %@ s · %@ s an item" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "^[%1$lld item](inflect: true) in %2$@ s · %3$@ s an item"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld ชิ้น ใน %@ วินาที · ชิ้นละ %@ วินาที"
-          }
-        }
-      }
-    },
     "^[%lld item](inflect: true) to check before paying" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "มี %lld ชิ้นต้องตรวจก่อนชำระเงิน"
-          }
-        }
-      }
-    },
-    "^[%lld item](inflect: true) · %@ s an item" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "^[%1$lld item](inflect: true) · %2$@ s an item"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld ชิ้น · ชิ้นละ %@ วินาที"
           }
         }
       }
@@ -3733,26 +3307,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "× %lld"
-          }
-        }
-      }
-    },
-    "ชื่อ (ภาษาไทย, optional)" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ชื่อ (ภาษาไทย, ไม่บังคับ)"
-          }
-        }
-      }
-    },
-    "The simulator has no camera here. Turn on Demo to ring up table photos." : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ซิมูเลเตอร์ไม่มีกล้อง เปิดเดโมเพื่อคิดเงินจากรูปโต๊ะ"
           }
         }
       }

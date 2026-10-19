@@ -87,7 +87,7 @@ struct TicketPanel: View {
                     .font(.system(size: 60, weight: .light))
                     .foregroundStyle(Brand.accent)
                 Text("Ready for the next customer").font(.seed(.title3)).foregroundStyle(Brand.ink)
-                Text("Hold the iPad over the items, then tap Ring up.")
+                Text("Hold the camera over the items, then tap Ring up.")
                     .font(.seed(.callout))
                     .foregroundStyle(Brand.body)
                     .multilineTextAlignment(.center)

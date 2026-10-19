@@ -54,10 +54,12 @@ final class TourTests: XCTestCase {
             let ringUp = button(label("Ring up the items in view"))
             XCTAssertTrue(ringUp.waitForExistence(timeout: 5), "Ring up missing")
             ringUp.tap()
-            sleep(3)
-            shot("\(o)-04-checkout-bill")
+            // The bill's own buttons mean it's built; detection runs on the simulator's CPU, slow on a busy Mac.
             let addItems = button(label("Add items"))
-            if addItems.waitForExistence(timeout: 3) {
+            XCTAssertTrue(addItems.waitForExistence(timeout: 30), "no bill after Ring up")
+            sleep(1)
+            shot("\(o)-04-checkout-bill")
+            do {
                 addItems.tap()
                 let scanMore = button(label("Scan more items"))
                 // On a loaded Mac the first tap can land before the menu is ready.
@@ -68,15 +70,19 @@ final class TourTests: XCTestCase {
                 sleep(3)
                 shot("\(o)-06-scan-more")
                 ringUp.tap()
-                sleep(3)
+                XCTAssertTrue(addItems.waitForExistence(timeout: 30), "no merged bill after the second Ring up")
+                sleep(1)
                 shot("\(o)-07-bill-merged")
             }
             let charge = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", label("Charge"))).firstMatch
             if charge.waitForExistence(timeout: 3), charge.isEnabled {
                 charge.tap()
-                sleep(2)
+                let back = button(label("Back"))
+                if !back.waitForExistence(timeout: 10) { charge.tap() }   // swallowed on a busy Mac, like the tabs
+                XCTAssertTrue(back.waitForExistence(timeout: 10), "Pay didn't open")
+                sleep(1)
                 shot("\(o)-08-pay")
-                button(label("Back")).tap()
+                back.tap()
                 sleep(1)
             } else {
                 shot("\(o)-08-charge-disabled")
@@ -133,6 +139,11 @@ final class TourTests: XCTestCase {
         }
         target.tap()
         sleep(2)
+        // A tap during the previous page's scroll momentum is swallowed (seen on a loaded Mac, 20 Oct): once more.
+        if candidates[0].exists, !candidates[0].isSelected {
+            candidates[0].tap()
+            sleep(2)
+        }
     }
 
     /// Settings is a sheet from Home's gear.
