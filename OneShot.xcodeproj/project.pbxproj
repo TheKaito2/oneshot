@@ -38,6 +38,7 @@
 		2A0E67CBCEC133A1D93F01DD /* seed-kitkat-original-9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BDC2ADC33F795491781BDD85 /* seed-kitkat-original-9.jpg */; };
 		2FE0B1A3D7897191F88A2C66 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF9A96C637035C154E71F6A /* HomeView.swift */; };
 		3264C02D85014A0EDC54ADC5 /* seed-julies-cheddar-cheese-2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CC8FECE185ED11968CBBFBF0 /* seed-julies-cheddar-cheese-2.jpg */; };
+		352A1E44A0268C31FD293B3B /* TourTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7687C034191842C158F5C80C /* TourTests.swift */; };
 		36608B64A90A1C62960B03CA /* RaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3F9AA8A20978BA4EC963A5 /* RaceView.swift */; };
 		36C565E538ACBDB0B938CE04 /* StockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DC9A12C410BA936FADC061 /* StockTests.swift */; };
 		377EFCB3A8CF744908B9BAAA /* product-hersheys-nugget-cookiencream.png in Resources */ = {isa = PBXBuildFile; fileRef = A0C3F5CED9C24FB736C796E2 /* product-hersheys-nugget-cookiencream.png */; };
@@ -229,6 +230,13 @@
 			remoteGlobalIDString = 90AC37292F1F961D863303DE;
 			remoteInfo = OneShot;
 		};
+		A11B6EA4389FCDDC9CEFAE72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CA11403D8B450345C559696F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 90AC37292F1F961D863303DE;
+			remoteInfo = OneShot;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -247,6 +255,7 @@
 		1235A15AA395034A85617D28 /* seed-julies-cheddar-cheese-8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-julies-cheddar-cheese-8.jpg"; sourceTree = "<group>"; };
 		13806C435A81020D5CAA61B9 /* seed-lactasoy-melon-6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lactasoy-melon-6.jpg"; sourceTree = "<group>"; };
 		16C02A8526246824FB625D62 /* demo-3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "demo-3.jpg"; sourceTree = "<group>"; };
+		16D2F578D42217358E529F0F /* OneShotUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = OneShotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		16FA14A3A58C543E83DA9A60 /* seed-kitkat-original-3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-kitkat-original-3.jpg"; sourceTree = "<group>"; };
 		1921FCD58A7E2E05BDCAF4E3 /* seed-lays-ridges-bbq-2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-ridges-bbq-2.jpg"; sourceTree = "<group>"; };
 		193B97132D7A93C1D612129A /* seed-mars-bar-6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-mars-bar-6.jpg"; sourceTree = "<group>"; };
@@ -335,6 +344,7 @@
 		74121CB8D97CE6ADA3D00044 /* StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
 		7479A859D1EBE4AEDD4ADB55 /* Detector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detector.swift; sourceTree = "<group>"; };
 		75DE2DD9A8B0E9EBC210AD8B /* LINESeedSansTH_A_Rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LINESeedSansTH_A_Rg.ttf; sourceTree = "<group>"; };
+		7687C034191842C158F5C80C /* TourTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourTests.swift; sourceTree = "<group>"; };
 		7943CA2AFE87EE609B373F36 /* seed-sticko-fingers-vanilla-8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-sticko-fingers-vanilla-8.jpg"; sourceTree = "<group>"; };
 		79C44E7538B442F1DFB51977 /* seed-lays-ridges-bbq-1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-ridges-bbq-1.jpg"; sourceTree = "<group>"; };
 		79D13A60AB6BD2763F4DEF25 /* Resolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resolver.swift; sourceTree = "<group>"; };
@@ -471,8 +481,17 @@
 			children = (
 				753293141870CC8C36231AC9 /* OneShot */,
 				475E08887628278E428B5F9D /* OneShotTests */,
+				1BA3B98BCB1CEE4797E88B99 /* OneShotUITests */,
 				C56BA17F0EEE096637A10EF0 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		1BA3B98BCB1CEE4797E88B99 /* OneShotUITests */ = {
+			isa = PBXGroup;
+			children = (
+				7687C034191842C158F5C80C /* TourTests.swift */,
+			);
+			path = OneShotUITests;
 			sourceTree = "<group>";
 		};
 		2DE827E7E7C9215AEB6B02F6 /* Demo */ = {
@@ -592,6 +611,7 @@
 			children = (
 				4CE418B6464DF37B30DBD810 /* OneShot.app */,
 				BA68877CAA57F22EDF5BCD88 /* OneShotTests.xctest */,
+				16D2F578D42217358E529F0F /* OneShotUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -780,6 +800,24 @@
 			productReference = 4CE418B6464DF37B30DBD810 /* OneShot.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A7ED33D5628CC734B3980125 /* OneShotUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CA2C1C3AACDC74B48445504F /* Build configuration list for PBXNativeTarget "OneShotUITests" */;
+			buildPhases = (
+				5CC22D4BED617CC918E490F9 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				10076A2A1DF8236500BB7CEF /* PBXTargetDependency */,
+			);
+			name = OneShotUITests;
+			packageProductDependencies = (
+			);
+			productName = OneShotUITests;
+			productReference = 16D2F578D42217358E529F0F /* OneShotUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		CD0CAACFBDA48CA8555CA923 /* OneShotTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 418A515D9895E36FD9104699 /* Build configuration list for PBXNativeTarget "OneShotTests" */;
@@ -811,6 +849,11 @@
 						DevelopmentTeam = 97BS2K8UQ2;
 						ProvisioningStyle = Automatic;
 					};
+					A7ED33D5628CC734B3980125 = {
+						DevelopmentTeam = 97BS2K8UQ2;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 90AC37292F1F961D863303DE;
+					};
 					CD0CAACFBDA48CA8555CA923 = {
 						DevelopmentTeam = 97BS2K8UQ2;
 						ProvisioningStyle = Automatic;
@@ -834,6 +877,7 @@
 			targets = (
 				90AC37292F1F961D863303DE /* OneShot */,
 				CD0CAACFBDA48CA8555CA923 /* OneShotTests */,
+				A7ED33D5628CC734B3980125 /* OneShotUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1027,6 +1071,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5CC22D4BED617CC918E490F9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				352A1E44A0268C31FD293B3B /* TourTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CF56B72495CB90EA864A8661 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1078,6 +1130,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		10076A2A1DF8236500BB7CEF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 90AC37292F1F961D863303DE /* OneShot */;
+			targetProxy = A11B6EA4389FCDDC9CEFAE72 /* PBXContainerItemProxy */;
+		};
 		91F6E404B4FA2B32458E3E5C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 90AC37292F1F961D863303DE /* OneShot */;
@@ -1086,6 +1143,23 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		1E2B297016046C9773D8E6E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.krist.hackday.OneShotUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = OneShot;
+			};
+			name = Debug;
+		};
 		293CF41BAEF4D12826960D55 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1123,6 +1197,23 @@
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		52A6663E028E440ADE7BECE5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.krist.hackday.OneShotUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = OneShot;
 			};
 			name = Release;
 		};
@@ -1309,6 +1400,15 @@
 			buildConfigurations = (
 				293CF41BAEF4D12826960D55 /* Debug */,
 				43E2E4FA92CB3DBC5859B81B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CA2C1C3AACDC74B48445504F /* Build configuration list for PBXNativeTarget "OneShotUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E2B297016046C9773D8E6E2 /* Debug */,
+				52A6663E028E440ADE7BECE5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

@@ -43,12 +43,10 @@ struct RootView: View {
             Tab("Reports", systemImage: "chart.bar.xaxis", value: AppModel.Tab.reports) {
                 ReportsView(app: app)
             }
-            // Sidebar only: five titles overflow the portrait tab bar and hid Settings behind a chevron (19 Oct).
-            Tab("Settings", systemImage: "gearshape.fill", value: AppModel.Tab.settings) {
-                SettingsView(app: app)
-            }
-            .tabPlacement(.sidebarOnly)
         }
+        // Settings is a sheet from Home's gear, not a fifth tab: five titles overflowed the portrait tab bar, and as a
+        // sidebar-only tab it still joined the bar when selected and pushed Home behind a chevron (19 Oct).
+        .sheet(isPresented: $app.showingSettings) { SettingsView(app: app) }
         .tabViewStyle(.sidebarAdaptable)
         .environment(\.font, .seed(.body))
         .id(legibilityWeight == .bold)

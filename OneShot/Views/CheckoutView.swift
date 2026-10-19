@@ -36,9 +36,12 @@ struct CheckoutView: View {
             let layout = wide ? AnyLayout(HStackLayout(spacing: 20)) : AnyLayout(VStackLayout(spacing: 20))
             layout {
                 VStack(spacing: 14) {
-                    // Stacked: the zone gives the ticket room to list a whole basket.
+                    // Stacked: the zone takes its 36 % first and the ticket's list scrolls in the rest. Without the
+                    // priority, landscape with the sidebar docked squeezed the zone to ~200 pt (19 Oct).
                     scanZone.frame(maxHeight: wide ? .infinity : geometry.size.height * 0.36)
-                    controls
+                        .frame(minHeight: wide ? nil : geometry.size.height * 0.3)
+                    // Tips only where they fit: on a short stacked screen they pushed Charge off the bottom.
+                    controls(tipsFit: wide || geometry.size.height > 1000)
                 }
                 sidePanel
                     .frame(width: wide ? 400 : nil)
@@ -269,10 +272,10 @@ struct CheckoutView: View {
 
     // MARK: - Controls
 
-    private var controls: some View {
+    private func controls(tipsFit: Bool) -> some View {
         VStack(spacing: 10) {
             // Inline, not a popover: on iPad a popover eats the first tap, and that tap should ring up.
-            if app.scan == nil, !app.teaching {
+            if app.scan == nil, !app.teaching, tipsFit {
                 if let tip = tips.currentTip as? LockTip {
                     TipView(tip)
                 } else if let tip = tips.currentTip as? QuickAddTip {

@@ -129,8 +129,7 @@ struct HomeView: View {
                     .font(.seed(.subheadline))
                     .foregroundStyle(Brand.muted)
             }
-            // Settings lives in the sidebar; this reaches it in Split View too, where the sidebar isn't offered.
-            Button("Settings", systemImage: "gearshape") { app.tab = .settings }
+            Button("Settings", systemImage: "gearshape") { app.showingSettings = true }
                 .labelStyle(.iconOnly)
                 .buttonStyle(.glass)
         }

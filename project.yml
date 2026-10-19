@@ -57,7 +57,27 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
+  OneShotUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: OneShotUITests
+    dependencies:
+      - target: OneShot
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: OneShot
 schemes:
+  OneShotTour:
+    build:
+      targets:
+        OneShot: all
+        OneShotUITests: [test]
+    test:
+      config: Release
+      targets:
+        - OneShotUITests
   OneShot:
     build:
       targets:

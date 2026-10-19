@@ -79,21 +79,24 @@ struct TicketPanel: View {
         }
     }
 
+    /// The full welcome where there's room, just the line where there isn't: the footer with Charge always shows.
     private var emptyState: some View {
-        VStack(spacing: 14) {
-            Spacer()
-            Image(systemName: "viewfinder")
-                .font(.system(size: 60, weight: .light))
-                .foregroundStyle(Brand.accent)
-            Text("Ready for the next customer").font(.seed(.title3)).foregroundStyle(Brand.ink)
-            Text("Hold the iPad over the items, then tap Ring up.")
-                .font(.seed(.callout))
-                .foregroundStyle(Brand.body)
-                .multilineTextAlignment(.center)
-            Spacer()
+        ViewThatFits(in: .vertical) {
+            VStack(spacing: 14) {
+                Image(systemName: "viewfinder")
+                    .font(.system(size: 60, weight: .light))
+                    .foregroundStyle(Brand.accent)
+                Text("Ready for the next customer").font(.seed(.title3)).foregroundStyle(Brand.ink)
+                Text("Hold the iPad over the items, then tap Ring up.")
+                    .font(.seed(.callout))
+                    .foregroundStyle(Brand.body)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(24)
+            Text("Ready for the next customer").font(.seed(.callout)).foregroundStyle(Brand.body).padding(8)
+            Color.clear.frame(height: 0)
         }
-        .frame(maxWidth: .infinity)
-        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var items: some View {

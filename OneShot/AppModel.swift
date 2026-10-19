@@ -4,9 +4,11 @@ import TipKit
 /// State the tabs share: one camera, one catalog, one gallery, the race, and the sale in progress.
 @Observable
 final class AppModel {
-    enum Tab: Hashable { case home, checkout, products, reports, settings }
+    enum Tab: Hashable { case home, checkout, products, reports }
 
     var tab: Tab = .home
+    /// Settings, as a sheet over whatever tab is showing.
+    var showingSettings = false
     var catalog = Catalog.load()
     /// The sale on the counter: one locked frame and its regions. nil = the scan zone is live.
     var scan: LockedScan? {

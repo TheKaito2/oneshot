@@ -26,6 +26,7 @@ struct SettingsView: View {
     /// Sample sales are only offered on empty books.
     @Query private var sales: [SaleRecord]
     @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
     var body: some View {
@@ -123,6 +124,10 @@ struct SettingsView: View {
             }
             .gridList()
             .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+            }
             .alert("Turn off the refund PIN?", isPresented: $turningOffPIN) {
                 SecureField("Current PIN", text: $pinEntry).keyboardType(.numberPad)
                 Button("Turn off", role: .destructive) {
