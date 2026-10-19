@@ -4,7 +4,7 @@ import MetricKit
 /// Crash, hang and disk-write reports from iOS (MetricKit), kept as JSON in Documents/Diagnostics so the owner can
 /// share them from Settings. Apple's own, on the device: no third-party SDK, nothing sent anywhere by OneShot.
 /// iOS delivers them at most once a day, for the day before (immediately on iOS 15+ for crashes, on the next launch).
-final class Diagnostics: NSObject, MXMetricManagerSubscriber {
+final class Diagnostics: NSObject, MXMetricManagerSubscriber, Sendable {
     static let shared = Diagnostics()
     static let folder = URL.documentsDirectory.appending(path: "Diagnostics", directoryHint: .isDirectory)
     /// A month of reports is plenty to share; older ones are deleted.

@@ -1,7 +1,7 @@
 // Grades a detector on the exam (data/raw/mixed-test, 42 real tables) as the till rings it up: the app's whole lock
 // path, on the Mac, with no Ultralytics. Built with the app's own Resolver, Detector (types) and Splitter:
 //
-//   swiftc -O tools/grade/main.swift OneShot/Recognition/{Resolver,Detector,Splitter}.swift -o build/grade
+//   swiftc -O tools/grade/main.swift OneShot/Recognition/{Resolver,Detector,Splitter}.swift OneShot/Log.swift -o build/grade
 //   build/grade <model .mlpackage|.mlmodel|.mlmodelc> [--item] [--photos data/raw/mixed-test]
 //               [--truth data/exam-truth.tsv]
 //
@@ -27,6 +27,8 @@ func option(_ name: String, _ fallback: String) -> String {
     defer { arguments.removeSubrange(index...index + 1) }
     return arguments[index + 1]
 }
+let mergeIoU = CGFloat(Double(option("--merge", "0.6")) ?? 0.6)   // Gallery.mergeOverlaps' threshold in the app
+let nmsIoU = Double(option("--nms", "-1")) ?? -1   // the model's own iouThreshold input; -1 leaves its default
 let itemMode = arguments.contains("--item")
 arguments.removeAll { $0 == "--item" }
 let root = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
@@ -133,14 +135,19 @@ for url in try FileManager.default.contentsOfDirectory(at: seedDir, includingPro
 // MARK: - Detector
 
 final class Thresholds: NSObject, MLFeatureProvider {
-    var featureNames: Set<String> { ["confidenceThreshold"] }
+    var featureNames: Set<String> { nmsIoU < 0 ? ["confidenceThreshold"] : ["confidenceThreshold", "iouThreshold"] }
     func featureValue(for featureName: String) -> MLFeatureValue? {
-        featureName == "confidenceThreshold" ? MLFeatureValue(double: 0.25) : nil   // CameraController.lockFloor
+        switch featureName {
+        case "confidenceThreshold": MLFeatureValue(double: 0.25)   // CameraController.lockFloor
+        case "iouThreshold" where nmsIoU >= 0: MLFeatureValue(double: nmsIoU)
+        default: nil
+        }
     }
 }
 var modelURL = URL(fileURLWithPath: modelArg, relativeTo: root)
 if modelURL.pathExtension != "mlmodelc" { modelURL = try await MLModel.compileModel(at: modelURL) }
 let coreML = try MLModel(contentsOf: modelURL)
+let tiled = Detector.inputSide(coreML) < 400   // as the app decides
 let vnModel = try VNCoreMLModel(for: coreML)
 vnModel.featureProvider = Thresholds()
 let request = VNCoreMLRequest(model: vnModel)
@@ -155,12 +162,16 @@ let skus = Set(views.keys)
 for (index, photo) in photos.enumerated() {
     guard let image = uprightImage(photo) else { print("unreadable \(photo.lastPathComponent)"); exit(1) }
     let start = CFAbsoluteTimeGetCurrent()
-    try VNImageRequestHandler(cgImage: image, orientation: .up).perform([request])
-    if index > 0 { detectMs.append((CFAbsoluteTimeGetCurrent() - start) * 1000) }   // first call pays the load
-    let raw = (request.results as? [VNRecognizedObjectObservation] ?? []).map {
-        Box(rect: $0.boundingBox, guesses: $0.labels.prefix(3).map { Guess(label: $0.identifier, confidence: $0.confidence) })
+    var raw: [Box] = []
+    for tile in tiled ? Detector.tiles : [CGRect(x: 0, y: 0, width: 1, height: 1)] {
+        guard let crop = image.cropping(to: Detector.pixelRect(tile, width: image.width, height: image.height)) else { continue }
+        try VNImageRequestHandler(cgImage: crop, orientation: .up).perform([request])
+        raw += Detector.fromTile((request.results as? [VNRecognizedObjectObservation] ?? []).map {
+            Box(rect: $0.boundingBox, guesses: $0.labels.prefix(3).map { Guess(label: $0.identifier, confidence: $0.confidence) })
+        }, tile)
     }
-    let boxes = Gallery.mergeOverlaps(raw)
+    if index > 0 { detectMs.append((CFAbsoluteTimeGetCurrent() - start) * 1000) }   // first call pays the load
+    let boxes = Gallery.mergeOverlaps(raw, iou: mergeIoU)
     let missed = try Splitter.instances(in: image).filter { instance in !boxes.contains { Gallery.covers($0.rect, instance) } }
     var regions: [Region] = []
     for (rect, guesses, fromMask) in boxes.map({ ($0.rect, $0.guesses, false) }) + missed.map({ ($0, [Guess](), true) }) {
@@ -188,7 +199,7 @@ func score(_ bill: (String) -> (billed: [String: Int], yellow: Int)) -> String {
     return "right \(right)/\(units)  wrong \(wrong)  missed \(missed)  yellow \(yellow)  exact bills \(exact)/\(truth.count)"
 }
 
-print("model: \(modelArg)\(itemMode ? "  (item mode: gallery names everything)" : "")")
+print("model: \(modelArg)\(itemMode ? "  (item mode: gallery names everything)" : "")\(tiled ? "  (tiled: frame + 4 tiles)" : "")")
 print(String(format: "detector: %.0f ms mean per photo on this Mac", detectMs.reduce(0, +) / Double(max(detectMs.count, 1))))
 
 if !itemMode {

@@ -185,7 +185,7 @@ final class CameraController: NSObject, @unchecked Sendable {
         try await onVideoQueue { try self.uprightFrame() }
     }
 
-    private func onVideoQueue<T>(_ work: @escaping () throws -> T) async throws -> T {
+    private func onVideoQueue<T: Sendable>(_ work: @escaping @Sendable () throws -> T) async throws -> T {
         try await withCheckedThrowingContinuation { continuation in
             videoQueue.async { continuation.resume(with: Result(catching: work)) }
         }

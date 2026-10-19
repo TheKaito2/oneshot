@@ -2,9 +2,11 @@
 // Checkpoints go to the session folder; rerunning the same command after a crash or reboot carries on from the last one.
 //
 //   swiftc -O tools/train_createml.swift -o build/train_createml
-//   build/train_createml <name> <annotation prefix> <iterations>
-//   e.g. build/train_createml cm-12class createml 1500      -> models/cm-12class.mlmodel
-//        build/train_createml cm-item createml-item 1500
+//   build/train_createml <name> <annotation prefix> <iterations> [data dir, default data/yolo] [tl|darknet]
+//   e.g. build/train_createml cm-12class createml 1500                          -> models/cm-12class.mlmodel
+//        build/train_createml cm-tiles createml-tiles 1500 data/yolo-tiles      (tiles: tools/createml_tiles.py)
+//        build/train_createml cm-darknet createml 3000 data/yolo darknet        (full network, 416 px input)
+//   Grade a checkpoint while a long run goes on: build/train_createml --export <session dir> <out.mlmodel>
 //
 // Transfer learning on Apple's ObjectPrint features: ~49 min per 300 iterations on the 8 GB M1 (measured Oct 2026).
 import Combine
@@ -13,13 +15,23 @@ import CreateML
 import Foundation
 
 let args = CommandLine.arguments
-guard args.count == 4, let iterations = Int(args[3]) else {
-    print("usage: train_createml <name> <annotation prefix> <iterations>")
+let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+if args.count == 4, args[1] == "--export" {
+    // The newest checkpoint of a session, written as a model.
+    let session = try MLObjectDetector.restoreTrainingSession(sessionParameters:
+        MLTrainingSessionParameters(sessionDirectory: URL(fileURLWithPath: args[2])))
+    guard let checkpoint = session.checkpoints.last else { print("no checkpoint yet"); exit(1) }
+    try MLObjectDetector(checkpoint: checkpoint).write(to: URL(fileURLWithPath: args[3]))
+    print("exported iteration \(checkpoint.iteration)")
+    exit(0)
+}
+guard (4...6).contains(args.count), let iterations = Int(args[3]) else {
+    print("usage: train_createml <name> <annotation prefix> <iterations> [data dir] [tl|darknet]")
     exit(2)
 }
 let name = args[1], prefix = args[2]
-let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
-let data = root.appending(path: "data/yolo")
+let data = root.appending(path: args.count > 4 ? args[4] : "data/yolo")
+let darknet = args.count > 5 && args[5] == "darknet"
 let session = root.appending(path: "runs/createml/\(name)")
 let output = root.appending(path: "models/\(name).mlmodel")
 
@@ -37,9 +49,9 @@ do {
         print("resuming \(session.path(percentEncoded: false))")
         job = try MLObjectDetector.resume(MLObjectDetector.restoreTrainingSession(sessionParameters: sessionParameters))
     } else {
-        let parameters = try MLObjectDetector.ModelParameters(
+        let parameters = MLObjectDetector.ModelParameters(
             validation: .dataSource(source("val")), batchSize: nil, maxIterations: iterations,
-            algorithm: .transferLearning(.objectPrint(revision: 1)))
+            algorithm: darknet ? .darknetYolo : .transferLearning(.objectPrint(revision: 1)))
         job = try MLObjectDetector.train(trainingData: source("train"), annotationType: annotation,
                                          parameters: parameters, sessionParameters: sessionParameters)
     }
@@ -70,7 +82,7 @@ job.result.sink { completion in
 } receiveValue: { detector in
     do {
         let metadata = MLModelMetadata(author: "OneShot", shortDescription:
-            "OneShot product detector (\(name)), Create ML transfer learning, \(iterations) iterations", version: "1.0")
+            "OneShot product detector (\(name)), Create ML \(darknet ? "full network (darknetYolo)" : "transfer learning"), \(iterations) iterations", version: "1.0")
         try FileManager.default.createDirectory(at: output.deletingLastPathComponent(), withIntermediateDirectories: true)
         try detector.write(to: output, metadata: metadata)
         let validation = detector.validationMetrics

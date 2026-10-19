@@ -18,3 +18,4 @@ tools/pylib/
 
 # wrangler deploy cache (account id)
 .wrangler/
+data/yolo-tiles/

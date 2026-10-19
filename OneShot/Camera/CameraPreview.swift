@@ -36,8 +36,8 @@ final class PreviewView: UIView {
         let coordinator = AVCaptureDevice.RotationCoordinator(device: device, previewLayer: previewLayer)
         // KVO updates arrive on the main queue (AVCaptureDevice.h).
         observation = coordinator.observe(\.videoRotationAngleForHorizonLevelPreview, options: [.initial, .new]) { [weak self] coordinator, _ in
+            let angle = coordinator.videoRotationAngleForHorizonLevelPreview   // read here: the coordinator isn't Sendable
             MainActor.assumeIsolated {
-                let angle = coordinator.videoRotationAngleForHorizonLevelPreview
                 guard let self, let connection = self.previewLayer.connection, connection.isVideoRotationAngleSupported(angle) else { return }
                 connection.videoRotationAngle = angle
                 self.onAngle?(angle)
