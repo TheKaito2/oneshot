@@ -32,6 +32,23 @@ final class TourTests: XCTestCase {
         dismissCameraPrompt()
     }
 
+    /// The Teach panel in Checkout: header, scrolling middle and action button all reachable (iPhone, 20 Oct).
+    func testTeachPanel() throws {
+        go("Checkout")
+        let teach = button("Teach")
+        XCTAssertTrue(teach.waitForExistence(timeout: 10), "Teach missing")
+        teach.tap()
+        let cancel = button("Cancel")
+        XCTAssertTrue(cancel.waitForExistence(timeout: 10), "Teach panel didn't open")
+        XCTAssertTrue(cancel.isHittable, "Cancel is off screen")
+        XCTAssertTrue(button("Take photo").isHittable, "Take photo is off screen")
+        shot("portrait-14-teach")
+        app.staticTexts["Put the item on its own with a gap around it. Turn it a little between shots."].swipeUp()
+        sleep(1)
+        shot("portrait-15-teach-scrolled")
+        cancel.tap()
+    }
+
     func testTour() throws {
         addSampleSalesIfOffered()
         // iPhone is portrait only.

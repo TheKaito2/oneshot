@@ -43,9 +43,9 @@ struct CheckoutView: View {
                     scanZone.frame(maxHeight: wide ? .infinity : geometry.size.height * zoneShare)
                         .frame(minHeight: wide ? nil : geometry.size.height * min(zoneShare, 0.3))
                     // Tips only where they fit: on a short stacked screen they pushed Charge off the bottom.
-                    // iPhone with a bill open: the greyed controls took the ticket's last rows (seen 19 Oct);
-                    // the bill's own Add items / Start over buttons cover what's left to do.
-                    if !(billOpen && geometry.size.height < 800) {
+                    // iPhone with a bill open or teaching: the greyed controls took the panel's room (seen 19–20 Oct);
+                    // the bill's own Add items / Start over buttons and the panel's Cancel cover what's left to do.
+                    if !((billOpen || app.teaching) && geometry.size.height < 800) {
                         controls(tipsFit: wide || geometry.size.height > 1000)
                     }
                 }

@@ -34,6 +34,7 @@ struct QuickAddPanel: View {
     }
 
     var body: some View {
+        // Header and the action button stay put; what's between scrolls, so a short iPhone slot can reach it all.
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
@@ -43,39 +44,21 @@ struct QuickAddPanel: View {
                 Spacer()
                 Button("Cancel", action: onCancel)
             }
-            if !typing {
-                HStack(spacing: 14) {
-                    ZStack {
-                        Circle().stroke(Brand.sky.opacity(0.25), lineWidth: 8)
-                        Circle()
-                            .trim(from: 0, to: CGFloat(shots.count) / CGFloat(Self.shotsNeeded))
-                            .stroke(Brand.accent, style: StrokeStyle(lineWidth: 8, lineCap: .round))
-                            .rotationEffect(.degrees(-90))
-                        Text("\(shots.count)/\(Self.shotsNeeded)").font(.seed(.headline))
-                    }
-                    .frame(width: 64, height: 64)
-                    .animation(.spring, value: shots.count)
-                    Text("Put the item on its own with a gap around it. Turn it a little between shots.")
-                        .font(.seed(.callout))
-                        .foregroundStyle(Brand.muted)
-                }
-                if let note {
-                    Text(note).font(.seed(.callout)).padding(10).background(.yellow, in: .rect(cornerRadius: 10)).foregroundStyle(.black)
-                }
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 4), spacing: 8) {
-                    ForEach(shots) { shot in
-                        Image(decorative: shot.crop, scale: 1)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(height: 72)
-                            .frame(maxWidth: .infinity)
-                            .clipShape(.rect(cornerRadius: 12))
-                            .transition(.scale.combined(with: .opacity))
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    if !typing { progress }
+                    if shots.count >= Self.shotsNeeded {
+                        VStack(spacing: 10) {
+                            TextField("Name in English", text: $nameEN).focused($typing)
+                            TextField("Name in Thai", text: $nameTH).focused($typing)
+                            TextField("Price ฿", text: $price).keyboardType(.decimalPad).focused($typing)
+                        }
+                        .textFieldStyle(.roundedBorder)
                     }
                 }
-                .animation(.spring, value: shots.count)
             }
-            Spacer(minLength: 0)
+            .scrollBounceBehavior(.basedOnSize)
+            .scrollDismissesKeyboard(.interactively)
             if shots.count < Self.shotsNeeded {
                 Button {
                     Task { await shoot() }
@@ -93,12 +76,6 @@ struct QuickAddPanel: View {
                         .foregroundStyle(Brand.muted)
                 }
             } else {
-                VStack(spacing: 10) {
-                    TextField("Name in English", text: $nameEN).focused($typing)
-                    TextField("Name in Thai", text: $nameTH).focused($typing)
-                    TextField("Price ฿", text: $price).keyboardType(.decimalPad).focused($typing)
-                }
-                .textFieldStyle(.roundedBorder)
                 Button { save() } label: {
                     Text("Save item").font(.seed(.title3, .bold)).frame(maxWidth: .infinity).padding(.vertical, 8)
                 }
@@ -111,6 +88,41 @@ struct QuickAddPanel: View {
         .animation(.easeOut(duration: 0.25), value: typing)
         .frame(maxHeight: .infinity, alignment: .top)
         .card(padding: 0)
+    }
+
+    /// The shot count, the tip, a failed shot's note and the photos so far.
+    @ViewBuilder
+    private var progress: some View {
+        HStack(spacing: 14) {
+            ZStack {
+                Circle().stroke(Brand.sky.opacity(0.25), lineWidth: 8)
+                Circle()
+                    .trim(from: 0, to: CGFloat(shots.count) / CGFloat(Self.shotsNeeded))
+                    .stroke(Brand.accent, style: StrokeStyle(lineWidth: 8, lineCap: .round))
+                    .rotationEffect(.degrees(-90))
+                Text("\(shots.count)/\(Self.shotsNeeded)").font(.seed(.headline))
+            }
+            .frame(width: 64, height: 64)
+            .animation(.spring, value: shots.count)
+            Text("Put the item on its own with a gap around it. Turn it a little between shots.")
+                .font(.seed(.callout))
+                .foregroundStyle(Brand.muted)
+        }
+        if let note {
+            Text(note).font(.seed(.callout)).padding(10).background(.yellow, in: .rect(cornerRadius: 10)).foregroundStyle(.black)
+        }
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 4), spacing: 8) {
+            ForEach(shots) { shot in
+                Image(decorative: shot.crop, scale: 1)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 72)
+                    .frame(maxWidth: .infinity)
+                    .clipShape(.rect(cornerRadius: 12))
+                    .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .animation(.spring, value: shots.count)
     }
 
     private func shoot() async {
