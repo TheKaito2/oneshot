@@ -129,6 +129,17 @@ final class TourTests: XCTestCase {
                     toggle.tap()
                     sleep(2)
                     shot("\(o)-14-checkout-no-sidebar")
+                    // The full-width layout with a bill on it (the thumbnail and store screenshots use this one).
+                    let ringUp = button(label("Ring up the items in view"))
+                    if ringUp.waitForExistence(timeout: 5), ringUp.isEnabled {
+                        ringUp.tap()
+                        if button(label("Add items")).waitForExistence(timeout: 30) {
+                            sleep(1)
+                            shot("\(o)-15-checkout-bill-no-sidebar")
+                        }
+                        button(label("Start over")).tap()
+                        sleep(1)
+                    }
                     if toggle.exists, toggle.isHittable { toggle.tap() }
                     sleep(1)
                 } else {
