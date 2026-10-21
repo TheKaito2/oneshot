@@ -259,4 +259,15 @@ struct StoreTests {
         try stock.save(to: context)
         #expect(try context.fetch(FetchDescriptor<TombstoneRecord>()).map(\.key) == ["lays"])
     }
+
+    /// A backup whose products can't be read throws before touching this device's catalog.
+    @Test func unreadableBackupLeavesTheCatalog() throws {
+        let folder = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        try Data("not json".utf8).write(to: folder.appending(path: "products.json"))
+        try Catalog.saveQuickAdd(lays, in: context)
+        #expect(throws: CocoaError.self) { try Catalog.importBackup(from: folder, into: context) }
+        #expect(Catalog.load(from: context).products.map(\.id) == ["lays"])
+    }
 }

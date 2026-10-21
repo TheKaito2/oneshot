@@ -151,15 +151,27 @@ struct Catalog {
         let used = ((try? context.fetchCount(FetchDescriptor<SaleRecord>())) ?? 0) > 0
             || !(UserDefaults.standard.string(forKey: SettingsKey.promptPayID) ?? "").isEmpty
             || FileManager.default.fileExists(atPath: folder.appending(path: "gallery.json").path(percentEncoded: false))
-        guard isEmpty(context), hasFiles || (used && folder == .documentsDirectory) else { return }
-        let prices = read([String: Decimal].self, from: files[1]) ?? [:]
-        let costs = read([String: Decimal].self, from: files[2]) ?? [:]
-        for var product in bundled() + (read([Product].self, from: files[0]) ?? []) {
-            if let price = prices[product.id] { product.price = price }
-            product.cost = costs[product.id]
+        // A shop that went through onboarding chose its products (maybe none): never fill it with the bundled ones.
+        let onboarded = folder == .documentsDirectory && UserDefaults.standard.object(forKey: OnboardingKey.done) != nil
+        guard isEmpty(context), !onboarded, hasFiles || (used && folder == .documentsDirectory) else { return }
+        // A file that exists but won't read stops the import, so its products aren't lost by renaming it below.
+        let exists = { (url: URL) in FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) }
+        let taught = read([Product].self, from: files[0])
+        let prices = read([String: Decimal].self, from: files[1])
+        let costs = read([String: Decimal].self, from: files[2])
+        let codes = read([String: String].self, from: files[3])
+        guard (taught != nil || !exists(files[0])) && (prices != nil || !exists(files[1]))
+                && (costs != nil || !exists(files[2])) && (codes != nil || !exists(files[3])) else {
+            Log.error("catalog files unreadable; left in place, not imported")
+            return
+        }
+        let (priceEdits, costEdits) = (prices ?? [:], costs ?? [:])
+        for var product in bundled() + (taught ?? []) {
+            if let price = priceEdits[product.id] { product.price = price }
+            product.cost = costEdits[product.id]
             context.insert(ProductRecord(product))
         }
-        for (code, sku) in read([String: String].self, from: files[3]) ?? [:] { context.insert(BarcodeRecord(code: code, sku: sku)) }
+        for (code, sku) in codes ?? [:] { context.insert(BarcodeRecord(code: code, sku: sku)) }
         do {
             try context.save()
             for file in files where FileManager.default.fileExists(atPath: file.path(percentEncoded: false)) {
@@ -181,15 +193,21 @@ struct Catalog {
         let hasV3 = FileManager.default.fileExists(atPath: productsFile.path(percentEncoded: false))
         let hasLegacy = FileManager.default.fileExists(atPath: folder.appending(path: "quickadd.json").path(percentEncoded: false))
         guard hasV3 || hasLegacy else { return }
+        // Read first: a backup that can't be read must not cost this device its catalog.
+        let products = hasV3 ? read([Product].self, from: productsFile) : []
+        guard let products else {
+            throw CocoaError(.fileReadCorruptFile, userInfo: [NSLocalizedDescriptionKey: String(localized: "The backup's products can't be read.")])
+        }
+        // Products this device had that the backup doesn't are gone: tombstones tell a synced account too.
+        let kept = Set(products.map(\.id))
+        for record in try context.fetch(FetchDescriptor<ProductRecord>()) where !kept.contains(record.id) && record.syncedAt != nil {
+            context.insert(TombstoneRecord(kind: "product", key: record.id))
+        }
         try context.delete(model: ProductRecord.self)
         try context.delete(model: BarcodeRecord.self)
         guard hasV3 else {
             importLegacy(into: context, folder: folder)
             return
-        }
-        guard let products = read([Product].self, from: productsFile) else {
-            context.rollback()
-            throw CocoaError(.fileReadCorruptFile, userInfo: [NSLocalizedDescriptionKey: String(localized: "The backup's products can't be read.")])
         }
         products.forEach { context.insert(ProductRecord($0)) }
         for (code, sku) in read([String: String].self, from: folder.appending(path: "barcodes.json")) ?? [:] {

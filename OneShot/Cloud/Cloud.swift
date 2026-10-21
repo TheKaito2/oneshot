@@ -51,8 +51,9 @@ final class Account {
 
     /// Signs out; the shop stays on this device.
     func signOut() async throws {
+        SyncEngine.shared.reset()   // first: signing out offline must still stop syncing this account
+        email = nil
         try await require().auth.signOut()
-        SyncEngine.shared.reset()
     }
 
     /// Deletes the account and everything stored for it on the server (Edge Function `delete-account`, which holds the

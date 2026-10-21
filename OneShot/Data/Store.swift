@@ -356,7 +356,7 @@ enum Store {
             if FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) { try FileManager.default.removeItem(at: url) }
         }
         try RefundPIN.save(nil)
-        for key in [SettingsKey.shopName, SettingsKey.promptPayID, OnboardingKey.done] {
+        for key in [SettingsKey.shopName, SettingsKey.promptPayID, OnboardingKey.done, SyncEngine.ownerKey] {
             UserDefaults.standard.removeObject(forKey: key)
         }
     }
