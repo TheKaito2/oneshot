@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		000EFF74EF79BD3D6C1A40AB /* product-lays-nori-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0C74EFFF8E2618A54F9947 /* product-lays-nori-small.png */; };
-		00F310AF79BCD3ADC2C10397 /* product-mm-peanut.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5EDAD033290AA883867367C8 /* product-mm-peanut.jpg */; };
 		01C0283A4286C1D06D053C2A /* seed-lays-nori-medium-2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 52FB61D724B4CADF61E09747 /* seed-lays-nori-medium-2.jpg */; };
 		03CECDEA258546C122DB8795 /* seed-sticko-fingers-vanilla-3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2971B31F4FF6C1866E09479E /* seed-sticko-fingers-vanilla-3.jpg */; };
 		042E98A9DB7E7E416503FBD9 /* seed-hersheys-nugget-cookiencream-1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 71F0DB829D40E37AF0E1F7B5 /* seed-hersheys-nugget-cookiencream-1.jpg */; };
@@ -56,6 +55,7 @@
 		3CAE1D0A336A8080830D9500 /* seed-lays-ridges-bbq-4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 30E559C3CAD431639C845573 /* seed-lays-ridges-bbq-4.jpg */; };
 		3D36255E96EB1078B8EB3AEE /* seed-lays-ridges-bbq-0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7AFD6010FCA6D770C53D37E7 /* seed-lays-ridges-bbq-0.jpg */; };
 		3D595E4976C822E5144D29EF /* seed-sticko-fingers-vanilla-2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 909309FC929EE6082EE32ABF /* seed-sticko-fingers-vanilla-2.jpg */; };
+		3FB6421735842537A570960D /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 3C431A29F3271644DAE31115 /* Supabase */; };
 		4032F5405CE7C5D42C4CB7AC /* seed-kitkat-original-8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5C6898C8A636DD194487B241 /* seed-kitkat-original-8.jpg */; };
 		41C0E0135D2A97C13A1463E4 /* seed-kitkat-original-0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9ADED80691CBAD676A5DD996 /* seed-kitkat-original-0.jpg */; };
 		440FDBE343C28BA34545F111 /* LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B6EF81A8DD1D81A1A5757F /* LocalizationTests.swift */; };
@@ -76,12 +76,10 @@
 		539A543F766DDF846CA670E2 /* DemoFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBDB46C65D8A96952312A1D /* DemoFeed.swift */; };
 		543D3FAEE6DD6062BCCA111E /* seed-sticko-fingers-vanilla-9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 42A7CE4EB9E054EA65A283B4 /* seed-sticko-fingers-vanilla-9.jpg */; };
 		56107A15431021592518EB24 /* Splitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CA9593BB0FCB5474569625 /* Splitter.swift */; };
-		56369F692BCB6E3E45F33516 /* product-lays-ridges-bbq.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6ECFA92EB011D55C4FC4B533 /* product-lays-ridges-bbq.jpg */; };
 		5639F450F0AB6625512D072C /* seed-lactasoy-melon-7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 254B21909F275CD80DE92907 /* seed-lactasoy-melon-7.jpg */; };
 		571F298DF3A5494F5CA0D7F8 /* seed-julies-cheddar-cheese-1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F3B0C1E1832C0BAB44A3E3D7 /* seed-julies-cheddar-cheese-1.jpg */; };
 		5789DDC2F9ECDD5434523F0D /* seed-jolly-cola-0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B2634DD08D355A69EDB3E896 /* seed-jolly-cola-0.jpg */; };
 		5C673E0A20851C1DAB3B8873 /* SalesLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5B313C3C3976B536281534 /* SalesLog.swift */; };
-		5CC50292D1C18B05DA1A2BB2 /* product-lactasoy-melon.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 68C74617749BEDE3D41E1FE9 /* product-lactasoy-melon.jpg */; };
 		5CE2A0A44C355E13C03C58DA /* seed-jolly-cola-5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6B64C8C217F839A61CCF9A27 /* seed-jolly-cola-5.jpg */; };
 		5D2BC00AC9373394975099F3 /* product-sticko-fingers-vanilla.png in Resources */ = {isa = PBXBuildFile; fileRef = B1C2BE243A017BDEA5FCE3F6 /* product-sticko-fingers-vanilla.png */; };
 		5E6069BEA8A7003405A4999D /* TicketPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1200427F390DA7E78BC53698 /* TicketPanel.swift */; };
@@ -97,7 +95,6 @@
 		6B1B0845A592F650C72FA7C6 /* seed-jolly-cola-3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E023A798B3B6226CF6D300A8 /* seed-jolly-cola-3.jpg */; };
 		6BFD8D05410C2BA90C322BD9 /* Bill.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3638DD3C29DBFEB14CE041C /* Bill.swift */; };
 		6CC325201069610286F2062B /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62FE429ED0CD5592318CF5 /* Log.swift */; };
-		6D2D3C634C2988CA5CB9ADAD /* product-sticko-fingers-vanilla.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CC9D5A3C98FF2191EBC1F3F3 /* product-sticko-fingers-vanilla.jpg */; };
 		6E2A13B6C14E86DD70CDEA9D /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9444070920C3AB9E03BC9604 /* CameraPreview.swift */; };
 		6E40123502E9BE87AAE193C6 /* BarcodeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52CBAAFF3C0EFD5D8C874AD4 /* BarcodeSheet.swift */; };
 		6E9F7C1C0468C12E4E04AEAB /* seed-mars-bar-4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92EE3D73A08D55F678408CFD /* seed-mars-bar-4.jpg */; };
@@ -109,7 +106,6 @@
 		79069E1FBEB57065B0033FFA /* seed-lays-nori-small-2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 583465CFF478074F5FF22A50 /* seed-lays-nori-small-2.jpg */; };
 		7984D301FFC7E26D4321D81F /* seed-lactasoy-melon-8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7254D1948A9B59F4E94E0AC0 /* seed-lactasoy-melon-8.jpg */; };
 		7AABE250931EF8A7778F9C82 /* seed-lactasoy-melon-4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 22A2AA1D1CEA6132C7AB3CA9 /* seed-lactasoy-melon-4.jpg */; };
-		7BA823EC43D97B9E3C9E1279 /* product-kitkat-original.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3BA20245C82B8C1C50DEA89C /* product-kitkat-original.jpg */; };
 		7EB991B0C1C39C49777FE9D9 /* seed-jolly-cola-4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D8176A4779E7466F22D89678 /* seed-jolly-cola-4.jpg */; };
 		7F7972BD0BB54710C6D3E237 /* seed-lays-ridges-bbq-6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9E7AE03E86C02F60081C0A4D /* seed-lays-ridges-bbq-6.jpg */; };
 		7F9637BA9CD427A8A3E7674B /* seed-mars-bar-6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 193B97132D7A93C1D612129A /* seed-mars-bar-6.jpg */; };
@@ -147,7 +143,6 @@
 		A249FE0EE459AF3901BCBD7C /* seed-mm-peanut-6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0154D5678EDAD9AB9031F2FD /* seed-mm-peanut-6.jpg */; };
 		A26E25EEE829EFF340851D71 /* seed-hersheys-nugget-cookiencream-8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0D0A855CA9C4F5DB6E860D70 /* seed-hersheys-nugget-cookiencream-8.jpg */; };
 		A2A1450A2925D65953E30966 /* Stock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211D611D429D947643D0FED8 /* Stock.swift */; };
-		A73CD070E97D6ACDAA109F94 /* product-julies-cheddar-cheese.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4CF88D69A4DF7563672711F8 /* product-julies-cheddar-cheese.jpg */; };
 		AAA3A9FC3D0FFA57998F32F9 /* product-lays-nori-medium.png in Resources */ = {isa = PBXBuildFile; fileRef = 291549AFDA8D234F26083A7C /* product-lays-nori-medium.png */; };
 		AC0C7B5335E14220FE6619B7 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C188D9E758B68530943A3FA /* CameraController.swift */; };
 		AD67C8BF7001ACCFED567093 /* seed-lays-ridges-hot-chilli-squid-2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CBC53519FC9A8719CFAB3834 /* seed-lays-ridges-hot-chilli-squid-2.jpg */; };
@@ -174,11 +169,10 @@
 		C1EB9BF04BD24E9E4226EA32 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 111429B800B04FD5A93EF2AD /* Localizable.xcstrings */; };
 		C207073E488B8C0D76DF7BBC /* seed-lays-nori-small-9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8DFBECD8BBC65FB99EBD87E6 /* seed-lays-nori-small-9.jpg */; };
 		C2A399FFF028D9FF7F8BB05E /* seed-hersheys-nugget-cookiencream-5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6FC8FB0C2250A60C4E440D11 /* seed-hersheys-nugget-cookiencream-5.jpg */; };
-		C3C37C9DDD8014520B319054 /* product-mars-bar.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B06D5273973E2EA9188EC2DA /* product-mars-bar.jpg */; };
 		C45E486108C07745BD1AA3CE /* ReceiptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20202E074CE489F83AFFC033 /* ReceiptView.swift */; };
 		C4C60759AD2C1B71A72BBD44 /* product-jolly-cola.png in Resources */ = {isa = PBXBuildFile; fileRef = E502474C7ADBDABA13C4DFDD /* product-jolly-cola.png */; };
 		C77A6E510D39968293CA7EC6 /* ReportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC3E1E19B81A70A78F0EC5 /* ReportTests.swift */; };
-		C7BD5F3C54A196F6B3BC0C04 /* product-lays-nori-small.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8B8308A2DF998033E3F11268 /* product-lays-nori-small.jpg */; };
+		C82331AFE1AED15C7C0F8E97 /* Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2AF39244E1CCDF68286C8D /* Cloud.swift */; };
 		C8D81C0C61070C49D23DD53D /* seed-lays-ridges-hot-chilli-squid-8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F82B12710EC568B5A121B610 /* seed-lays-ridges-hot-chilli-squid-8.jpg */; };
 		C9163300863ABF80FBC4BB83 /* ok.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3297B219C7553368E4BE86EB /* ok.wav */; };
 		C98ABD1281EEE01B76AD4788 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0F7B4376790E981073BB9A06 /* Assets.xcassets */; };
@@ -188,35 +182,34 @@
 		D22385A3CB5C3D894FCCE4CD /* Gallery.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFC022C5C3F2809D47C87B85 /* Gallery.swift */; };
 		D51F171E29C58CA00E412D7F /* seed-sticko-fingers-vanilla-4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5D44B30663A48F8000BF2C54 /* seed-sticko-fingers-vanilla-4.jpg */; };
 		D53650ACAA5262AC7889FD14 /* seed-mars-bar-0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 89312BEDE43094CF7F6851B3 /* seed-mars-bar-0.jpg */; };
+		D5414FB9D6E29641F3B49A06 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736482B21159E84C71C9EE63 /* AccountView.swift */; };
 		D6F151E2AC62AE3442E7759A /* QuickAddPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B77753F9313C51051717618 /* QuickAddPanel.swift */; };
 		D7DDA283D61B205983E2E800 /* seed-jolly-cola-6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1D4791FD9A4D485C1DD7A7B6 /* seed-jolly-cola-6.jpg */; };
 		D7F2D2C7DD31C1FF993CB786 /* Detector.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = CA86420B1E19972B1A9FA005 /* Detector.mlpackage */; };
 		DABBAEADA54C1C2B4DAFAC0E /* StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74121CB8D97CE6ADA3D00044 /* StoreTests.swift */; };
 		DDADABCCE1821E10C920C690 /* seed-lactasoy-melon-0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E4B2170A0E1665B2415BE431 /* seed-lactasoy-melon-0.jpg */; };
 		DDCECD4492A80BB39DBE494D /* demo-2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3E8775FC459C5B2CB9A9D908 /* demo-2.jpg */; };
+		DE893233A04D71805EAD7A30 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200D9E7B71788B5B7C59D78E /* OnboardingView.swift */; };
 		DE990EA29545814A5B1F360D /* seed-julies-cheddar-cheese-8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1235A15AA395034A85617D28 /* seed-julies-cheddar-cheese-8.jpg */; };
-		E1F6E14A20C3F1B2E21F9264 /* product-lays-nori-medium.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F2339035C32F88EBE4995218 /* product-lays-nori-medium.jpg */; };
 		E36CCEA1DDEB3D374CD8AC5A /* seed-hersheys-nugget-cookiencream-6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 63A5AF685E45C549AE41AEBC /* seed-hersheys-nugget-cookiencream-6.jpg */; };
 		E41271EC7462A05BC3A64DBC /* seed-hersheys-nugget-cookiencream-2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B06D055D7839D628642DD462 /* seed-hersheys-nugget-cookiencream-2.jpg */; };
 		E43D0C055753A0D6E80426D7 /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D13A60AB6BD2763F4DEF25 /* Resolver.swift */; };
-		E61E777DF3E00B62E9921A92 /* product-jolly-cola.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 05EA408A3B6F69D134DB70E5 /* product-jolly-cola.jpg */; };
 		E69AD7ABD81F296EDB5E86C8 /* seed-lays-ridges-bbq-7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 302FAD73E148478313346FC6 /* seed-lays-ridges-bbq-7.jpg */; };
 		E6D40BEAA8DBBA452BF11779 /* seed-mm-peanut-7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6370773430922E16B90DE540 /* seed-mm-peanut-7.jpg */; };
 		E7BD26C17C3BDE58F10941CE /* seed-sticko-fingers-vanilla-7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7320E8476196296594834C71 /* seed-sticko-fingers-vanilla-7.jpg */; };
 		EB357C84D855F3D904B768B1 /* seed-kitkat-original-7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9B056C7BB6191DDA504A0FBD /* seed-kitkat-original-7.jpg */; };
 		EBA9434366C6F9024A129EE0 /* seed-lays-ridges-bbq-1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 79C44E7538B442F1DFB51977 /* seed-lays-ridges-bbq-1.jpg */; };
-		EE2F91908AA015DC28FC9623 /* product-hersheys-nugget-cookiencream.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 52557BB46ECB9663BC2F985C /* product-hersheys-nugget-cookiencream.jpg */; };
 		EFF18B271C5D04E0A1F2E2A7 /* seed-mars-bar-7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C4DB2FFCF88364A2C34AFF05 /* seed-mars-bar-7.jpg */; };
 		F0E28BAB319773AD5A84479A /* LINESeedSansTH_A_Rg.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 75DE2DD9A8B0E9EBC210AD8B /* LINESeedSansTH_A_Rg.ttf */; };
 		F28FCCCE80238797602156E4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD0F1B641C1954C9E337EC7 /* SettingsView.swift */; };
 		F2A7AFD41469088065B6B040 /* seed-lactasoy-melon-9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F1743F1526DAAB53BECB9D3E /* seed-lactasoy-melon-9.jpg */; };
 		F38CB81312702973515612FA /* seed-julies-cheddar-cheese-0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 476E986B2C4C282F3370E128 /* seed-julies-cheddar-cheese-0.jpg */; };
 		F3E392943D658C56B240C9FF /* seed-lays-nori-small-8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7AB85F94471D26A093521DB5 /* seed-lays-nori-small-8.jpg */; };
-		F5BE765B9FDD5D3F02302213 /* product-lays-ridges-hot-chilli-squid.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B9AD038518DC0DFA396A6191 /* product-lays-ridges-hot-chilli-squid.jpg */; };
 		F6479E4BE2EEE0F6A8C4FCC6 /* seed-lays-nori-medium-7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0A1A22DEBDE6684DF29C54FE /* seed-lays-nori-medium-7.jpg */; };
 		F73A35377D891BD46F4ABD4F /* seed-lays-nori-medium-0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 231727BB48A9ABC976546BE1 /* seed-lays-nori-medium-0.jpg */; };
 		F858507991EF156D028F9158 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4067F42012841C8CE2D3AD0E /* Payment.swift */; };
 		FC617FBC9B730F9E4CB56734 /* demo-3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 16C02A8526246824FB625D62 /* demo-3.jpg */; };
+		FD13663EB20B4D99B615248B /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = C964546FAC78EB2BD2601F04 /* SyncEngine.swift */; };
 		FD539B22283E95EA98B78502 /* seed-hersheys-nugget-cookiencream-9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E727998CA8E557F846E1EA63 /* seed-hersheys-nugget-cookiencream-9.jpg */; };
 		FF21992C5B89A581A7FB9DC8 /* seed-mm-peanut-0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9C96971AC0402EAEA31A109 /* seed-mm-peanut-0.jpg */; };
 		FF470C6091FEB710D8A9DE4E /* LINESeedSansTH_A_Bd.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC40E44802FCCCEFC2086877 /* LINESeedSansTH_A_Bd.ttf */; };
@@ -244,7 +237,6 @@
 		0154D5678EDAD9AB9031F2FD /* seed-mm-peanut-6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-mm-peanut-6.jpg"; sourceTree = "<group>"; };
 		02D537D6AEF5BB2B3E8E3D94 /* Diagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diagnostics.swift; sourceTree = "<group>"; };
 		03B8562083123509CA7DD506 /* seed-jolly-cola-1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-jolly-cola-1.jpg"; sourceTree = "<group>"; };
-		05EA408A3B6F69D134DB70E5 /* product-jolly-cola.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "product-jolly-cola.jpg"; sourceTree = "<group>"; };
 		09A44C4714C82AB3A154A8D8 /* seed-lays-nori-small-7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-nori-small-7.jpg"; sourceTree = "<group>"; };
 		0A1A22DEBDE6684DF29C54FE /* seed-lays-nori-medium-7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-nori-medium-7.jpg"; sourceTree = "<group>"; };
 		0CF75CB8B25173D632F81FF0 /* seed-hersheys-nugget-cookiencream-4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-hersheys-nugget-cookiencream-4.jpg"; sourceTree = "<group>"; };
@@ -265,6 +257,7 @@
 		1C1D9CC87BFA6C8439AEC69F /* seed-lays-ridges-hot-chilli-squid-6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-ridges-hot-chilli-squid-6.jpg"; sourceTree = "<group>"; };
 		1CE029BD68D294898EA102DD /* seed-lays-nori-medium-9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-nori-medium-9.jpg"; sourceTree = "<group>"; };
 		1D4791FD9A4D485C1DD7A7B6 /* seed-jolly-cola-6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-jolly-cola-6.jpg"; sourceTree = "<group>"; };
+		200D9E7B71788B5B7C59D78E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		20202E074CE489F83AFFC033 /* ReceiptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptView.swift; sourceTree = "<group>"; };
 		211D611D429D947643D0FED8 /* Stock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stock.swift; sourceTree = "<group>"; };
 		22A2AA1D1CEA6132C7AB3CA9 /* seed-lactasoy-melon-4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lactasoy-melon-4.jpg"; sourceTree = "<group>"; };
@@ -285,7 +278,6 @@
 		3680DC77A3F1B5A6B940E7D2 /* SalesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesTests.swift; sourceTree = "<group>"; };
 		37746DC151C58D7D3D35566A /* seed-lays-ridges-hot-chilli-squid-4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-ridges-hot-chilli-squid-4.jpg"; sourceTree = "<group>"; };
 		379594F1C2EB802322DBD2E1 /* seed-lays-ridges-bbq-5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-ridges-bbq-5.jpg"; sourceTree = "<group>"; };
-		3BA20245C82B8C1C50DEA89C /* product-kitkat-original.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "product-kitkat-original.jpg"; sourceTree = "<group>"; };
 		3C48AE63036A5DA14E8A251A /* product-kitkat-original.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "product-kitkat-original.png"; sourceTree = "<group>"; };
 		3E8775FC459C5B2CB9A9D908 /* demo-2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "demo-2.jpg"; sourceTree = "<group>"; };
 		3FAF809A3BDE7EEC35C4DDC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -303,12 +295,11 @@
 		4B77753F9313C51051717618 /* QuickAddPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAddPanel.swift; sourceTree = "<group>"; };
 		4C6FAE462861A8EB99691BB2 /* seed-julies-cheddar-cheese-4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-julies-cheddar-cheese-4.jpg"; sourceTree = "<group>"; };
 		4CE418B6464DF37B30DBD810 /* OneShot.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = OneShot.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4CF88D69A4DF7563672711F8 /* product-julies-cheddar-cheese.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "product-julies-cheddar-cheese.jpg"; sourceTree = "<group>"; };
 		4DB23F8C4FF9348F8BE6F47F /* product-mm-peanut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "product-mm-peanut.png"; sourceTree = "<group>"; };
+		4E2AF39244E1CCDF68286C8D /* Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cloud.swift; sourceTree = "<group>"; };
 		5042B90425C80B5F7443A05B /* seed-kitkat-original-6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-kitkat-original-6.jpg"; sourceTree = "<group>"; };
 		5168A107974219619E7D8D1E /* seed-lays-nori-medium-8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-nori-medium-8.jpg"; sourceTree = "<group>"; };
 		51E388428E21217AF44C78BD /* seed-lactasoy-melon-1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lactasoy-melon-1.jpg"; sourceTree = "<group>"; };
-		52557BB46ECB9663BC2F985C /* product-hersheys-nugget-cookiencream.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "product-hersheys-nugget-cookiencream.jpg"; sourceTree = "<group>"; };
 		52CBAAFF3C0EFD5D8C874AD4 /* BarcodeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeSheet.swift; sourceTree = "<group>"; };
 		52DC281F83500836C6C040D7 /* ReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsView.swift; sourceTree = "<group>"; };
 		52FB61D724B4CADF61E09747 /* seed-lays-nori-medium-2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-nori-medium-2.jpg"; sourceTree = "<group>"; };
@@ -320,21 +311,18 @@
 		5C6898C8A636DD194487B241 /* seed-kitkat-original-8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-kitkat-original-8.jpg"; sourceTree = "<group>"; };
 		5CC1764B69EF1DE4C9B92B9F /* seed-lays-ridges-hot-chilli-squid-0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-ridges-hot-chilli-squid-0.jpg"; sourceTree = "<group>"; };
 		5D44B30663A48F8000BF2C54 /* seed-sticko-fingers-vanilla-4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-sticko-fingers-vanilla-4.jpg"; sourceTree = "<group>"; };
-		5EDAD033290AA883867367C8 /* product-mm-peanut.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "product-mm-peanut.jpg"; sourceTree = "<group>"; };
 		6194E7F8A7710B1A92F3D639 /* FontTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontTests.swift; sourceTree = "<group>"; };
 		6370773430922E16B90DE540 /* seed-mm-peanut-7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-mm-peanut-7.jpg"; sourceTree = "<group>"; };
 		63A5AF685E45C549AE41AEBC /* seed-hersheys-nugget-cookiencream-6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-hersheys-nugget-cookiencream-6.jpg"; sourceTree = "<group>"; };
 		63A5F51A672037F86F6F32DB /* seed-julies-cheddar-cheese-3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-julies-cheddar-cheese-3.jpg"; sourceTree = "<group>"; };
 		676EF397481B8A34B85064C3 /* seed-hersheys-nugget-cookiencream-7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-hersheys-nugget-cookiencream-7.jpg"; sourceTree = "<group>"; };
 		678BA4430385388447D09B87 /* seed-kitkat-original-5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-kitkat-original-5.jpg"; sourceTree = "<group>"; };
-		68C74617749BEDE3D41E1FE9 /* product-lactasoy-melon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "product-lactasoy-melon.jpg"; sourceTree = "<group>"; };
 		69DFD4A024FBB2B0DFB25A4F /* check.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = check.wav; sourceTree = "<group>"; };
 		69EBA59984A9FAA4D84C3F87 /* seed-lays-nori-medium-4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-nori-medium-4.jpg"; sourceTree = "<group>"; };
 		6B64C8C217F839A61CCF9A27 /* seed-jolly-cola-5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-jolly-cola-5.jpg"; sourceTree = "<group>"; };
 		6BAC3E1E19B81A70A78F0EC5 /* ReportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportTests.swift; sourceTree = "<group>"; };
 		6C188D9E758B68530943A3FA /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		6EBDB46C65D8A96952312A1D /* DemoFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoFeed.swift; sourceTree = "<group>"; };
-		6ECFA92EB011D55C4FC4B533 /* product-lays-ridges-bbq.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "product-lays-ridges-bbq.jpg"; sourceTree = "<group>"; };
 		6FC8FB0C2250A60C4E440D11 /* seed-hersheys-nugget-cookiencream-5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-hersheys-nugget-cookiencream-5.jpg"; sourceTree = "<group>"; };
 		71A9810215B7B211C8618B38 /* LINESeedSansTH_A_XBd.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LINESeedSansTH_A_XBd.ttf; sourceTree = "<group>"; };
 		71B607162C564795F8FDC281 /* seed-lays-nori-small-3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-nori-small-3.jpg"; sourceTree = "<group>"; };
@@ -342,6 +330,7 @@
 		723AC38EF1F60AA7E3D1C006 /* seed-lays-ridges-bbq-3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-ridges-bbq-3.jpg"; sourceTree = "<group>"; };
 		7254D1948A9B59F4E94E0AC0 /* seed-lactasoy-melon-8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lactasoy-melon-8.jpg"; sourceTree = "<group>"; };
 		7320E8476196296594834C71 /* seed-sticko-fingers-vanilla-7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-sticko-fingers-vanilla-7.jpg"; sourceTree = "<group>"; };
+		736482B21159E84C71C9EE63 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		74121CB8D97CE6ADA3D00044 /* StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
 		7479A859D1EBE4AEDD4ADB55 /* Detector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detector.swift; sourceTree = "<group>"; };
 		75DE2DD9A8B0E9EBC210AD8B /* LINESeedSansTH_A_Rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LINESeedSansTH_A_Rg.ttf; sourceTree = "<group>"; };
@@ -360,7 +349,6 @@
 		88082CE55AA9B46C764225F6 /* demo-1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "demo-1.jpg"; sourceTree = "<group>"; };
 		89312BEDE43094CF7F6851B3 /* seed-mars-bar-0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-mars-bar-0.jpg"; sourceTree = "<group>"; };
 		8ACCB05E5B4CAD0DE92D8E82 /* GalleryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryTests.swift; sourceTree = "<group>"; };
-		8B8308A2DF998033E3F11268 /* product-lays-nori-small.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "product-lays-nori-small.jpg"; sourceTree = "<group>"; };
 		8C0C74EFFF8E2618A54F9947 /* product-lays-nori-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "product-lays-nori-small.png"; sourceTree = "<group>"; };
 		8DFBECD8BBC65FB99EBD87E6 /* seed-lays-nori-small-9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-nori-small-9.jpg"; sourceTree = "<group>"; };
 		8E5423D23ECC47F0179E7D47 /* RefundPIN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefundPIN.swift; sourceTree = "<group>"; };
@@ -394,7 +382,7 @@
 		AEBA36CF61A87D68BBA741D8 /* product-mars-bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "product-mars-bar.png"; sourceTree = "<group>"; };
 		AFB63F8BFC3B3CE4C88B4954 /* DashboardKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardKit.swift; sourceTree = "<group>"; };
 		B06D055D7839D628642DD462 /* seed-hersheys-nugget-cookiencream-2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-hersheys-nugget-cookiencream-2.jpg"; sourceTree = "<group>"; };
-		B06D5273973E2EA9188EC2DA /* product-mars-bar.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "product-mars-bar.jpg"; sourceTree = "<group>"; };
+		B114246D48DB005B0C7CFF21 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		B126F1F840D66F72488957D6 /* seed-julies-cheddar-cheese-6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-julies-cheddar-cheese-6.jpg"; sourceTree = "<group>"; };
 		B1C2BE243A017BDEA5FCE3F6 /* product-sticko-fingers-vanilla.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "product-sticko-fingers-vanilla.png"; sourceTree = "<group>"; };
 		B2634DD08D355A69EDB3E896 /* seed-jolly-cola-0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-jolly-cola-0.jpg"; sourceTree = "<group>"; };
@@ -402,7 +390,6 @@
 		B65C422E6AB343E0D3D36039 /* seed-kitkat-original-1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-kitkat-original-1.jpg"; sourceTree = "<group>"; };
 		B803AB26DEF5FA50AE6E0CA5 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		B91C65AD25A28DD8E6C7EDBB /* seed-lays-nori-medium-5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-nori-medium-5.jpg"; sourceTree = "<group>"; };
-		B9AD038518DC0DFA396A6191 /* product-lays-ridges-hot-chilli-squid.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "product-lays-ridges-hot-chilli-squid.jpg"; sourceTree = "<group>"; };
 		BA68877CAA57F22EDF5BCD88 /* OneShotTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = OneShotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC40E44802FCCCEFC2086877 /* LINESeedSansTH_A_Bd.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LINESeedSansTH_A_Bd.ttf; sourceTree = "<group>"; };
 		BDC2ADC33F795491781BDD85 /* seed-kitkat-original-9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-kitkat-original-9.jpg"; sourceTree = "<group>"; };
@@ -414,12 +401,12 @@
 		C4DB2FFCF88364A2C34AFF05 /* seed-mars-bar-7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-mars-bar-7.jpg"; sourceTree = "<group>"; };
 		C5368744281847F9C8D44DF1 /* BoxSmootherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxSmootherTests.swift; sourceTree = "<group>"; };
 		C7FD44B65DBCCA11FF4F003E /* seed-hersheys-nugget-cookiencream-0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-hersheys-nugget-cookiencream-0.jpg"; sourceTree = "<group>"; };
+		C964546FAC78EB2BD2601F04 /* SyncEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
 		CA86420B1E19972B1A9FA005 /* Detector.mlpackage */ = {isa = PBXFileReference; path = Detector.mlpackage; sourceTree = "<group>"; };
 		CAAFFB23E07013F10F09D68F /* seed-lays-ridges-hot-chilli-squid-5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-ridges-hot-chilli-squid-5.jpg"; sourceTree = "<group>"; };
 		CB5B313C3C3976B536281534 /* SalesLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesLog.swift; sourceTree = "<group>"; };
 		CBC53519FC9A8719CFAB3834 /* seed-lays-ridges-hot-chilli-squid-2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-ridges-hot-chilli-squid-2.jpg"; sourceTree = "<group>"; };
 		CC8FECE185ED11968CBBFBF0 /* seed-julies-cheddar-cheese-2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-julies-cheddar-cheese-2.jpg"; sourceTree = "<group>"; };
-		CC9D5A3C98FF2191EBC1F3F3 /* product-sticko-fingers-vanilla.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "product-sticko-fingers-vanilla.jpg"; sourceTree = "<group>"; };
 		CF93EB23DF3E4D9367D1C21E /* LINESeedSansTH_A_He.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LINESeedSansTH_A_He.ttf; sourceTree = "<group>"; };
 		D0E72E7DE9EEA472020A407A /* StatementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatementView.swift; sourceTree = "<group>"; };
 		D2D3A03CD780DDD62B1EBE9B /* seed-lays-nori-medium-3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-nori-medium-3.jpg"; sourceTree = "<group>"; };
@@ -447,7 +434,6 @@
 		EEF9A96C637035C154E71F6A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		EFC022C5C3F2809D47C87B85 /* Gallery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gallery.swift; sourceTree = "<group>"; };
 		F1743F1526DAAB53BECB9D3E /* seed-lactasoy-melon-9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lactasoy-melon-9.jpg"; sourceTree = "<group>"; };
-		F2339035C32F88EBE4995218 /* product-lays-nori-medium.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "product-lays-nori-medium.jpg"; sourceTree = "<group>"; };
 		F3638DD3C29DBFEB14CE041C /* Bill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bill.swift; sourceTree = "<group>"; };
 		F3A8483F06661D9C5F911D54 /* seed-lays-nori-small-6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-lays-nori-small-6.jpg"; sourceTree = "<group>"; };
 		F3B0C1E1832C0BAB44A3E3D7 /* seed-julies-cheddar-cheese-1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "seed-julies-cheddar-cheese-1.jpg"; sourceTree = "<group>"; };
@@ -460,6 +446,17 @@
 		FD7D37529FF52BA9A6972A9E /* Tips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tips.swift; sourceTree = "<group>"; };
 		FF0435955DBEB74E53B863DF /* PromptPayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptPayTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B0CEC0CF97163423464C9914 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3FB6421735842537A570960D /* Supabase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0482DD0E320E62F0498C9641 /* Resources */ = {
@@ -546,12 +543,14 @@
 		6C90EAEF4E4243FC67DF4FCF /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				736482B21159E84C71C9EE63 /* AccountView.swift */,
 				52CBAAFF3C0EFD5D8C874AD4 /* BarcodeSheet.swift */,
 				AD0FBAEB59E251325AD70232 /* BoxOverlay.swift */,
 				DB636C86517FA567C6FE3779 /* CheckoutView.swift */,
 				9F30875D4BDD9621E39B3645 /* CloseDayView.swift */,
 				AFB63F8BFC3B3CE4C88B4954 /* DashboardKit.swift */,
 				EEF9A96C637035C154E71F6A /* HomeView.swift */,
+				200D9E7B71788B5B7C59D78E /* OnboardingView.swift */,
 				DB750CFCCE6899A5CD28135E /* PayView.swift */,
 				1A4452DD05D02EE1EEF534BD /* PickListView.swift */,
 				8F99DEE5972E026DC836CA66 /* ProductsView.swift */,
@@ -573,18 +572,29 @@
 			isa = PBXGroup;
 			children = (
 				55CC385E2CA91DAE674459DD /* AppModel.swift */,
+				B114246D48DB005B0C7CFF21 /* Config.xcconfig */,
 				02D537D6AEF5BB2B3E8E3D94 /* Diagnostics.swift */,
 				3FAF809A3BDE7EEC35C4DDC8 /* Info.plist */,
 				2A62FE429ED0CD5592318CF5 /* Log.swift */,
 				948A55C5BD6C7650AD3D98A4 /* OneShotApp.swift */,
 				D9559EE3058220E0062169DB /* PrivacyInfo.xcprivacy */,
 				886AB76E4E772C9BAAF05D04 /* Camera */,
+				8401DD3E9CAD9431F7187873 /* Cloud */,
 				346EF3309DB874A7EAA550E8 /* Data */,
 				9A304930D6725DE1D8EBEAE2 /* Recognition */,
 				0482DD0E320E62F0498C9641 /* Resources */,
 				6C90EAEF4E4243FC67DF4FCF /* Views */,
 			);
 			path = OneShot;
+			sourceTree = "<group>";
+		};
+		8401DD3E9CAD9431F7187873 /* Cloud */ = {
+			isa = PBXGroup;
+			children = (
+				4E2AF39244E1CCDF68286C8D /* Cloud.swift */,
+				C964546FAC78EB2BD2601F04 /* SyncEngine.swift */,
+			);
+			path = Cloud;
 			sourceTree = "<group>";
 		};
 		886AB76E4E772C9BAAF05D04 /* Camera */ = {
@@ -634,29 +644,17 @@
 		EF507619AF670BC37FA1BAB1 /* Seed */ = {
 			isa = PBXGroup;
 			children = (
-				52557BB46ECB9663BC2F985C /* product-hersheys-nugget-cookiencream.jpg */,
 				A0C3F5CED9C24FB736C796E2 /* product-hersheys-nugget-cookiencream.png */,
-				05EA408A3B6F69D134DB70E5 /* product-jolly-cola.jpg */,
 				E502474C7ADBDABA13C4DFDD /* product-jolly-cola.png */,
-				4CF88D69A4DF7563672711F8 /* product-julies-cheddar-cheese.jpg */,
 				FC1167D47A7F0500636432B7 /* product-julies-cheddar-cheese.png */,
-				3BA20245C82B8C1C50DEA89C /* product-kitkat-original.jpg */,
 				3C48AE63036A5DA14E8A251A /* product-kitkat-original.png */,
-				68C74617749BEDE3D41E1FE9 /* product-lactasoy-melon.jpg */,
 				E01AED35BA2A34B0D8F9BBF6 /* product-lactasoy-melon.png */,
-				F2339035C32F88EBE4995218 /* product-lays-nori-medium.jpg */,
 				291549AFDA8D234F26083A7C /* product-lays-nori-medium.png */,
-				8B8308A2DF998033E3F11268 /* product-lays-nori-small.jpg */,
 				8C0C74EFFF8E2618A54F9947 /* product-lays-nori-small.png */,
-				6ECFA92EB011D55C4FC4B533 /* product-lays-ridges-bbq.jpg */,
 				8E7212E2BAA79621A4DBB2D8 /* product-lays-ridges-bbq.png */,
-				B9AD038518DC0DFA396A6191 /* product-lays-ridges-hot-chilli-squid.jpg */,
 				7F88927E5D90CA9EC28F723B /* product-lays-ridges-hot-chilli-squid.png */,
-				B06D5273973E2EA9188EC2DA /* product-mars-bar.jpg */,
 				AEBA36CF61A87D68BBA741D8 /* product-mars-bar.png */,
-				5EDAD033290AA883867367C8 /* product-mm-peanut.jpg */,
 				4DB23F8C4FF9348F8BE6F47F /* product-mm-peanut.png */,
-				CC9D5A3C98FF2191EBC1F3F3 /* product-sticko-fingers-vanilla.jpg */,
 				B1C2BE243A017BDEA5FCE3F6 /* product-sticko-fingers-vanilla.png */,
 				C7FD44B65DBCCA11FF4F003E /* seed-hersheys-nugget-cookiencream-0.jpg */,
 				71F0DB829D40E37AF0E1F7B5 /* seed-hersheys-nugget-cookiencream-1.jpg */,
@@ -791,6 +789,7 @@
 			buildPhases = (
 				CF56B72495CB90EA864A8661 /* Sources */,
 				CD4B66175BD478AFD0A8CB6A /* Resources */,
+				B0CEC0CF97163423464C9914 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -798,6 +797,7 @@
 			);
 			name = OneShot;
 			packageProductDependencies = (
+				3C431A29F3271644DAE31115 /* Supabase */,
 			);
 			productName = OneShot;
 			productReference = 4CE418B6464DF37B30DBD810 /* OneShot.app */;
@@ -873,6 +873,9 @@
 			);
 			mainGroup = 0A6A4AFB9E43362325C622E7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				39804080820D6EF8BDA327A9 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C56BA17F0EEE096637A10EF0 /* Products */;
 			projectDirPath = "";
@@ -905,29 +908,17 @@
 				FC617FBC9B730F9E4CB56734 /* demo-3.jpg in Resources */,
 				C0AEF7BE0A56DD77BE453374 /* demo-4.jpg in Resources */,
 				C9163300863ABF80FBC4BB83 /* ok.wav in Resources */,
-				EE2F91908AA015DC28FC9623 /* product-hersheys-nugget-cookiencream.jpg in Resources */,
 				377EFCB3A8CF744908B9BAAA /* product-hersheys-nugget-cookiencream.png in Resources */,
-				E61E777DF3E00B62E9921A92 /* product-jolly-cola.jpg in Resources */,
 				C4C60759AD2C1B71A72BBD44 /* product-jolly-cola.png in Resources */,
-				A73CD070E97D6ACDAA109F94 /* product-julies-cheddar-cheese.jpg in Resources */,
 				3B73C55323589844FFF0EE39 /* product-julies-cheddar-cheese.png in Resources */,
-				7BA823EC43D97B9E3C9E1279 /* product-kitkat-original.jpg in Resources */,
 				96774DBB90F2FBA903468DE9 /* product-kitkat-original.png in Resources */,
-				5CC50292D1C18B05DA1A2BB2 /* product-lactasoy-melon.jpg in Resources */,
 				B37FFD5237FBA74175A72BBC /* product-lactasoy-melon.png in Resources */,
-				E1F6E14A20C3F1B2E21F9264 /* product-lays-nori-medium.jpg in Resources */,
 				AAA3A9FC3D0FFA57998F32F9 /* product-lays-nori-medium.png in Resources */,
-				C7BD5F3C54A196F6B3BC0C04 /* product-lays-nori-small.jpg in Resources */,
 				000EFF74EF79BD3D6C1A40AB /* product-lays-nori-small.png in Resources */,
-				56369F692BCB6E3E45F33516 /* product-lays-ridges-bbq.jpg in Resources */,
 				4D597AEBC6E82A93D7DCA1FD /* product-lays-ridges-bbq.png in Resources */,
-				F5BE765B9FDD5D3F02302213 /* product-lays-ridges-hot-chilli-squid.jpg in Resources */,
 				493663E616479FD1F5431E16 /* product-lays-ridges-hot-chilli-squid.png in Resources */,
-				C3C37C9DDD8014520B319054 /* product-mars-bar.jpg in Resources */,
 				94B86DD1E535B69BA45CB756 /* product-mars-bar.png in Resources */,
-				00F310AF79BCD3ADC2C10397 /* product-mm-peanut.jpg in Resources */,
 				71B2EFFEEF66DAC36C39E7B2 /* product-mm-peanut.png in Resources */,
-				6D2D3C634C2988CA5CB9ADAD /* product-sticko-fingers-vanilla.jpg in Resources */,
 				5D2BC00AC9373394975099F3 /* product-sticko-fingers-vanilla.png in Resources */,
 				27EB7DAA83D10EFF43A268D0 /* seed-hersheys-nugget-cookiencream-0.jpg in Resources */,
 				042E98A9DB7E7E416503FBD9 /* seed-hersheys-nugget-cookiencream-1.jpg in Resources */,
@@ -1086,6 +1077,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5414FB9D6E29641F3B49A06 /* AccountView.swift in Sources */,
 				BB4939D82E625B000792F5DF /* AppModel.swift in Sources */,
 				6E40123502E9BE87AAE193C6 /* BarcodeSheet.swift in Sources */,
 				6BFD8D05410C2BA90C322BD9 /* Bill.swift in Sources */,
@@ -1096,6 +1088,7 @@
 				BF8935AA490E87044B09EF0A /* Catalog.swift in Sources */,
 				39BD96DBD7D7B35607FC304C /* CheckoutView.swift in Sources */,
 				AF3328140B90052A142A4923 /* CloseDayView.swift in Sources */,
+				C82331AFE1AED15C7C0F8E97 /* Cloud.swift in Sources */,
 				22F647614A8C2374C668294F /* DashboardKit.swift in Sources */,
 				539A543F766DDF846CA670E2 /* DemoFeed.swift in Sources */,
 				D7F2D2C7DD31C1FF993CB786 /* Detector.mlpackage in Sources */,
@@ -1104,6 +1097,7 @@
 				D22385A3CB5C3D894FCCE4CD /* Gallery.swift in Sources */,
 				2FE0B1A3D7897191F88A2C66 /* HomeView.swift in Sources */,
 				6CC325201069610286F2062B /* Log.swift in Sources */,
+				DE893233A04D71805EAD7A30 /* OnboardingView.swift in Sources */,
 				3A1F5F4A1D43584FA5DB0606 /* OneShotApp.swift in Sources */,
 				8472ADFC0CF3EF08DB60DB9E /* PayView.swift in Sources */,
 				F858507991EF156D028F9158 /* Payment.swift in Sources */,
@@ -1124,6 +1118,7 @@
 				A2A1450A2925D65953E30966 /* Stock.swift in Sources */,
 				856841AF592DC850E92FC287 /* Store.swift in Sources */,
 				13D70C2D81B0B248705A8E08 /* StoreV3.swift in Sources */,
+				FD13663EB20B4D99B615248B /* SyncEngine.swift in Sources */,
 				655FC893432CB25244237A65 /* Theme.swift in Sources */,
 				5E6069BEA8A7003405A4999D /* TicketPanel.swift in Sources */,
 				3AED503B7704EAB6BE01F50F /* Tips.swift in Sources */,
@@ -1166,6 +1161,7 @@
 		};
 		293CF41BAEF4D12826960D55 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B114246D48DB005B0C7CFF21 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1186,6 +1182,7 @@
 		};
 		43E2E4FA92CB3DBC5859B81B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B114246D48DB005B0C7CFF21 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1418,6 +1415,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		39804080820D6EF8BDA327A9 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.55.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3C431A29F3271644DAE31115 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39804080820D6EF8BDA327A9 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CA11403D8B450345C559696F /* Project object */;
 }

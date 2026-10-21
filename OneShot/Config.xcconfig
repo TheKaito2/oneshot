@@ -1,0 +1,8 @@
+// The Supabase project OneShot signs in to. Empty values build an app without accounts (everything on the device).
+// Put the real values in Secrets.xcconfig next to this file (gitignored):
+//   SUPABASE_HOST = <project-ref>.supabase.co
+//   SUPABASE_ANON_KEY = <the project's anon / publishable key>
+// The host is written without "https://": xcconfig treats "//" as the start of a comment.
+SUPABASE_HOST =
+SUPABASE_ANON_KEY =
+#include? "Secrets.xcconfig"

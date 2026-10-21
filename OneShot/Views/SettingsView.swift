@@ -10,6 +10,12 @@ enum SettingsKey {
 }
 
 struct SettingsView: View {
+    #if DEBUG
+    static let showsDebug = true
+    #else
+    static let showsDebug = UserDefaults.standard.bool(forKey: "debugMenu")
+    #endif
+
     @Bindable var app: AppModel
     @AppStorage(SettingsKey.promptPayID) private var promptPayID = ""
     @AppStorage(SettingsKey.debugOverlay) private var debugOverlay = false
@@ -27,6 +33,8 @@ struct SettingsView: View {
     /// The picked backup folder and what it holds, waiting for the owner's OK.
     @State private var restoring: (url: URL, summary: Store.BackupSummary)?
     @State private var restoreNote: String?
+    @State private var showingAccount = false
+    @State private var account = Account.shared
     @State private var addingSamples = false
     @State private var sampleNote: String?
     /// Sample sales are only offered on empty books.
@@ -38,6 +46,18 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                if Cloud.isConfigured {
+                    Section {
+                        Button {
+                            showingAccount = true
+                        } label: {
+                            LabeledContent("Account", value: account.email ?? String(localized: "Not signed in"))
+                        }
+                    } footer: {
+                        Text("Optional. Sign in to back up the shop and use it on your other devices.")
+                    }
+                    .frostedRows()
+                }
                 Section("Shop") {
                     TextField("Shop name", text: $shopName)
                 }
@@ -118,12 +138,14 @@ struct SettingsView: View {
                     Text("For presenting without the snacks, or from the simulator. Sample sales can only be added while the books are empty, so they never mix with real ones.")
                 }
                 .frostedRows()
-                Section("Debug") {
-                    Toggle("Show speed HUD and save lock photos", isOn: $debugOverlay)
-                    // Before each new judge.
-                    Button("Show tips again") { Tips.showAllTipsForTesting() }
+                // Development builds, and a test build launched with -debugMenu YES; a shop never sees it.
+                if Self.showsDebug {
+                    Section("Debug") {
+                        Toggle("Show speed HUD and save lock photos", isOn: $debugOverlay)
+                        Button("Show tips again") { Tips.showAllTipsForTesting() }
+                    }
+                    .frostedRows()
                 }
-                .frostedRows()
                 Section {
                     let reports = Diagnostics.files()
                     if reports.isEmpty {
@@ -178,6 +200,7 @@ struct SettingsView: View {
             } message: { pending in
                 Text("\(pending.summary.sales) sales, \(pending.summary.closes) day closes, \(pending.summary.products) taught products, \(pending.summary.photos) photos. Products, prices and photos on this device are replaced.")
             }
+            .sheet(isPresented: $showingAccount) { AccountView(app: app) }
             .alert("Turn off the refund PIN?", isPresented: $turningOffPIN) {
                 SecureField("Current PIN", text: $pinEntry).keyboardType(.numberPad)
                 Button("Turn off", role: .destructive) {

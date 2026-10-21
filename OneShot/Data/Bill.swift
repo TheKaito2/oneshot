@@ -153,6 +153,17 @@ enum CropStore {
     }
 
     /// JPEG under Documents. A failed save must not block the sale; it only costs one photo, so it is logged.
+    /// A photo that came down from the account's backup, as it was stored.
+    static func write(_ data: Data, to relativePath: String) {
+        do {
+            let url = URL.documentsDirectory.appending(path: relativePath)
+            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try data.write(to: url, options: .atomic)
+        } catch {
+            Log.error("photo save failed: \(error)")
+        }
+    }
+
     static func write(_ image: CGImage, to relativePath: String) {
         do {
             let url = URL.documentsDirectory.appending(path: relativePath)

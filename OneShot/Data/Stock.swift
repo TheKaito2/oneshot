@@ -93,6 +93,17 @@ struct StockBook: Equatable {
         pendingMoves.append(Move(sku: sku, delta: quantity, reason: "receive"))
     }
 
+    /// Another device started tracking a product (sync): its count and reorder point, no move recorded here.
+    mutating func track(_ sku: String, count: Int, reorderAt: Int) {
+        levels[sku] = StockLevel(count: max(0, count), reorderAt: max(0, reorderAt))
+        untracked.remove(sku)
+    }
+
+    /// Another device changed a reorder point (sync).
+    mutating func setReorder(_ sku: String, reorderAt: Int) {
+        levels[sku]?.reorderAt = max(0, reorderAt)
+    }
+
     /// Another device's delivery or recount, pulled by sync. Applied as the difference it made; no move is
     /// recorded here (it is already on the server). Untracked products are ignored, like sales.
     mutating func applyRemote(_ sku: String, delta: Int) {

@@ -29,6 +29,11 @@ Built for the Swift Coding Club TH finals (Young iOS Developer Hackathon). iPadO
   the plain numbers.
 - **English and Thai** UI, in LINE Seed Sans TH.
 - **iPad and iPhone.** iPad in any orientation, iPhone in portrait.
+- **Onboarding** on first launch: camera, shop name, PromptPay ID, refund PIN, and where the products come from
+  (teach the first one, the 12 sample snacks, or start empty).
+- **Optional account** (Supabase): sign in with an emailed code to back the shop up and keep the owner's devices in
+  step. Offline-first: the device is the source of truth (`Cloud/SyncEngine.swift`); sales and stock moves are
+  insert-only, settings-like rows are last-writer-wins. Delete account removes the account and its server data.
 - **Privacy.** No account, no server, no analytics: see `OneShot/PrivacyInfo.xcprivacy` and the policy at
   <https://oneshot-pos.pages.dev> (source in `site/`, deploy with `npx wrangler pages deploy site --project-name oneshot-pos`).
 
@@ -41,6 +46,10 @@ open OneShot.xcodeproj     # scheme OneShot, an iPad or the iPad simulator
 ```
 
 The device build needs a development team; set `DEVELOPMENT_TEAM` in `project.yml`.
+
+Accounts are off unless the build knows a Supabase project: create `OneShot/Secrets.xcconfig` (gitignored) with
+`SUPABASE_HOST = <ref>.supabase.co` and `SUPABASE_ANON_KEY = <anon key>`, then `xcodegen generate`. The backend
+(schema, Row Level Security, the delete-account function) is in `supabase/`; see `docs/BACKEND.md`.
 
 ### Presenting from the simulator
 

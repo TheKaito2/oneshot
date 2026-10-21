@@ -10,6 +10,10 @@ struct OneShotApp: App {
         SeedAppearance.apply()
         AudioMode.mixed()   // the first ring-up chime was silent in Silent Mode until a payment set the session
         Diagnostics.shared.start()
+        // An install already in use (its catalog came over from the old files) never sees onboarding.
+        if UserDefaults.standard.object(forKey: OnboardingKey.done) == nil, !Catalog.isEmpty(Store.context) {
+            UserDefaults.standard.set(true, forKey: OnboardingKey.done)
+        }
         do {
             try Tips.configure([.displayFrequency(.immediate)])
         } catch {
@@ -27,6 +31,8 @@ struct OneShotApp: App {
 
 struct RootView: View {
     @State private var app = AppModel()
+    @AppStorage(OnboardingKey.done) private var onboarded = false
+    @State private var account = Account.shared
     /// Custom fonts don't follow Bold Text by themselves: rebuild with the heavier faces when it changes.
     @Environment(\.legibilityWeight) private var legibilityWeight
 
@@ -48,6 +54,10 @@ struct RootView: View {
         // Settings is a sheet from Home's gear, not a fifth tab: five titles overflowed the portrait tab bar, and as a
         // sidebar-only tab it still joined the bar when selected and pushed Home behind a chevron (19 Oct).
         .sheet(isPresented: $app.showingSettings) { SettingsView(app: app) }
+        .fullScreenCover(isPresented: Binding(get: { !onboarded }, set: { onboarded = !$0 })) {
+            OnboardingView(app: app) { onboarded = true }
+                .environment(\.font, .seed(.body))
+        }
         .tabViewStyle(.sidebarAdaptable)
         // Top tab bar by default in every orientation; the sidebar is one tap away (its button in the bar).
         .defaultAdaptableTabBarPlacement(.tabBar)
@@ -65,6 +75,14 @@ struct RootView: View {
                 gallery.seedFromBundle()
             }
             if app.cameraIdle { app.camera.pause() }
+        }
+        // Signed in: sync now, then every 5 minutes (sales also nudge it). Signed out, the loop isn't running.
+        .task(id: account.email) {
+            guard account.isSignedIn else { return }
+            while !Task.isCancelled {
+                await SyncEngine.shared.sync(app)
+                try? await Task.sleep(for: .seconds(300))
+            }
         }
         // Demo bills the table photos' snacks, so it needs them in the catalog (a fresh install has none).
         .task(id: app.demo) { if app.demo { app.addSampleProducts() } }

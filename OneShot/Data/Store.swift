@@ -346,6 +346,21 @@ enum Store {
         try Catalog.importBackup(from: work, into: context)
     }
 
+    /// Everything this device holds for the shop: the books, catalog, stock, sync queue, gallery and photos, the shop's
+    /// settings and the refund PIN. After an account is deleted, if the owner chooses; onboarding runs again.
+    static func eraseEverything(in context: ModelContext, documents: URL = .documentsDirectory) throws {
+        for model in StoreV3.models { try context.delete(model: model) }
+        try context.save()
+        for name in shopFiles {
+            let url = documents.appending(path: name)
+            if FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) { try FileManager.default.removeItem(at: url) }
+        }
+        try RefundPIN.save(nil)
+        for key in [SettingsKey.shopName, SettingsKey.promptPayID, OnboardingKey.done] {
+            UserDefaults.standard.removeObject(forKey: key)
+        }
+    }
+
     /// Copies each shop file that exists in `source` over the one in `destination`.
     nonisolated private static func copyShopFiles(from source: URL, to destination: URL) throws -> [URL] {
         let manager = FileManager.default

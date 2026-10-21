@@ -31,6 +31,10 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>OneShot uses the camera to recognise the items on the counter.</string>
+	<key>SupabaseAnonKey</key>
+	<string>$(SUPABASE_ANON_KEY)</string>
+	<key>SupabaseHost</key>
+	<string>$(SUPABASE_HOST)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>LINESeedSansTH_A_Rg.ttf</string>

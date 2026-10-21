@@ -26,10 +26,49 @@ final class TourTests: XCTestCase {
         app = XCUIApplication()
         app.launchArguments += thai ? ["-AppleLanguages", "(th)", "-AppleLocale", "th_TH"]
                                     : ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
-        app.launchArguments += ["-promptPayID", "0812345678"]
+        app.launchArguments += ["-promptPayID", "0812345678", "-onboarded", "YES"]
         XCUIDevice.shared.orientation = .portrait
         app.launch()
         dismissCameraPrompt()
+    }
+
+    /// First launch: every onboarding page, then the shop it set up (iPhone and iPad, 22 Oct).
+    func testOnboarding() throws {
+        app.terminate()
+        app.launchArguments = app.launchArguments.map { $0 == "YES" ? "NO" : $0 }   // -onboarded NO
+        app.launch()
+        let start = button("Get started")
+        XCTAssertTrue(start.waitForExistence(timeout: 15), "onboarding didn't show")
+        shot("portrait-16-onboarding-welcome")
+        start.tap()
+        shot("portrait-17-onboarding-camera")
+        button("Skip").tap()
+        let name = app.textFields["Shop name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        name.tap()
+        name.typeText("Somchai Shop")
+        shot("portrait-18-onboarding-shop")
+        button("Next").tap()
+        let id = app.textFields["Mobile, 13-digit ID or e-wallet"]
+        XCTAssertTrue(id.waitForExistence(timeout: 5))
+        shot("portrait-19-onboarding-promptpay")
+        button("Next").tap()   // keeps the -promptPayID launch value
+        XCTAssertTrue(app.secureTextFields["4-digit PIN"].waitForExistence(timeout: 5))
+        shot("portrait-20-onboarding-pin")
+        button("Skip").tap()
+        let samples = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Try it with 12 sample snacks")).firstMatch
+        XCTAssertTrue(samples.waitForExistence(timeout: 5))
+        shot("portrait-21-onboarding-products")
+        samples.tap()
+        if samples.waitForExistence(timeout: 5), samples.isHittable { samples.tap() }   // swallowed on a busy Mac
+        if button("Not now").waitForExistence(timeout: 3) {   // only in a build with accounts
+            shot("portrait-22-onboarding-account")
+            button("Not now").tap()
+        }
+        XCTAssertTrue(button("Home").waitForExistence(timeout: 10) || app.cells["Home"].exists, "onboarding didn't finish")
+        go("Products")
+        XCTAssertTrue(app.staticTexts["KitKat"].waitForExistence(timeout: 5), "sample snacks weren't added")
+        shot("portrait-23-after-onboarding-products")
     }
 
     /// The Teach panel in Checkout: header, scrolling middle and action button all reachable (iPhone, 20 Oct).

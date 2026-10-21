@@ -4,6 +4,10 @@ options:
   developmentLanguage: en
   deploymentTarget:
     iOS: "26.0"
+packages:
+  Supabase:
+    url: https://github.com/supabase/supabase-swift
+    from: 2.55.4
 settings:
   base:
     SWIFT_VERSION: "6.0"
@@ -15,6 +19,14 @@ targets:
     platform: iOS
     sources:
       - path: OneShot
+        excludes:
+          - "*.xcconfig"
+    configFiles:
+      Debug: OneShot/Config.xcconfig
+      Release: OneShot/Config.xcconfig
+    dependencies:
+      - package: Supabase
+        product: Supabase
     info:
       path: OneShot/Info.plist
       properties:
@@ -28,6 +40,9 @@ targets:
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
         ITSAppUsesNonExemptEncryption: false
+        # From OneShot/Config.xcconfig (+ the gitignored Secrets.xcconfig); empty = a build without accounts.
+        SupabaseHost: $(SUPABASE_HOST)
+        SupabaseAnonKey: $(SUPABASE_ANON_KEY)
         UIAppFonts:
           - LINESeedSansTH_A_Rg.ttf
           - LINESeedSansTH_A_Bd.ttf

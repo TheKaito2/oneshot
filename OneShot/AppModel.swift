@@ -75,6 +75,7 @@ final class AppModel {
     func applyToStock(_ sale: Sale) {
         stock.apply(sale)
         saveStock()
+        Task { await SyncEngine.shared.sync(self) }   // signed out: does nothing
     }
 
     @MainActor

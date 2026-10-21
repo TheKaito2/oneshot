@@ -139,6 +139,16 @@
         }
       }
     },
+    "6-digit code" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รหัส 6 หลัก"
+          }
+        }
+      }
+    },
     "8 photos and a price. No retraining." : {
       "localizations" : {
         "th" : {
@@ -169,6 +179,26 @@
         }
       }
     },
+    "A PIN for refunds?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตั้งรหัสสำหรับคืนเงินไหม?"
+          }
+        }
+      }
+    },
+    "A Thai mobile number, 13-digit ID or e-wallet ID. Customers scan a QR with the amount already filled in." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เบอร์มือถือ เลขบัตรประชาชน 13 หลัก หรือรหัสวอลเล็ต ลูกค้าสแกน QR ที่ใส่ยอดเงินไว้ให้แล้ว"
+          }
+        }
+      }
+    },
     "A month of takings on one page: daily totals, refunds, and the PromptPay share a bank can check against its own records. For a loan application or your own books." : {
       "localizations" : {
         "th" : {
@@ -179,12 +209,52 @@
         }
       }
     },
+    "ACCOUNT" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บัญชี"
+          }
+        }
+      }
+    },
     "About" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "เกี่ยวกับ"
+          }
+        }
+      }
+    },
+    "Account" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บัญชี"
+          }
+        }
+      }
+    },
+    "Account deleted" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลบบัญชีแล้ว"
+          }
+        }
+      }
+    },
+    "Accounts aren't available in this build." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เวอร์ชันนี้ยังไม่รองรับบัญชี"
           }
         }
       }
@@ -245,6 +315,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เพิ่ม %@ หนึ่งชิ้น"
+          }
+        }
+      }
+    },
+    "Add products later from Products or Checkout." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เพิ่มสินค้าภายหลังได้จากหน้าสินค้าหรือหน้าขายของ"
           }
         }
       }
@@ -319,6 +399,16 @@
         }
       }
     },
+    "Allow the camera" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อนุญาตให้ใช้กล้อง"
+          }
+        }
+      }
+    },
     "Average a day open" : {
       "localizations" : {
         "th" : {
@@ -369,6 +459,26 @@
         }
       }
     },
+    "Back up and use more devices?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สำรองข้อมูลและใช้หลายเครื่องไหม?"
+          }
+        }
+      }
+    },
+    "Back up the shop and use it on your other devices. No password: we email you a code." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สำรองข้อมูลร้านและใช้บนเครื่องอื่นของคุณ ไม่ต้องใช้รหัสผ่าน เราจะส่งรหัสไปทางอีเมล"
+          }
+        }
+      }
+    },
     "Back up…" : {
       "localizations" : {
         "th" : {
@@ -385,6 +495,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "สำรองข้อมูล"
+          }
+        }
+      }
+    },
+    "Backup and sync" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สำรองและซิงก์ข้อมูล"
           }
         }
       }
@@ -495,12 +615,32 @@
         }
       }
     },
+    "CAMERA" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กล้อง"
+          }
+        }
+      }
+    },
     "Camera access is off. Turn it on in Settings › OneShot." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ปิดการเข้าถึงกล้องอยู่ เปิดได้ที่ การตั้งค่า › OneShot"
+          }
+        }
+      }
+    },
+    "Camera allowed" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อนุญาตกล้องแล้ว"
           }
         }
       }
@@ -845,6 +985,16 @@
         }
       }
     },
+    "Customers pay by PromptPay QR or cash, with the total spoken in Thai." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลูกค้าจ่ายด้วย QR พร้อมเพย์หรือเงินสด พร้อมอ่านยอดเป็นภาษาไทย"
+          }
+        }
+      }
+    },
     "DEMO" : {
       "localizations" : {
         "th" : {
@@ -905,6 +1055,16 @@
         }
       }
     },
+    "Delete account" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลบบัญชี"
+          }
+        }
+      }
+    },
     "Delete photo" : {
       "localizations" : {
         "th" : {
@@ -931,6 +1091,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ลบสินค้านี้"
+          }
+        }
+      }
+    },
+    "Delete your account?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลบบัญชีของคุณไหม?"
+          }
+        }
+      }
+    },
+    "Deletes your account and the shop's copy on our server: products, sales, day closes, stock and photos." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลบบัญชีและข้อมูลร้านบนเซิร์ฟเวอร์ของเรา ได้แก่ สินค้า ยอดขาย การปิดยอด สต็อก และรูปภาพ"
           }
         }
       }
@@ -1025,6 +1205,26 @@
         }
       }
     },
+    "Email" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อีเมล"
+          }
+        }
+      }
+    },
+    "Email me a code" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ส่งรหัสทางอีเมล"
+          }
+        }
+      }
+    },
     "Enter a cost like 18 or 18.50, or leave it empty." : {
       "localizations" : {
         "th" : {
@@ -1061,6 +1261,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ใส่เลขพร้อมเพย์ของร้านครั้งเดียว"
+          }
+        }
+      }
+    },
+    "Erase this device" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลบข้อมูลในเครื่องนี้"
           }
         }
       }
@@ -1201,6 +1411,16 @@
         }
       }
     },
+    "Get started" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เริ่มต้นใช้งาน"
+          }
+        }
+      }
+    },
     "Give the customer the cash back. The items go back into stock." : {
       "localizations" : {
         "th" : {
@@ -1251,6 +1471,16 @@
         }
       }
     },
+    "Hold the camera over the items and tap Ring up. Every pack is named and priced." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ส่องกล้องเหนือสินค้าแล้วแตะคิดเงิน สินค้าทุกชิ้นจะขึ้นชื่อและราคา"
+          }
+        }
+      }
+    },
     "Hold the camera over the items, then tap Ring up." : {
       "localizations" : {
         "th" : {
@@ -1277,6 +1507,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "หน้าหลัก"
+          }
+        }
+      }
+    },
+    "It goes on receipts and the monthly statement." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใช้แสดงบนใบเสร็จและสรุปรายเดือน"
           }
         }
       }
@@ -1321,6 +1561,16 @@
         }
       }
     },
+    "Keep on this device" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เก็บไว้ในเครื่องนี้"
+          }
+        }
+      }
+    },
     "Known from %lld training photos. Each time you pick it from a yellow item, that photo is added here." : {
       "localizations" : {
         "th" : {
@@ -1357,6 +1607,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เดือนที่แล้ว"
+          }
+        }
+      }
+    },
+    "Last synced" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ซิงก์ล่าสุด"
+          }
+        }
+      }
+    },
+    "Lay's, KitKat, M&M's and more, the packs OneShot knows already." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เลย์ คิทแคท เอ็มแอนด์เอ็ม และอื่น ๆ สินค้าที่ OneShot รู้จักอยู่แล้ว"
           }
         }
       }
@@ -1521,6 +1791,16 @@
         }
       }
     },
+    "Next" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ถัดไป"
+          }
+        }
+      }
+    },
     "Next photo" : {
       "localizations" : {
         "th" : {
@@ -1641,12 +1921,32 @@
         }
       }
     },
+    "Not now" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ไว้ทีหลัง"
+          }
+        }
+      }
+    },
     "Not selling this week" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "สัปดาห์นี้ยังขายไม่ได้"
+          }
+        }
+      }
+    },
+    "Not signed in" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยังไม่ได้ลงชื่อเข้าใช้"
           }
         }
       }
@@ -1667,6 +1967,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ตกลง"
+          }
+        }
+      }
+    },
+    "ONE-TAP CHECKOUT" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คิดเงินแตะเดียว"
           }
         }
       }
@@ -1731,6 +2041,26 @@
         }
       }
     },
+    "OneShot learns a product from 8 photos and a price. No retraining." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OneShot เรียนรู้สินค้าจากรูป 8 รูปและราคา ไม่ต้องเทรนใหม่"
+          }
+        }
+      }
+    },
+    "OneShot sees the counter" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OneShot มองเห็นเคาน์เตอร์"
+          }
+        }
+      }
+    },
     "OneShot speed" : {
       "localizations" : {
         "th" : {
@@ -1747,6 +2077,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OneShot จะไม่จดจำสินค้านี้อีก และรูปของสินค้าจะถูกลบ"
+          }
+        }
+      }
+    },
+    "Only someone who knows it can refund a sale. You can set it later in Settings." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เฉพาะคนที่รู้รหัสเท่านั้นที่คืนเงินได้ ตั้งภายหลังในการตั้งค่าได้"
+          }
+        }
+      }
+    },
+    "Open the camera and teach it now." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เปิดกล้องแล้วสอนสินค้าตอนนี้"
+          }
+        }
+      }
+    },
+    "Optional. Sign in to back up the shop and use it on your other devices." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ไม่บังคับ ลงชื่อเข้าใช้เพื่อสำรองข้อมูลร้านและใช้บนเครื่องอื่นของคุณ"
           }
         }
       }
@@ -1791,6 +2151,26 @@
         }
       }
     },
+    "PAYMENT" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การชำระเงิน"
+          }
+        }
+      }
+    },
+    "PRODUCTS" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สินค้า"
+          }
+        }
+      }
+    },
     "Paid" : {
       "localizations" : {
         "th" : {
@@ -1817,6 +2197,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "รับเงินแล้ว แต่ยังไม่ได้บันทึกยอด"
+          }
+        }
+      }
+    },
+    "Password" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รหัสผ่าน"
           }
         }
       }
@@ -2013,6 +2403,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "วางสินค้าชิ้นเดียว เว้นที่ว่างรอบ ๆ แล้วหมุนเล็กน้อยระหว่างถ่ายแต่ละรูป"
+          }
+        }
+      }
+    },
+    "REFUNDS" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การคืนเงิน"
           }
         }
       }
@@ -2237,6 +2637,16 @@
         }
       }
     },
+    "Ring up the whole counter in one photo" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คิดเงินทั้งเคาน์เตอร์ในภาพเดียว"
+          }
+        }
+      }
+    },
     "Ring-up times start with sales made in this version." : {
       "localizations" : {
         "th" : {
@@ -2343,6 +2753,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "การขาย การคืนเงิน และการปิดยอดจะขึ้นที่นี่"
+          }
+        }
+      }
+    },
+    "Sales, stock, day close and reports stay on this device, even offline." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยอดขาย สต็อก การปิดยอด และรายงาน เก็บอยู่ในเครื่องนี้ ใช้ได้แม้ไม่มีอินเทอร์เน็ต"
           }
         }
       }
@@ -2613,12 +3033,72 @@
         }
       }
     },
+    "Sign in" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลงชื่อเข้าใช้"
+          }
+        }
+      }
+    },
+    "Sign in to keep a copy of your shop in the cloud and use it on your iPad and iPhone. OneShot works fully without an account." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลงชื่อเข้าใช้เพื่อเก็บสำเนาร้านไว้บนคลาวด์ และใช้บน iPad และ iPhone ของคุณ OneShot ใช้งานได้ครบโดยไม่ต้องมีบัญชี"
+          }
+        }
+      }
+    },
+    "Sign out" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ออกจากระบบ"
+          }
+        }
+      }
+    },
+    "Signed in as" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลงชื่อเข้าใช้เป็น"
+          }
+        }
+      }
+    },
+    "Signing out keeps the shop on this device." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เมื่อออกจากระบบ ข้อมูลร้านยังอยู่ในเครื่องนี้"
+          }
+        }
+      }
+    },
     "Size %@" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ขนาด %@"
+          }
+        }
+      }
+    },
+    "Skip" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ข้าม"
           }
         }
       }
@@ -2649,6 +3129,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เริ่มขาย"
+          }
+        }
+      }
+    },
+    "Start empty" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เริ่มแบบว่างเปล่า"
           }
         }
       }
@@ -2699,6 +3189,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "สรุปยอด"
+          }
+        }
+      }
+    },
+    "Sync now" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ซิงก์ตอนนี้"
+          }
+        }
+      }
+    },
+    "Syncing…" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำลังซิงก์…"
           }
         }
       }
@@ -2763,6 +3273,16 @@
         }
       }
     },
+    "Teach my first product" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สอนสินค้าชิ้นแรก"
+          }
+        }
+      }
+    },
     "Teaching needs the device's camera. In the simulator, show it with the products already taught." : {
       "localizations" : {
         "th" : {
@@ -2783,6 +3303,16 @@
         }
       }
     },
+    "That product no longer exists." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ไม่มีสินค้านี้แล้ว"
+          }
+        }
+      }
+    },
     "The AI took too long; here are the numbers." : {
       "localizations" : {
         "th" : {
@@ -2793,12 +3323,52 @@
         }
       }
     },
+    "The PIN is 4 digits." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รหัสต้องเป็นตัวเลข 4 หลัก"
+          }
+        }
+      }
+    },
+    "The backup's products can't be read." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อ่านข้อมูลสินค้าในไฟล์สำรองไม่ได้"
+          }
+        }
+      }
+    },
+    "The camera is off for OneShot. Turn it on in Settings › OneShot › Camera." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กล้องถูกปิดสำหรับ OneShot เปิดได้ที่ การตั้งค่า › OneShot › กล้อง"
+          }
+        }
+      }
+    },
     "The camera is still starting. Try again in a second." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "กล้องกำลังเปิด ลองใหม่อีกสักครู่"
+          }
+        }
+      }
+    },
+    "The camera recognises the items you sell. Photos stay on this device unless you sign in to back them up." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กล้องใช้จดจำสินค้าที่คุณขาย รูปภาพอยู่ในเครื่องนี้ เว้นแต่คุณลงชื่อเข้าใช้เพื่อสำรองไว้"
           }
         }
       }
@@ -2829,6 +3399,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เปิดข้อมูลร้านที่บันทึกไว้ไม่ได้ จึงเก็บแยกไว้และเริ่มข้อมูลใหม่ โปรดแจ้งเจ้าของร้าน"
+          }
+        }
+      }
+    },
+    "The shop is backed up and kept the same on every device you sign in on. The till never waits for it." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ข้อมูลร้านถูกสำรองและตรงกันทุกเครื่องที่คุณลงชื่อเข้าใช้ การขายไม่ต้องรอการซิงก์"
+          }
+        }
+      }
+    },
+    "The shop is still on this device. Erase it too?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ข้อมูลร้านยังอยู่ในเครื่องนี้ ลบด้วยไหม?"
           }
         }
       }
@@ -2989,6 +3579,16 @@
         }
       }
     },
+    "Try it with 12 sample snacks" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลองใช้กับขนมตัวอย่าง 12 ชนิด"
+          }
+        }
+      }
+    },
     "Turn off" : {
       "localizations" : {
         "th" : {
@@ -3069,6 +3669,86 @@
         }
       }
     },
+    "Use a different email" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใช้อีเมลอื่น"
+          }
+        }
+      }
+    },
+    "Use a password instead" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใช้รหัสผ่านแทน"
+          }
+        }
+      }
+    },
+    "Use an emailed code instead" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใช้รหัสทางอีเมลแทน"
+          }
+        }
+      }
+    },
+    "Waiting to sync" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รอซิงก์"
+          }
+        }
+      }
+    },
+    "We sent a code to %@." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เราส่งรหัสไปที่ %@ แล้ว"
+          }
+        }
+      }
+    },
+    "What do you sell?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ร้านของคุณขายอะไร?"
+          }
+        }
+      }
+    },
+    "What is the shop called?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ร้านของคุณชื่ออะไร?"
+          }
+        }
+      }
+    },
+    "Where should PromptPay payments go?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ให้เงินพร้อมเพย์เข้าที่ไหน?"
+          }
+        }
+      }
+    },
     "Which item is this?" : {
       "localizations" : {
         "th" : {
@@ -3119,6 +3799,16 @@
         }
       }
     },
+    "YOUR SHOP" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ร้านของคุณ"
+          }
+        }
+      }
+    },
     "Yellow means not sure" : {
       "localizations" : {
         "th" : {
@@ -3135,6 +3825,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เมื่อวาน"
+          }
+        }
+      }
+    },
+    "Your account and the shop's copy on our server are deleted for good." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บัญชีและข้อมูลร้านบนเซิร์ฟเวอร์ของเราจะถูกลบถาวร"
           }
         }
       }

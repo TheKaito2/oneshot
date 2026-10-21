@@ -22,3 +22,6 @@ data/yolo-tiles/
 
 # downloaded detector code and weights (Apache-2.0, not ours to commit)
 third_party/
+
+# Supabase project values (host + anon key) for local builds
+OneShot/Secrets.xcconfig
