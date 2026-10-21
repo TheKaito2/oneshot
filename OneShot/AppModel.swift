@@ -1,7 +1,7 @@
 import Observation
 import TipKit
 
-/// State the tabs share: one camera, one catalog, one gallery, the race, and the sale in progress.
+/// State the tabs share: one camera, one catalog, one gallery, and the sale in progress.
 @Observable
 final class AppModel {
     enum Tab: Hashable { case home, checkout, products, reports }
@@ -9,7 +9,7 @@ final class AppModel {
     var tab: Tab = .home
     /// Settings, as a sheet over whatever tab is showing.
     var showingSettings = false
-    var catalog = Catalog.load()
+    var catalog: Catalog
     /// The sale on the counter: one locked frame and its regions. nil = the scan zone is live.
     var scan: LockedScan? {
         didSet { if scan == nil { scanningMore = false } }
@@ -41,6 +41,7 @@ final class AppModel {
 
     /// Picks up barcodes, prices and quick-adds saved since launch. A product that's gone (a deleted teach) can't stay
     /// billed at its old price: its boxes turn yellow again and its hand-added units go, so Charge waits for a pick.
+    @MainActor
     func reloadCatalog() {
         catalog = Catalog.load()
         guard var open = scan else { return }
@@ -54,7 +55,21 @@ final class AppModel {
     }
 
     @MainActor
-    init() { stock = StockBook.load(from: Store.context) }
+    init() {
+        catalog = Catalog.load()
+        stock = StockBook.load(from: Store.context)
+    }
+
+    /// The 12 sample snacks, for Demo and onboarding; missing ones only.
+    @MainActor
+    func addSampleProducts() {
+        do {
+            try Catalog.addSamples()
+            reloadCatalog()
+        } catch {
+            Log.error("samples not added: \(error)")
+        }
+    }
 
     @MainActor
     func applyToStock(_ sale: Sale) {
@@ -81,6 +96,7 @@ final class AppModel {
     }
 
     /// Back to a live scan zone for the next customer: Start over and New sale both come here.
+    @MainActor
     func clearSale() {
         scan = nil
         reloadCatalog()   // barcodes assigned in the pick list

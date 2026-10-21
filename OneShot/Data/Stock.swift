@@ -15,6 +15,15 @@ struct StockBook: Equatable {
     /// Products the owner stopped tracking since the last save: only these rows are deleted (a book that failed to
     /// load is empty, and saving it must not wipe every row).
     private var untracked: Set<String> = []
+    /// Count changes that aren't sales (deliveries, recounts) since the last save, written as `StockMoveRecord`s so a
+    /// synced device applies the same difference. Sales need none: each sale syncs and takes its own lines off.
+    private var pendingMoves: [Move] = []
+
+    private struct Move: Equatable {
+        let sku: String
+        let delta: Int
+        let reason: String
+    }
 
     init(levels: [String: StockLevel]) {
         self.levels = levels
@@ -31,21 +40,30 @@ struct StockBook: Equatable {
         }
     }
 
-    /// Writes every level into the store, updating rows that exist and deleting untracked ones.
+    /// Writes every level into the store, updating rows that exist and deleting untracked ones (with a tombstone
+    /// for sync), plus the pending moves.
     @MainActor
-    func save(to context: ModelContext) throws {
+    mutating func save(to context: ModelContext) throws {
         let rows = try context.fetch(FetchDescriptor<StockRecord>())
-        for row in rows where untracked.contains(row.sku) && levels[row.sku] == nil { context.delete(row) }
+        for row in rows where untracked.contains(row.sku) && levels[row.sku] == nil {
+            context.delete(row)
+            context.insert(TombstoneRecord(kind: "stock", key: row.sku))
+        }
         let bySKU = Dictionary(rows.filter { levels[$0.sku] != nil }.map { ($0.sku, $0) }, uniquingKeysWith: { first, _ in first })
         for (sku, level) in levels {
             if let row = bySKU[sku] {
+                // The reorder point is a setting that syncs; the count travels as sales and moves.
+                if row.reorderAt != level.reorderAt { row.updatedAt = .now }
                 row.count = level.count
                 row.reorderAt = level.reorderAt
             } else {
                 context.insert(StockRecord(sku: sku, level: level))
             }
         }
+        for move in pendingMoves { context.insert(StockMoveRecord(sku: move.sku, delta: move.delta, reason: move.reason)) }
         try context.save()
+        pendingMoves = []
+        untracked = []
     }
 
     subscript(sku: String) -> StockLevel? { levels[sku] }
@@ -56,6 +74,8 @@ struct StockBook: Equatable {
     }
 
     mutating func set(_ sku: String, count: Int, reorderAt: Int) {
+        let delta = max(0, count) - (levels[sku]?.count ?? 0)
+        if delta != 0 { pendingMoves.append(Move(sku: sku, delta: delta, reason: "count")) }
         levels[sku] = StockLevel(count: max(0, count), reorderAt: max(0, reorderAt))
         untracked.remove(sku)
     }
@@ -69,6 +89,15 @@ struct StockBook: Equatable {
     mutating func receive(_ sku: String, _ quantity: Int) {
         var level = levels[sku] ?? StockLevel(count: 0)
         level.count += quantity
+        levels[sku] = level
+        pendingMoves.append(Move(sku: sku, delta: quantity, reason: "receive"))
+    }
+
+    /// Another device's delivery or recount, pulled by sync. Applied as the difference it made; no move is
+    /// recorded here (it is already on the server). Untracked products are ignored, like sales.
+    mutating func applyRemote(_ sku: String, delta: Int) {
+        guard var level = levels[sku] else { return }
+        level.count = max(0, level.count + delta)
         levels[sku] = level
     }
 

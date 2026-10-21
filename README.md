@@ -95,5 +95,5 @@ The training data, runs and model sources are not in this package (several hundr
 - Font: LINE Seed Sans TH © LY Corporation, SIL Open Font License 1.1 (`Resources/Fonts/OFL-LINE-Seed.txt`).
 - Detector: see `docs/MODEL-COMPARISON.md`. A model trained with Ultralytics YOLO is AGPL-3.0; shipping one in a
   closed-source app needs an Ultralytics Enterprise licence. Create ML models are ours.
-- Product pictures: retailer and brand packshots (Lotus's, 7-Eleven 7Online, lactasoy.com, Gourmet Market) with the
-  backgrounds cut away, used for this demo only. They belong to their owners.
+- Product pictures: our own photos of the packs, cut out with Vision (`tools/packshots.swift`). The brands and
+  their packaging belong to their owners.

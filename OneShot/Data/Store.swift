@@ -6,10 +6,14 @@ import SwiftData
 
 // The current shape. To change a model, add the next `StoreV<n>` (copying what changes), point these at it and add
 // a `MigrationStage` to `StoreMigrations`. Never edit a version a build has shipped: its stores would stop opening.
-typealias SaleRecord = StoreV2.SaleRecord
-typealias LineRecord = StoreV2.LineRecord
-typealias CloseRecord = StoreV2.CloseRecord
-typealias StockRecord = StoreV2.StockRecord
+typealias SaleRecord = StoreV3.SaleRecord
+typealias LineRecord = StoreV3.LineRecord
+typealias CloseRecord = StoreV3.CloseRecord
+typealias StockRecord = StoreV3.StockRecord
+typealias StockMoveRecord = StoreV3.StockMoveRecord
+typealias ProductRecord = StoreV3.ProductRecord
+typealias BarcodeRecord = StoreV3.BarcodeRecord
+typealias TombstoneRecord = StoreV3.TombstoneRecord
 
 /// The store's shape as first shipped (18 Oct). Frozen.
 enum StoreV1: VersionedSchema {
@@ -176,13 +180,16 @@ enum StoreV2: VersionedSchema {
 
 /// How a store written by an older build reaches the current schema.
 enum StoreMigrations: SchemaMigrationPlan {
-    static var schemas: [any VersionedSchema.Type] { [StoreV1.self, StoreV2.self] }
-    static var stages: [MigrationStage] { [.lightweight(fromVersion: StoreV1.self, toVersion: StoreV2.self)] }
+    static var schemas: [any VersionedSchema.Type] { [StoreV1.self, StoreV2.self, StoreV3.self] }
+    static var stages: [MigrationStage] {
+        [.lightweight(fromVersion: StoreV1.self, toVersion: StoreV2.self),
+         .lightweight(fromVersion: StoreV2.self, toVersion: StoreV3.self)]
+    }
 }
 
 @MainActor
 enum Store {
-    static let schema = Schema(versionedSchema: StoreV2.self)
+    static let schema = Schema(versionedSchema: StoreV3.self)
 
     /// Where this launch put a store that wouldn't open. Home warns while it's set.
     static private(set) var setAside: URL?
@@ -192,6 +199,7 @@ enum Store {
         let (container, aside) = open(ModelConfiguration())
         setAside = aside
         importLegacyJSON(into: container.mainContext)
+        Catalog.importLegacy(into: container.mainContext)
         return container
     }()
 
@@ -280,11 +288,12 @@ enum Store {
         }
     }
 
-    /// The shop's own files beside the books, in Documents: taught products, price and cost changes, barcodes, the
-    /// gallery's vectors and the photos they came from. A backup without them loses every taught product.
-    nonisolated static let shopFiles = ["quickadd.json", "prices.json", "costs.json", "barcodes.json", "gallery.json", "Crops"]
+    /// The shop's own files beside the store, in Documents: the gallery's vectors and the photos they came from.
+    /// A backup without them loses every taught product's look.
+    nonisolated static let shopFiles = ["gallery.json", "Crops"]
 
-    /// Writes the books as the three files `importLegacyJSON` reads, plus a copy of the shop files that exist.
+    /// Writes the books as the files `importLegacyJSON` reads, the catalog as `products.json` and `barcodes.json`
+    /// (what `Catalog.importBackup` reads), plus a copy of the shop files that exist.
     /// Restore with `restore(from:)`, or by hand: put them in OneShot's folder in the Files app and reopen the app.
     /// Throws rather than write a backup with anything missing.
     /// Nonisolated, on its own context: a big shop's books take seconds, so call it off the main actor.
@@ -294,9 +303,13 @@ enum Store {
         let sales = try context.fetch(FetchDescriptor<SaleRecord>(sortBy: [SortDescriptor(\.date)])).map(\.sale)
         let closes = try context.fetch(FetchDescriptor<CloseRecord>(sortBy: [SortDescriptor(\.date)])).map(\.close)
         let stock = try context.fetch(FetchDescriptor<StockRecord>()).map { ($0.sku, $0.level) }
+        let products = try context.fetch(FetchDescriptor<ProductRecord>(sortBy: [SortDescriptor(\.id)])).map(\.product)
+        let barcodes = try context.fetch(FetchDescriptor<BarcodeRecord>()).map { ($0.code, $0.sku) }
         let files = [("sales.json", try JSONEncoder().encode(sales)),
                      ("closings.json", try JSONEncoder().encode(closes)),
-                     ("stock.json", try JSONEncoder().encode(Dictionary(stock, uniquingKeysWith: { first, _ in first })))]
+                     ("stock.json", try JSONEncoder().encode(Dictionary(stock, uniquingKeysWith: { first, _ in first }))),
+                     ("products.json", try JSONEncoder().encode(products)),
+                     ("barcodes.json", try JSONEncoder().encode(Dictionary(barcodes, uniquingKeysWith: { _, last in last })))]
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         let books = try files.map { name, data in
             let url = folder.appending(path: name)
@@ -317,19 +330,20 @@ enum Store {
         }
         let crops = FileManager.default.enumerator(at: backup.appending(path: "Crops"), includingPropertiesForKeys: nil)
         return BackupSummary(sales: count("sales.json", [Sale].self), closes: count("closings.json", [DayClose].self),
-                             products: count("quickadd.json", [Product].self),
+                             products: max(count("products.json", [Product].self), count("quickadd.json", [Product].self)),
                              photos: (crops?.allObjects as? [URL])?.filter { $0.pathExtension == "jpg" }.count ?? 0)
     }
 
-    /// Puts a backup folder back: the shop files replace this iPad's, and the books are merged in by
-    /// `importLegacyJSON` (nothing already in the store is doubled). Works on a copy, because the import renames the
-    /// files it reads and the backup must stay as it is. The caller reloads the catalog and gallery afterwards.
+    /// Puts a backup folder back: the products and shop files replace this device's, and the books are merged in by
+    /// `importLegacyJSON` (nothing already in the store is doubled). Works on a copy, because the imports rename the
+    /// files they read and the backup must stay as it is. The caller reloads the catalog and gallery afterwards.
     static func restore(from backup: URL, into context: ModelContext, documents: URL = .documentsDirectory) throws {
         let work = FileManager.default.temporaryDirectory.appending(path: "Restore-\(UUID().uuidString)")
         defer { try? FileManager.default.removeItem(at: work) }
         try FileManager.default.copyItem(at: backup, to: work)
         _ = try copyShopFiles(from: work, to: documents)
         importLegacyJSON(into: context, folder: work)
+        try Catalog.importBackup(from: work, into: context)
     }
 
     /// Copies each shop file that exists in `source` over the one in `destination`.

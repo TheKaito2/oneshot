@@ -66,6 +66,8 @@ struct RootView: View {
             }
             if app.cameraIdle { app.camera.pause() }
         }
+        // Demo bills the table photos' snacks, so it needs them in the catalog (a fresh install has none).
+        .task(id: app.demo) { if app.demo { app.addSampleProducts() } }
         .onChange(of: app.cameraIdle) { _, idle in
             idle ? app.camera.pause() : app.camera.resume()
         }

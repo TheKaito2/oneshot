@@ -19,3 +19,6 @@ tools/pylib/
 # wrangler deploy cache (account id)
 .wrangler/
 data/yolo-tiles/
+
+# downloaded detector code and weights (Apache-2.0, not ours to commit)
+third_party/

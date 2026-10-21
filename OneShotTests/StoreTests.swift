@@ -43,7 +43,8 @@ struct StoreTests {
         stock.set("lays", count: 10, reorderAt: 4)
         stock.set("pocky", count: 3, reorderAt: 1)
         try stock.save(to: context)
-        try StockBook(levels: [:]).save(to: context)   // a book that failed to load must not wipe the rows
+        var unloaded = StockBook(levels: [:])
+        try unloaded.save(to: context)   // a book that failed to load must not wipe the rows
         #expect(try context.fetchCount(FetchDescriptor<StockRecord>()) == 2)
         stock.untrack("pocky")
         try stock.save(to: context)
@@ -148,7 +149,7 @@ struct StoreTests {
 
         let noShopFiles = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         let files = try Store.backUp(container, to: folder, documents: noShopFiles)
-        #expect(files.map(\.lastPathComponent) == ["sales.json", "closings.json", "stock.json"])
+        #expect(files.map(\.lastPathComponent) == ["sales.json", "closings.json", "stock.json", "products.json", "barcodes.json"])
         stock.receive("lays", 5)   // a delivery after the backup
         try stock.save(to: context)
         Store.importLegacyJSON(into: context, folder: folder)   // put back while the same books are still here
@@ -170,32 +171,92 @@ struct StoreTests {
         #expect(!FileManager.default.fileExists(atPath: folder.appending(path: "sales.json").path(percentEncoded: false)))
     }
 
-    @Test func restoreBringsBackTheShopFilesAndLeavesTheBackupAsItWas() throws {
+    @Test func restoreBringsBackTheCatalogAndPhotosAndLeavesTheBackupAsItWas() throws {
         let temp = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: temp) }
         let shop = temp.appending(path: "shop"), backup = temp.appending(path: "backup"), newShop = temp.appending(path: "new")
         try FileManager.default.createDirectory(at: shop.appending(path: "Crops/pocky"), withIntermediateDirectories: true)
-        try JSONEncoder().encode([pocky]).write(to: shop.appending(path: "quickadd.json"))
-        try Data("{\"lays\":\"25\"}".utf8).write(to: shop.appending(path: "prices.json"))
         try Data([0xFF, 0xD8]).write(to: shop.appending(path: "Crops/pocky/1.jpg"))
+        try Catalog.saveQuickAdd(lays, in: context)
+        try Catalog.saveQuickAdd(pocky, in: context)
+        try Catalog.savePrice(25, for: "lays", in: context)
+        try Catalog.assignBarcode("885000", to: "pocky", in: context)
         try SalesLog.record([BillLine(product: lays, quantity: 1)], total: 20, method: .cash, received: 20, at: t0, in: context)
 
         let written = try Store.backUp(container, to: backup, documents: shop)
-        #expect(Set(written.map(\.lastPathComponent)) == ["sales.json", "closings.json", "stock.json", "quickadd.json", "prices.json", "Crops"])
-        #expect(Store.summary(of: backup) == Store.BackupSummary(sales: 1, closes: 0, products: 1, photos: 1))
+        #expect(Set(written.map(\.lastPathComponent)) == ["sales.json", "closings.json", "stock.json", "products.json", "barcodes.json", "Crops"])
+        #expect(Store.summary(of: backup) == Store.BackupSummary(sales: 1, closes: 0, products: 2, photos: 1))
 
-        // A new device: empty books, an old prices file that the backup's must replace.
-        try FileManager.default.createDirectory(at: newShop, withIntermediateDirectories: true)
-        try Data("{}".utf8).write(to: newShop.appending(path: "prices.json"))
+        // A new device with a product of its own: the backup's catalog replaces it.
         let fresh = try Store.inMemory()
+        try Catalog.saveQuickAdd(Product(id: "qa-old", nameEN: "Old", nameTH: "เก่า", price: 5, barcode: nil), in: fresh.mainContext)
         try Store.restore(from: backup, into: fresh.mainContext, documents: newShop)
         #expect(SalesLog.all(in: fresh.mainContext) == SalesLog.all(in: context))
-        #expect(try Data(contentsOf: newShop.appending(path: "prices.json")) == Data("{\"lays\":\"25\"}".utf8))
+        let restored = Catalog.load(from: fresh.mainContext)
+        #expect(restored.products.map(\.id).sorted() == ["lays", "pocky"])
+        #expect(restored["lays"]?.price == 25)
+        #expect(restored.product(barcode: "885000")?.id == "pocky")
         #expect(FileManager.default.fileExists(atPath: newShop.appending(path: "Crops/pocky/1.jpg").path(percentEncoded: false)))
-        #expect(try JSONDecoder().decode([Product].self, from: Data(contentsOf: newShop.appending(path: "quickadd.json"))) == [pocky])
-        // The backup itself is untouched (the import renames what it reads, so it works on a copy).
+        // The backup itself is untouched (the imports rename what they read, so restore works on a copy).
         #expect(FileManager.default.fileExists(atPath: backup.appending(path: "sales.json").path(percentEncoded: false)))
         try Store.restore(from: backup, into: fresh.mainContext, documents: newShop)   // twice: nothing doubled
         #expect(SalesLog.all(in: fresh.mainContext).count == 1)
+        #expect(Catalog.load(from: fresh.mainContext).products.count == 2)
+    }
+
+    /// An install from before V3 keeps its catalog: bundled snacks, taught products, price edits, costs and scanned
+    /// barcodes all move from Documents' JSON files into the store, once.
+    @Test func legacyCatalogFilesMoveIntoTheStore() throws {
+        let docs = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: docs) }
+        try FileManager.default.createDirectory(at: docs, withIntermediateDirectories: true)
+        let taught = Product(id: "qa-1", nameEN: "Pocky", nameTH: "ป๊อกกี้", price: 20, barcode: nil)
+        try JSONEncoder().encode([taught]).write(to: docs.appending(path: "quickadd.json"))
+        try JSONEncoder().encode(["kitkat-original": Decimal(15)]).write(to: docs.appending(path: "prices.json"))
+        try JSONEncoder().encode(["qa-1": Decimal(12)]).write(to: docs.appending(path: "costs.json"))
+        try JSONEncoder().encode(["885000": "qa-1"]).write(to: docs.appending(path: "barcodes.json"))
+
+        Catalog.importLegacy(into: context, folder: docs)
+        let catalog = Catalog.load(from: context)
+        #expect(catalog.products.count == 13)   // the 12 bundled snacks + the taught one
+        #expect(catalog["kitkat-original"]?.price == 15)
+        #expect(catalog["qa-1"]?.cost == 12)
+        #expect(catalog.product(barcode: "885000")?.id == "qa-1")
+        #expect(catalog.products.last?.id == "qa-1")   // taught products list last
+        #expect(!FileManager.default.fileExists(atPath: docs.appending(path: "quickadd.json").path(percentEncoded: false)))
+        Catalog.importLegacy(into: context, folder: docs)   // second launch: nothing doubled
+        #expect(Catalog.load(from: context).products.count == 13)
+    }
+
+    /// A fresh install starts with no products (onboarding offers the samples); adding them twice adds them once.
+    @Test func freshInstallStartsEmptyAndSamplesAddOnce() throws {
+        let docs = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        try FileManager.default.createDirectory(at: docs, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: docs) }
+        Catalog.importLegacy(into: context, folder: docs)
+        #expect(Catalog.isEmpty(context))
+        try Catalog.addSamples(to: context)
+        try Catalog.addSamples(to: context)
+        #expect(Catalog.load(from: context).products.count == 12)
+    }
+
+    /// Deliveries and recounts become moves for sync; two devices' moves both count.
+    @Test func stockChangesBecomeMovesThatAddUp() throws {
+        var stock = StockBook(levels: [:])
+        stock.set("lays", count: 10, reorderAt: 4)
+        stock.receive("lays", 6)
+        stock.set("lays", count: 14, reorderAt: 4)   // a recount: 2 missing
+        try stock.save(to: context)
+        let moves = try context.fetch(FetchDescriptor<StockMoveRecord>(sortBy: [SortDescriptor(\.at)])).map(\.delta)
+        #expect(moves.sorted() == [-2, 6, 10])
+        stock.applyRemote("lays", delta: 12)   // the other device's delivery
+        stock.apply(Sale(id: UUID(), date: t0, lines: [SaleLine(sku: "lays", name: "Lay's", quantity: 3, amount: 60)],
+                         total: 60, method: .cash))   // and a sale it made, pulled
+        #expect(stock["lays"]?.count == 23)
+        try stock.save(to: context)
+        #expect(try context.fetchCount(FetchDescriptor<StockMoveRecord>()) == 3)   // remote changes add no moves here
+        stock.untrack("lays")
+        try stock.save(to: context)
+        #expect(try context.fetch(FetchDescriptor<TombstoneRecord>()).map(\.key) == ["lays"])
     }
 }
