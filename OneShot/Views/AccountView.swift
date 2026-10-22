@@ -8,8 +8,6 @@ struct AccountView: View {
     @Bindable var app: AppModel
     @State private var account = Account.shared
     @State private var sync = SyncEngine.shared
-    /// The nonce for the Apple request in flight; its hash went into the request.
-    @State private var appleNonce = ""
     @State private var busy = false
     @State private var problem: String?
     @State private var confirmingDelete = false
@@ -18,7 +16,6 @@ struct AccountView: View {
     @State private var justSignedIn = false
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         NavigationStack {
@@ -76,37 +73,7 @@ struct AccountView: View {
                     .frostedRows()
                 } else {
                     Section {
-                        SignInWithAppleButton(.continue) { request in
-                            appleNonce = AppleNonce.make()
-                            request.requestedScopes = [.email]
-                            request.nonce = AppleNonce.sha256(appleNonce)
-                        } onCompletion: { result in
-                            switch result {
-                            case .success(let authorization):
-                                guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
-                                      let token = credential.identityToken.flatMap({ String(data: $0, encoding: .utf8) }) else {
-                                    problem = String(localized: "Apple didn't return a sign-in token. Try again.")
-                                    return
-                                }
-                                let nonce = appleNonce
-                                run {
-                                    try await account.signInWithApple(idToken: token, nonce: nonce)
-                                    signedInNow()
-                                }
-                            case .failure(let error):
-                                if (error as? ASAuthorizationError)?.code != .canceled { problem = error.localizedDescription }
-                            }
-                        }
-                        .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
-                        .frame(height: 48)
-                        Button {
-                            run {
-                                try await account.signInWithGoogle()
-                                signedInNow()
-                            }
-                        } label: {
-                            Label("Continue with Google", systemImage: "globe")
-                        }
+                        SignInButtons(onSignedIn: signedInNow)
                     } footer: {
                         Text("Back up the shop and use it on your other devices.")
                     }
@@ -165,6 +132,73 @@ struct AccountView: View {
             defer { busy = false }
             do {
                 try await work()
+            } catch let error as ASWebAuthenticationSessionError where error.code == .canceledLogin {
+                return   // the sheet was closed: nothing to report
+            } catch {
+                problem = error.localizedDescription
+            }
+        }
+    }
+}
+
+/// Sign in with Apple and with Google, shared by Account and onboarding. Apple's button comes first (guideline 4.8).
+struct SignInButtons: View {
+    let onSignedIn: () -> Void
+    @State private var account = Account.shared
+    /// The nonce for the Apple request in flight; its hash went into the request.
+    @State private var appleNonce = ""
+    @State private var busy = false
+    @State private var problem: String?
+    @Environment(\.colorScheme) private var colorScheme
+
+    var body: some View {
+        VStack(spacing: 12) {
+            SignInWithAppleButton(.continue) { request in
+                appleNonce = AppleNonce.make()
+                request.requestedScopes = [.email]
+                request.nonce = AppleNonce.sha256(appleNonce)
+            } onCompletion: { result in
+                switch result {
+                case .success(let authorization):
+                    guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
+                          let token = credential.identityToken.flatMap({ String(data: $0, encoding: .utf8) }) else {
+                        problem = String(localized: "Apple didn't return a sign-in token. Try again.")
+                        return
+                    }
+                    let nonce = appleNonce
+                    run { try await account.signInWithApple(idToken: token, nonce: nonce) }
+                case .failure(let error):
+                    if (error as? ASAuthorizationError)?.code != .canceled { problem = error.localizedDescription }
+                }
+            }
+            .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
+            .frame(height: 50)
+            .clipShape(.capsule)
+            Button {
+                run { try await account.signInWithGoogle() }
+            } label: {
+                Label("Continue with Google", systemImage: "globe")
+                    .font(.seed(.headline))
+                    .frame(maxWidth: .infinity, minHeight: 36)
+            }
+            .buttonStyle(.glass)
+            .controlSize(.large)
+            if let problem {
+                Text(problem).font(.seed(.caption)).foregroundStyle(Brand.negative)
+            }
+        }
+        .disabled(busy)
+        .padding(.vertical, 4)
+    }
+
+    private func run(_ work: @escaping () async throws -> Void) {
+        problem = nil
+        busy = true
+        Task {
+            defer { busy = false }
+            do {
+                try await work()
+                onSignedIn()
             } catch let error as ASWebAuthenticationSessionError where error.code == .canceledLogin {
                 return   // the sheet was closed: nothing to report
             } catch {

@@ -35,6 +35,7 @@ struct SettingsView: View {
     @State private var restoreNote: String?
     @State private var showingAccount = false
     @State private var account = Account.shared
+    @State private var sync = SyncEngine.shared
     @State private var addingSamples = false
     @State private var sampleNote: String?
     /// Sample sales are only offered on empty books.
@@ -48,94 +49,47 @@ struct SettingsView: View {
             Form {
                 if Cloud.isConfigured {
                     Section {
-                        Button {
-                            showingAccount = true
-                        } label: {
-                            LabeledContent("Account", value: account.email ?? String(localized: "Not signed in"))
-                        }
-                    } footer: {
-                        Text("Optional. Sign in to back up the shop and use it on your other devices.")
+                        Button { showingAccount = true } label: { accountHeader }
+                            .buttonStyle(.plain)
                     }
                     .frostedRows()
                 }
                 Section("Shop") {
-                    TextField("Shop name", text: $shopName)
+                    NavigationLink { shopPage } label: {
+                        row("Shop details", icon: "storefront.fill", tint: Brand.accent,
+                            value: maskedID)
+                    }
+                    NavigationLink { pinPage } label: {
+                        row("Refund PIN", icon: "lock.fill", tint: Brand.mauve,
+                            value: hasPIN ? String(localized: "On") : String(localized: "Off"))
+                    }
                 }
                 .frostedRows()
-                Section("Payment") {
-                    TextField("PromptPay: mobile, 13-digit ID or e-wallet", text: $draftID)
-                        .keyboardType(.numberPad)
-                    if PromptPay.looksFinished(draftID), !PromptPay.isValidTarget(draftID) {
-                        Text("Not a Thai mobile number, 13-digit ID or 15-digit e-wallet ID.")
-                            .font(.seed(.caption))
-                            .foregroundStyle(Brand.negative)
+                Section("Data") {
+                    NavigationLink { backupPage } label: {
+                        row("Backup & restore", icon: "externaldrive.fill", tint: Brand.sky)
                     }
-                    Button("Save") { promptPayID = draftID }
-                        .disabled(!PromptPay.isValidTarget(draftID) || draftID == promptPayID)
-                }
-                .frostedRows()
-                Section {
-                    if hasPIN {
-                        Button("Turn off the refund PIN", role: .destructive) { turningOffPIN = true }
-                    } else {
-                        SecureField("4-digit PIN", text: $newPIN)
-                            .keyboardType(.numberPad)
-                        Button("Set refund PIN") { savePIN(newPIN) }
-                            .disabled(!RefundPIN.isValid(newPIN))
-                    }
-                    if let pinProblem {
-                        Text(pinProblem).font(.seed(.caption)).foregroundStyle(Brand.negative)
-                    }
-                } header: {
-                    Text("Refunds")
-                } footer: {
-                    Text(hasPIN
-                         ? "Refunds ask for this PIN. To change it, turn it off and set a new one."
-                         : "Set a PIN and only someone who knows it can refund a sale.")
-                }
-                .frostedRows()
-                Section {
-                    Button("Back up…", systemImage: "externaldrive") { exporting = true }
-                        .disabled(backup == nil)
-                    Button("Restore from a backup…", systemImage: "arrow.counterclockwise") { importing = true }
-                    if let backupProblem {
-                        Text("Backup failed: \(backupProblem)").font(.seed(.caption)).foregroundStyle(Brand.negative)
-                    }
-                    if let restoreNote {
-                        Text(restoreNote).font(.seed(.caption)).foregroundStyle(Brand.muted)
-                    }
-                } header: {
-                    Text("Backup")
-                } footer: {
-                    Text("One folder with sales, refunds, day closes, stock, taught products, prices, barcodes and product photos. Keep it outside OneShot, e.g. in iCloud Drive. Restoring adds the backup's sales to these books and replaces products, prices and photos with the backup's.")
-                }
-                .frostedRows()
-                Section {
-                    // ponytail: iOS's own per-app language page; an instant in-app switch only if the demo needs it.
-                    Button("Language: English / ไทย") {
+                    // ponytail: iOS's own per-app language page; an instant in-app switch only if a shop asks.
+                    Button {
                         if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
+                    } label: {
+                        row("Language", icon: "globe", tint: Brand.sage, value: language, external: true)
                     }
-                } footer: {
-                    Text("The spoken total is always Thai.")
                 }
                 .frostedRows()
-                Section {
-                    Toggle("Demo camera: table photos instead of the camera", isOn: $app.demo)
-                    Button("Add two weeks of sample sales") { addingSamples = true }
-                        .disabled(!sales.isEmpty)
-                        // On the button, so the iPad popover points at it (it hung from the top of the screen).
-                        .confirmationDialog("Add two weeks of sample sales?", isPresented: $addingSamples, titleVisibility: .visible) {
-                            Button("Add sample sales") { addSamples() }
-                        } message: {
-                            Text("Made-up sales fill Home and Reports for a demo. Delete the app to remove them.")
-                        }
-                    if let sampleNote {
-                        Text(sampleNote).font(.seed(.caption)).foregroundStyle(Brand.muted)
+                Section("Help") {
+                    NavigationLink { demoPage } label: {
+                        row("Demo & sample data", icon: "sparkles", tint: Brand.sand)
                     }
-                } header: {
-                    Text("Demo")
-                } footer: {
-                    Text("For presenting without the snacks, or from the simulator. Sample sales can only be added while the books are empty, so they never mix with real ones.")
+                    NavigationLink { diagnosticsPage } label: {
+                        row("Diagnostics", icon: "stethoscope", tint: Brand.muted)
+                    }
+                    Link(destination: URL(string: "https://oneshot-pos.pages.dev")!) {
+                        row("Privacy & support", icon: "hand.raised.fill", tint: Brand.sky, external: true)
+                    }
+                    NavigationLink { aboutPage } label: {
+                        row("About", icon: "info.circle.fill", tint: Brand.muted)
+                    }
                 }
                 .frostedRows()
                 // Development builds, and a test build launched with -debugMenu YES; a shop never sees it.
@@ -146,28 +100,8 @@ struct SettingsView: View {
                     }
                     .frostedRows()
                 }
-                Section {
-                    let reports = Diagnostics.files()
-                    if reports.isEmpty {
-                        Text("No reports yet.").foregroundStyle(Brand.muted)
-                    } else {
-                        ShareLink(items: reports) {
-                            Label("Share \(reports.count) reports", systemImage: "stethoscope")
-                        }
-                    }
-                } header: {
-                    Text("Diagnostics")
-                } footer: {
-                    Text("Crash and hang reports from iOS, kept on this device. Share them when asking for help.")
-                }
-                .frostedRows()
-                // The OFL asks for the notice to travel with the font; the full licence is in the app bundle too.
-                Section("About") {
-                    Link("Privacy and support", destination: URL(string: "https://oneshot-pos.pages.dev")!)
-                    LabeledContent("Font", value: "LINE Seed Sans TH")
-                    Text("© LY Corporation. SIL Open Font License 1.1.").font(.seed(.caption)).foregroundStyle(Brand.muted)
-                }
-                .frostedRows()
+                Section { versionFooter }
+                    .listRowBackground(Color.clear)
             }
             .gridList()
             .navigationTitle("Settings")
@@ -175,46 +109,261 @@ struct SettingsView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
-            .fileExporter(isPresented: $exporting, document: backup.map(BackupFolder.init), contentType: .folder,
-                          defaultFilename: String(localized: "OneShot Backup \(Date.now.formatted(.iso8601.year().month().day()))")) { result in
-                if case .failure(let error) = result { backupProblem = error.localizedDescription }
-            }
-            .fileImporter(isPresented: $importing, allowedContentTypes: [.folder]) { result in
-                switch result {
-                case .success(let url):
-                    let access = url.startAccessingSecurityScopedResource()
-                    defer { if access { url.stopAccessingSecurityScopedResource() } }
-                    let summary = Store.summary(of: url)
-                    if summary == Store.BackupSummary() {
-                        restoreNote = String(localized: "That folder isn't a OneShot backup.")
-                    } else {
-                        restoring = (url, summary)
-                    }
-                case .failure(let error):
-                    restoreNote = error.localizedDescription
+        }
+        // On the stack, not a page: the dialogs keep working whichever page is showing.
+        .fileExporter(isPresented: $exporting, document: backup.map(BackupFolder.init), contentType: .folder,
+                      defaultFilename: String(localized: "OneShot Backup \(Date.now.formatted(.iso8601.year().month().day()))")) { result in
+            if case .failure(let error) = result { backupProblem = error.localizedDescription }
+        }
+        .fileImporter(isPresented: $importing, allowedContentTypes: [.folder]) { result in
+            switch result {
+            case .success(let url):
+                let access = url.startAccessingSecurityScopedResource()
+                defer { if access { url.stopAccessingSecurityScopedResource() } }
+                let summary = Store.summary(of: url)
+                if summary == Store.BackupSummary() {
+                    restoreNote = String(localized: "That folder isn't a OneShot backup.")
+                } else {
+                    restoring = (url, summary)
                 }
+            case .failure(let error):
+                restoreNote = error.localizedDescription
             }
-            .confirmationDialog("Restore this backup?", isPresented: Binding(get: { restoring != nil }, set: { if !$0 { restoring = nil } }),
-                                titleVisibility: .visible, presenting: restoring) { pending in
-                Button("Restore") { restore(pending.url) }
-            } message: { pending in
-                Text("\(pending.summary.sales) sales, \(pending.summary.closes) day closes, \(pending.summary.products) taught products, \(pending.summary.photos) photos. Products, prices and photos on this device are replaced.")
+        }
+        .confirmationDialog("Restore this backup?", isPresented: Binding(get: { restoring != nil }, set: { if !$0 { restoring = nil } }),
+                            titleVisibility: .visible, presenting: restoring) { pending in
+            Button("Restore") { restore(pending.url) }
+        } message: { pending in
+            Text("\(pending.summary.sales) sales, \(pending.summary.closes) day closes, \(pending.summary.products) taught products, \(pending.summary.photos) photos. Products, prices and photos on this device are replaced.")
+        }
+        .sheet(isPresented: $showingAccount) { AccountView(app: app) }
+        .alert("Turn off the refund PIN?", isPresented: $turningOffPIN) {
+            SecureField("Current PIN", text: $pinEntry).keyboardType(.numberPad)
+            Button("Turn off", role: .destructive) {
+                if RefundPIN.matches(pinEntry) { savePIN(nil) } else { pinProblem = String(localized: "Wrong PIN.") }
+                pinEntry = ""
             }
-            .sheet(isPresented: $showingAccount) { AccountView(app: app) }
-            .alert("Turn off the refund PIN?", isPresented: $turningOffPIN) {
-                SecureField("Current PIN", text: $pinEntry).keyboardType(.numberPad)
-                Button("Turn off", role: .destructive) {
-                    if RefundPIN.matches(pinEntry) { savePIN(nil) } else { pinProblem = String(localized: "Wrong PIN.") }
-                    pinEntry = ""
-                }
-                Button("Cancel", role: .cancel) { pinEntry = "" }
-            }
+            Button("Cancel", role: .cancel) { pinEntry = "" }
         }
         .onAppear {
             draftID = promptPayID
             hasPIN = RefundPIN.isSet()
         }
         .task { await writeBackup() }
+    }
+
+    // MARK: - Root pieces
+
+    /// Apple Settings' account card: who owns this shop and whether it's backed up.
+    private var accountHeader: some View {
+        HStack(spacing: 14) {
+            LogoTile(size: 56)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(shopName.isEmpty ? String(localized: "Your shop") : shopName)
+                    .font(.seed(.title3, .bold)).foregroundStyle(Brand.ink).lineLimit(1)
+                Text(account.email ?? String(localized: "Sign in to back up and sync"))
+                    .font(.seed(.subheadline)).foregroundStyle(account.isSignedIn ? Brand.body : Brand.accent).lineLimit(1)
+                if account.isSignedIn {
+                    Group {
+                        if sync.running {
+                            Text("Backing up…")
+                        } else if let last = sync.lastSynced {
+                            Text("Synced \(last, style: .relative) ago")
+                        }
+                    }
+                    .font(.seed(.caption)).foregroundStyle(Brand.muted)
+                }
+            }
+            Spacer(minLength: 0)
+            Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(Brand.mutedSoft)
+        }
+        .padding(.vertical, 6)
+        .contentShape(.rect)
+    }
+
+    /// One Settings row: a white symbol on a coloured tile, the title, and the current value in grey.
+    private func row(_ title: LocalizedStringKey, icon: String, tint: Color, value: String? = nil,
+                     external: Bool = false) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 30, height: 30)
+                .background(tint, in: .rect(cornerRadius: 8, style: .continuous))
+                .accessibilityHidden(true)
+            Text(title).foregroundStyle(Brand.ink)
+            Spacer(minLength: 8)
+            if let value {
+                Text(value).foregroundStyle(Brand.muted).lineLimit(1)
+            }
+            if external {
+                Image(systemName: "arrow.up.right").font(.footnote.weight(.semibold)).foregroundStyle(Brand.mutedSoft)
+            }
+        }
+    }
+
+    private var maskedID: String {
+        promptPayID.isEmpty ? String(localized: "Not set") : "•••\(promptPayID.suffix(4))"
+    }
+
+    private var language: String {
+        let code = Bundle.main.preferredLocalizations.first ?? "en"
+        return Locale(identifier: code).localizedString(forLanguageCode: code) ?? code
+    }
+
+    private var versionFooter: some View {
+        let info = Bundle.main.infoDictionary
+        let version = info?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let build = info?["CFBundleVersion"] as? String ?? "1"
+        return VStack(spacing: 6) {
+            LogoTile(size: 28)
+            Text(verbatim: "OneShot \(version) (\(build))").font(.seed(.footnote, .bold)).foregroundStyle(Brand.muted)
+            Text("Made in Thailand").font(.seed(.caption)).foregroundStyle(Brand.mutedSoft)
+        }
+        .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .combine)
+    }
+
+    // MARK: - Pages
+
+    private func page(_ title: LocalizedStringKey, @ViewBuilder content: () -> some View) -> some View {
+        Form { content() }
+            .gridList()
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var shopPage: some View {
+        page("Shop details") {
+            Section {
+                TextField("Shop name", text: $shopName)
+            } header: {
+                Text("Name")
+            } footer: {
+                Text("It goes on receipts and the monthly statement.")
+            }
+            .frostedRows()
+            Section {
+                TextField("Mobile, 13-digit ID or e-wallet", text: $draftID)
+                    .keyboardType(.numberPad)
+                    // Saved as soon as it's a valid target, like the iOS Settings app: no Save button to miss.
+                    .onChange(of: draftID) { _, id in if PromptPay.isValidTarget(id) { promptPayID = id } }
+                if PromptPay.looksFinished(draftID), !PromptPay.isValidTarget(draftID) {
+                    Text("Not a Thai mobile number, 13-digit ID or 15-digit e-wallet ID.")
+                        .font(.seed(.caption)).foregroundStyle(Brand.negative)
+                } else if !promptPayID.isEmpty, draftID == promptPayID {
+                    Label("Saved", systemImage: "checkmark.circle.fill").font(.seed(.caption)).foregroundStyle(Brand.positive)
+                }
+            } header: {
+                Text("PromptPay")
+            } footer: {
+                Text("Customers scan a QR with the amount already filled in, paid straight to this ID.")
+            }
+            .frostedRows()
+        }
+    }
+
+    private var pinPage: some View {
+        page("Refund PIN") {
+            Section {
+                if hasPIN {
+                    Button("Turn off the refund PIN", role: .destructive) { turningOffPIN = true }
+                } else {
+                    SecureField("4-digit PIN", text: $newPIN)
+                        .keyboardType(.numberPad)
+                    Button("Set refund PIN") { savePIN(newPIN) }
+                        .disabled(!RefundPIN.isValid(newPIN))
+                }
+                if let pinProblem {
+                    Text(pinProblem).font(.seed(.caption)).foregroundStyle(Brand.negative)
+                }
+            } footer: {
+                Text(hasPIN
+                     ? "Refunds ask for this PIN. To change it, turn it off and set a new one."
+                     : "Set a PIN and only someone who knows it can refund a sale.")
+            }
+            .frostedRows()
+        }
+    }
+
+    private var backupPage: some View {
+        page("Backup & restore") {
+            Section {
+                Button("Back up…", systemImage: "externaldrive") { exporting = true }
+                    .disabled(backup == nil)
+                Button("Restore from a backup…", systemImage: "arrow.counterclockwise") { importing = true }
+                if let backupProblem {
+                    Text("Backup failed: \(backupProblem)").font(.seed(.caption)).foregroundStyle(Brand.negative)
+                }
+                if let restoreNote {
+                    Text(restoreNote).font(.seed(.caption)).foregroundStyle(Brand.muted)
+                }
+            } footer: {
+                Text("One folder with sales, refunds, day closes, stock, taught products, prices, barcodes and product photos. Keep it outside OneShot, e.g. in iCloud Drive. Restoring adds the backup's sales to these books and replaces products, prices and photos with the backup's.")
+            }
+            .frostedRows()
+        }
+    }
+
+    private var demoPage: some View {
+        page("Demo & sample data") {
+            Section {
+                Toggle("Demo camera: table photos instead of the camera", isOn: $app.demo)
+                Button("Add two weeks of sample sales") { addingSamples = true }
+                    .disabled(!sales.isEmpty)
+                    // On the button, so the iPad popover points at it (it hung from the top of the screen).
+                    .confirmationDialog("Add two weeks of sample sales?", isPresented: $addingSamples, titleVisibility: .visible) {
+                        Button("Add sample sales") { addSamples() }
+                    } message: {
+                        Text("Made-up sales fill Home and Reports for a demo. Delete the app to remove them.")
+                    }
+                if let sampleNote {
+                    Text(sampleNote).font(.seed(.caption)).foregroundStyle(Brand.muted)
+                }
+            } footer: {
+                Text("For presenting without the snacks, or from the simulator. Sample sales can only be added while the books are empty, so they never mix with real ones.")
+            }
+            .frostedRows()
+        }
+    }
+
+    private var diagnosticsPage: some View {
+        page("Diagnostics") {
+            Section {
+                let reports = Diagnostics.files()
+                if reports.isEmpty {
+                    Text("No reports yet.").foregroundStyle(Brand.muted)
+                } else {
+                    ShareLink(items: reports) {
+                        Label("Share \(reports.count) reports", systemImage: "stethoscope")
+                    }
+                }
+            } footer: {
+                Text("Crash and hang reports from iOS, kept on this device. Share them when asking for help.")
+            }
+            .frostedRows()
+        }
+    }
+
+    // The OFL asks for the notice to travel with the font; the full licence is in the app bundle too.
+    private var aboutPage: some View {
+        page("About") {
+            Section {
+                VStack(spacing: 10) {
+                    LogoTile(size: 72)
+                    Text(verbatim: "OneShot").font(.seed(.title2, .bold)).foregroundStyle(Brand.ink)
+                    Text("One-tap checkout for Thai shops.").font(.seed(.subheadline)).foregroundStyle(Brand.body)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+            }
+            .listRowBackground(Color.clear)
+            Section("Licences") {
+                LabeledContent("Font", value: "LINE Seed Sans TH")
+                Text("© LY Corporation. SIL Open Font License 1.1.").font(.seed(.caption)).foregroundStyle(Brand.muted)
+            }
+            .frostedRows()
+        }
     }
 
     private func addSamples() {

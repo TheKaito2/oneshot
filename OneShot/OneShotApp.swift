@@ -31,7 +31,8 @@ struct OneShotApp: App {
 
 struct RootView: View {
     @State private var app = AppModel()
-    @AppStorage(OnboardingKey.done) private var onboarded = false
+    /// Read once: a `-onboarded NO` launch argument (UI tests) outranks the write at the end, so the cover can't follow it.
+    @State private var onboarding = !UserDefaults.standard.bool(forKey: OnboardingKey.done)
     @State private var account = Account.shared
     /// Custom fonts don't follow Bold Text by themselves: rebuild with the heavier faces when it changes.
     @Environment(\.legibilityWeight) private var legibilityWeight
@@ -54,8 +55,8 @@ struct RootView: View {
         // Settings is a sheet from Home's gear, not a fifth tab: five titles overflowed the portrait tab bar, and as a
         // sidebar-only tab it still joined the bar when selected and pushed Home behind a chevron (19 Oct).
         .sheet(isPresented: $app.showingSettings) { SettingsView(app: app) }
-        .fullScreenCover(isPresented: Binding(get: { !onboarded }, set: { onboarded = !$0 })) {
-            OnboardingView(app: app) { onboarded = true }
+        .fullScreenCover(isPresented: $onboarding) {
+            OnboardingView(app: app) { onboarding = false }
                 .environment(\.font, .seed(.body))
         }
         .tabViewStyle(.sidebarAdaptable)

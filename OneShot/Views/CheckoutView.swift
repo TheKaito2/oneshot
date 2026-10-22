@@ -18,6 +18,7 @@ struct CheckoutView: View {
     @State private var demoFrame: CGImage?
     @State private var demoBoxes: [Box] = []
     @AppStorage(SettingsKey.debugOverlay) private var debugOverlay = false
+    @Environment(\.horizontalSizeClass) private var sizeClass
     /// One tip at a time under the zone: how to ring up first, then how to teach a product.
     @State private var tips = TipGroup(.ordered) {
         LockTip()
@@ -33,6 +34,9 @@ struct CheckoutView: View {
             // side by side there crushed the controls until Ring up wrapped one letter a line (seen 18 Oct).
             // The ticket keeps a full 400 pt beside it: at ~320 its item names wrapped one letter a line (seen 18 Oct).
             let wide = geometry.size.width >= 960
+            // iPhone: no empty ticket under the camera. The camera gets the screen until Ring up, then the cart
+            // slides in from the right (Krist, 22 Oct: the empty "Current sale" card made it look cramped).
+            let cameraOnly = sizeClass == .compact && !wide && !billOpen && !app.teaching
             let layout = wide ? AnyLayout(HStackLayout(spacing: 20)) : AnyLayout(VStackLayout(spacing: 20))
             layout {
                 VStack(spacing: 14) {
@@ -40,19 +44,23 @@ struct CheckoutView: View {
                     // priority, landscape with the sidebar docked squeezed the zone to ~200 pt (19 Oct).
                     // iPhone with a bill open: the frozen photo shrinks so the ticket shows more than one line.
                     let zoneShare = billOpen && geometry.size.height < 800 ? 0.22 : 0.36
-                    scanZone.frame(maxHeight: wide ? .infinity : geometry.size.height * zoneShare)
-                        .frame(minHeight: wide ? nil : geometry.size.height * min(zoneShare, 0.3))
+                    scanZone.frame(maxHeight: wide || cameraOnly ? .infinity : geometry.size.height * zoneShare)
+                        .frame(minHeight: wide || cameraOnly ? nil : geometry.size.height * min(zoneShare, 0.3))
                     // Tips only where they fit: on a short stacked screen they pushed Charge off the bottom.
                     // iPhone with a bill open or teaching: the greyed controls took the panel's room (seen 19–20 Oct);
                     // the bill's own Add items / Start over buttons and the panel's Cancel cover what's left to do.
                     if !((billOpen || app.teaching) && geometry.size.height < 800) {
-                        controls(tipsFit: wide || geometry.size.height > 1000)
+                        controls(tipsFit: wide || cameraOnly || geometry.size.height > 1000)
                     }
                 }
-                sidePanel
-                    .frame(width: wide ? 400 : nil)
+                if !cameraOnly {
+                    sidePanel
+                        .frame(width: wide ? 400 : nil)
+                        .transition(.move(edge: .trailing).combined(with: .opacity))
+                }
             }
             .padding(20)
+            .animation(.spring(duration: 0.45, bounce: 0.15), value: cameraOnly)
         }
         // The workspace doesn't scroll: at accessibility text sizes the ticket pushed Charge off the screen (18 Oct).
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)

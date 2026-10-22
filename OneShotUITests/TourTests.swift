@@ -16,7 +16,7 @@ final class TourTests: XCTestCase {
             "Ring up the items in view": "คิดเงินสินค้าที่อยู่ในภาพ", "Back": "กลับ", "Charge": "เก็บเงิน",
             "Add two weeks of sample sales": "เพิ่มยอดขายตัวอย่าง 2 สัปดาห์", "Add sample sales": "เพิ่มยอดขายตัวอย่าง",
             "This month": "เดือนนี้", "Add items": "เพิ่มสินค้า", "Scan more items": "สแกนเพิ่ม",
-            "Start over": "เริ่มใหม่", "Done": "เสร็จ",
+            "Start over": "เริ่มใหม่", "Done": "เสร็จ", "Demo & sample data": "เดโมและข้อมูลตัวอย่าง",
         ][english] ?? english
     }
 
@@ -41,6 +41,7 @@ final class TourTests: XCTestCase {
         XCTAssertTrue(start.waitForExistence(timeout: 15), "onboarding didn't show")
         shot("portrait-16-onboarding-welcome")
         start.tap()
+        if !button("Allow the camera").waitForExistence(timeout: 3), start.exists { start.tap() }   // swallowed on a busy Mac
         shot("portrait-17-onboarding-camera")
         button("Skip").tap()
         let name = app.textFields["Shop name"]
@@ -48,11 +49,11 @@ final class TourTests: XCTestCase {
         name.tap()
         name.typeText("Somchai Shop")
         shot("portrait-18-onboarding-shop")
-        button("Next").tap()
+        button("Continue").tap()
         let id = app.textFields["Mobile, 13-digit ID or e-wallet"]
         XCTAssertTrue(id.waitForExistence(timeout: 5))
         shot("portrait-19-onboarding-promptpay")
-        button("Next").tap()   // keeps the -promptPayID launch value
+        button("Continue").tap()   // keeps the -promptPayID launch value
         XCTAssertTrue(app.secureTextFields["4-digit PIN"].waitForExistence(timeout: 5))
         shot("portrait-20-onboarding-pin")
         button("Skip").tap()
@@ -107,6 +108,11 @@ final class TourTests: XCTestCase {
             go("Checkout")
             sleep(3)   // demo photo and its boxes
             shot("\(o)-03-checkout-live")
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                // iPhone: the cart stays hidden until Ring up, then slides in.
+                XCTAssertFalse(app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", label("Charge"))).firstMatch.exists,
+                               "the empty cart shows before Ring up")
+            }
             let ringUp = button(label("Ring up the items in view"))
             XCTAssertTrue(ringUp.waitForExistence(timeout: 5), "Ring up missing")
             ringUp.tap()
@@ -187,6 +193,12 @@ final class TourTests: XCTestCase {
             }
             openSettings()
             shot("\(o)-13-settings")
+            if orientation == .portrait {
+                row("Shop details").tap()
+                sleep(1)
+                shot("\(o)-16-settings-shop")
+                backInSettings()
+            }
             closeSheet()
         }
         XCUIDevice.shared.orientation = .portrait
@@ -248,8 +260,20 @@ final class TourTests: XCTestCase {
         }
     }
 
+    /// A Settings row (a navigation link reads its title, then its value).
+    private func row(_ title: String) -> XCUIElement {
+        app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", label(title))).firstMatch
+    }
+
+    private func backInSettings() {
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        sleep(1)
+    }
+
     private func addSampleSalesIfOffered() {
         openSettings()
+        row("Demo & sample data").tap()
+        sleep(1)
         let add = button(label("Add two weeks of sample sales"))
         for _ in 0..<4 where !add.isHittable { app.swipeUp() }
         if add.exists, add.isEnabled {
@@ -259,6 +283,7 @@ final class TourTests: XCTestCase {
             sleep(2)
             XCTAssertFalse(add.isEnabled, "sample sales weren't added")
         }
+        backInSettings()
         closeSheet()
     }
 
