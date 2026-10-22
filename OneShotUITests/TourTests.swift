@@ -16,7 +16,7 @@ final class TourTests: XCTestCase {
             "Ring up the items in view": "คิดเงินสินค้าที่อยู่ในภาพ", "Back": "กลับ", "Charge": "เก็บเงิน",
             "Add two weeks of sample sales": "เพิ่มยอดขายตัวอย่าง 2 สัปดาห์", "Add sample sales": "เพิ่มยอดขายตัวอย่าง",
             "This month": "เดือนนี้", "Add items": "เพิ่มสินค้า", "Scan more items": "สแกนเพิ่ม",
-            "Start over": "เริ่มใหม่", "Done": "เสร็จ", "Demo & sample data": "เดโมและข้อมูลตัวอย่าง", "Scanner": "สแกน", "Cart": "ตะกร้า",
+            "Start over": "เริ่มใหม่", "Done": "เสร็จ", "Demo & sample data": "เดโมและข้อมูลตัวอย่าง", "Scanner": "สแกน", "Cart": "ตะกร้า", "Add item": "เพิ่มสินค้า", "Scan with OneShot": "สแกนด้วย OneShot", "Cancel": "ยกเลิก",
         ][english] ?? english
     }
 
@@ -138,6 +138,16 @@ final class TourTests: XCTestCase {
                 sleep(1)
                 shot("\(o)-07-bill-merged")
                 showPage("Cart")
+                // Add item's options: OneShot first, then barcode, then the list.
+                let addItem = visible(label("Add item"))
+                if addItem.exists, addItem.isHittable {
+                    addItem.tap()
+                    if app.buttons.matching(NSPredicate(format: "label CONTAINS %@", label("Scan with OneShot"))).firstMatch.waitForExistence(timeout: 5) {
+                        shot("\(o)-24-add-item-options")
+                        app.swipeDown(velocity: .fast)
+                        sleep(1)
+                    }
+                }
             }
             let charge = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", label("Charge"))).firstMatch
             if charge.waitForExistence(timeout: 3), charge.isEnabled {
@@ -157,6 +167,18 @@ final class TourTests: XCTestCase {
 
             go("Products")
             shot("\(o)-09-products")
+            if orientation == .portrait {
+                let first = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Hershey")).firstMatch
+                if first.waitForExistence(timeout: 3) {
+                    first.tap()
+                    if button(label("Cancel")).waitForExistence(timeout: 5) {
+                        sleep(1)
+                        shot("\(o)-25-product-detail")
+                        button(label("Cancel")).tap()
+                        sleep(1)
+                    }
+                }
+            }
             go("Reports")
             shot("\(o)-10-reports")
             let month = button(label("This month"))

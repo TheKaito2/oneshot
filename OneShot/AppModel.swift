@@ -4,7 +4,7 @@ import TipKit
 /// State the tabs share: one camera, one catalog, one gallery, and the sale in progress.
 @Observable
 final class AppModel {
-    enum Tab: Hashable { case home, checkout, products, reports }
+    enum Tab: Hashable { case home, checkout, products, reports, settings }
 
     var tab: Tab = .home
     /// Settings, as a sheet over whatever tab is showing.

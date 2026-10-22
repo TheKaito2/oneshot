@@ -8,6 +8,9 @@ struct TicketPanel: View {
     @Environment(\.modelContext) private var context
     @State private var picking: Region?
     @State private var adding = false
+    /// The Add item option picked, opened once the options sheet is gone.
+    @State private var chosen: AddItemSheet.Choice?
+    @State private var listRoute: AddItemSheet.Choice?
     @State private var paying = false
     /// Charge tapped: ends the sale's ring-up time (Reports › OneShot speed).
     @State private var chargedAt: Date?
@@ -22,8 +25,15 @@ struct TicketPanel: View {
             HStack {
                 Text("Current sale").font(.seed(.title3)).foregroundStyle(Brand.ink)
                 Spacer()
-                TimelineView(.everyMinute) { context in
-                    Text(context.date, style: .time).font(.seed(.subheadline)).foregroundStyle(Brand.muted)
+                // Up here, not under the lines: with a dozen items it sat a long scroll down.
+                if app.scan != nil {
+                    Button("Add item", systemImage: "plus") { adding = true }
+                        .font(.seed(.subheadline, .bold))
+                        .buttonStyle(.glass)
+                } else {
+                    TimelineView(.everyMinute) { context in
+                        Text(context.date, style: .time).font(.seed(.subheadline)).foregroundStyle(Brand.muted)
+                    }
                 }
             }
             .padding([.horizontal, .top], 20)
@@ -53,11 +63,28 @@ struct TicketPanel: View {
                          onPick: { sku in pick(region, as: sku) },
                          onNotAnItem: { remove(region) })
         }
-        .sheet(isPresented: $adding) {
+        // Add item: the options first; a list or barcode pick opens once they've gone (one sheet at a time).
+        .sheet(isPresented: $adding, onDismiss: {
+            listRoute = chosen
+            chosen = nil
+        }) {
+            AddItemSheet { choice in
+                switch choice {
+                case .oneShot:
+                    app.scanningMore = true   // the pager turns to the scanner
+                    if app.demo { app.demoIndex += 1 }   // the next table, not the one just billed
+                case .barcode, .list:
+                    chosen = choice
+                }
+                adding = false
+            }
+            .presentationDetents([.height(300)])
+        }
+        .sheet(item: $listRoute) { route in
             PickListView(region: nil, catalog: app.catalog, onPick: { sku in
                 app.scan?.manual.append(sku)
-                adding = false
-            })
+                listRoute = nil
+            }, startsWithBarcode: route == .barcode)
         }
         .fullScreenCover(isPresented: $paying) {
             PayView(total: total, catalog: app.catalog, onPaid: { method, received in
@@ -115,9 +142,6 @@ struct TicketPanel: View {
             ForEach(lines) { line in
                 lineRow(line)
             }
-            Button("Add item", systemImage: "plus.circle.fill") { adding = true }
-                .font(.seed(.headline))
-                .padding(.vertical, 8)
         }
         .padding(.bottom, 12)
     }
@@ -280,5 +304,51 @@ struct TicketPanel: View {
     private func remove(_ region: Region) {
         app.scan?.regions.removeAll { $0.id == region.id }
         picking = nil
+    }
+}
+
+/// Add item, from the cart: OneShot's camera first and obvious, then a barcode, then the list.
+struct AddItemSheet: View {
+    enum Choice: Identifiable { case oneShot, barcode, list; var id: Self { self } }
+    let onChoose: (Choice) -> Void
+
+    var body: some View {
+        VStack(spacing: 14) {
+            Text("Add items").font(.seed(.headline)).foregroundStyle(Brand.ink).padding(.top, 6)
+            Button { onChoose(.oneShot) } label: {
+                HStack(spacing: 14) {
+                    Image(systemName: "viewfinder")
+                        .font(.system(size: 22, weight: .semibold))
+                        .frame(width: 46, height: 46)
+                        .background(.white.opacity(0.18), in: .circle)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Scan with OneShot").font(.seed(.headline))
+                        Text("Point the camera at the items").font(.seed(.caption)).opacity(0.85)
+                    }
+                    Spacer(minLength: 0)
+                    Image(systemName: "chevron.right").font(.footnote.weight(.bold))
+                }
+                .foregroundStyle(.white)
+                .padding(16)
+                .background(Brand.buttonFill, in: .rect(cornerRadius: 20, style: .continuous))
+                .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            VStack(spacing: 0) {
+                Button { onChoose(.barcode) } label: {
+                    IconRow("Scan a barcode", subtitle: "For a pack with a barcode", icon: "barcode.viewfinder", tint: Brand.sky)
+                        .padding(14)
+                }
+                Divider().padding(.leading, 56)
+                Button { onChoose(.list) } label: {
+                    IconRow("Choose from the list", icon: "list.bullet", tint: Brand.muted).padding(14)
+                }
+            }
+            .buttonStyle(.plain)
+            .background(Brand.card, in: .rect(cornerRadius: 20, style: .continuous))
+        }
+        .padding(20)
+        .frame(maxHeight: .infinity, alignment: .top)
+        .background(Brand.canvas)
     }
 }

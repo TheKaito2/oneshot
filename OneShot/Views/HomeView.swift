@@ -117,7 +117,7 @@ struct HomeView: View {
 
     // MARK: - Header and hero
 
-    /// Full on iPad; on iPhone just the wordmark, the shop and the gear (the breadcrumb crushed the wordmark).
+    /// Full on iPad; on iPhone the wordmark and the shop (the breadcrumb crushed the wordmark).
     private var header: some View {
         ViewThatFits(in: .horizontal) {
             HStack(alignment: .center, spacing: 16) {
@@ -128,11 +128,13 @@ struct HomeView: View {
                 shopAndDate
                 settingsButton
             }
+            // iPhone: Settings is a tab in the bottom bar, so the gear makes way for the shop and date.
             HStack(alignment: .center, spacing: 12) {
                 Wordmark().fixedSize()
                 Spacer(minLength: 8)
-                settingsButton
+                shopAndDate
             }
+            Wordmark()
         }
     }
 

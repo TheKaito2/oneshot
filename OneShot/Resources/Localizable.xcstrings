@@ -369,6 +369,16 @@
         }
       }
     },
+    "All" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ทั้งหมด"
+          }
+        }
+      }
+    },
     "All items" : {
       "localizations" : {
         "th" : {
@@ -805,6 +815,16 @@
         }
       }
     },
+    "Choose from the list" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เลือกจากรายการ"
+          }
+        }
+      }
+    },
     "Close the day" : {
       "localizations" : {
         "th" : {
@@ -885,12 +905,22 @@
         }
       }
     },
-    "Cost ฿ (what you pay)" : {
+    "Cost" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ต้นทุน ฿ (ราคาที่ร้านซื้อมา)"
+            "value" : "ต้นทุน"
+          }
+        }
+      }
+    },
+    "Cost is what you pay for one. It's only used for profit in Reports." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ต้นทุนคือราคาที่ร้านซื้อมาต่อชิ้น ใช้คำนวณกำไรในรายงานเท่านั้น"
           }
         }
       }
@@ -1417,6 +1447,16 @@
         }
       }
     },
+    "For a pack with a barcode" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สำหรับสินค้าที่มีบาร์โค้ด"
+          }
+        }
+      }
+    },
     "For a test or duplicate teach. Past sales keep their lines." : {
       "localizations" : {
         "th" : {
@@ -1717,6 +1757,16 @@
         }
       }
     },
+    "Low stock" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใกล้หมด"
+          }
+        }
+      }
+    },
     "Made %@" : {
       "localizations" : {
         "th" : {
@@ -1977,6 +2027,16 @@
         }
       }
     },
+    "None yet. Scan one from Add item › Scan a barcode, then pick this product, and it's remembered." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยังไม่มี สแกนจาก เพิ่มสินค้า › สแกนบาร์โค้ด แล้วเลือกสินค้านี้ ระบบจะจำไว้"
+          }
+        }
+      }
+    },
     "Not a Thai mobile number, 13-digit ID or 15-digit e-wallet ID." : {
       "localizations" : {
         "th" : {
@@ -2067,12 +2127,12 @@
         }
       }
     },
-    "On the shelf: %lld" : {
+    "On the shelf" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "บนชั้น: %lld"
+            "value" : "บนชั้น"
           }
         }
       }
@@ -2203,6 +2263,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เปิดกล้องแล้วสอนสินค้าตอนนี้"
+          }
+        }
+      }
+    },
+    "Optional" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ไม่บังคับ"
           }
         }
       }
@@ -2343,6 +2413,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "รูปภาพ"
+          }
+        }
+      }
+    },
+    "Photos" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รูปภาพ"
+          }
+        }
+      }
+    },
+    "Point the camera at the items" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หันกล้องไปที่สินค้า"
           }
         }
       }
@@ -2513,6 +2603,16 @@
         }
       }
     },
+    "Recognition" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การจดจำ"
+          }
+        }
+      }
+    },
     "Records" : {
       "localizations" : {
         "th" : {
@@ -2613,12 +2713,12 @@
         }
       }
     },
-    "Reorder at: %lld" : {
+    "Reorder at" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "สั่งเพิ่มเมื่อเหลือ: %lld"
+            "value" : "สั่งเพิ่มเมื่อเหลือ"
           }
         }
       }
@@ -2883,6 +2983,16 @@
         }
       }
     },
+    "Scan a barcode" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สแกนบาร์โค้ด"
+          }
+        }
+      }
+    },
     "Scan more items" : {
       "localizations" : {
         "th" : {
@@ -2899,6 +3009,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "สแกนบาร์โค้ด"
+          }
+        }
+      }
+    },
+    "Scan with OneShot" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สแกนด้วย OneShot"
           }
         }
       }
@@ -2929,6 +3049,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ดูทั้งหมด"
+          }
+        }
+      }
+    },
+    "Selling" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การขาย"
           }
         }
       }
@@ -3495,16 +3625,6 @@
         }
       }
     },
-    "The cost is only used for profit in Reports. Leave it empty if you don't know it." : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ต้นทุนใช้คำนวณกำไรในหน้ารายงานเท่านั้น ถ้าไม่ทราบให้เว้นว่างไว้"
-          }
-        }
-      }
-    },
     "The on-device model is still downloading." : {
       "localizations" : {
         "th" : {
@@ -3797,6 +3917,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "รอซิงก์"
+          }
+        }
+      }
+    },
+    "What OneShot knows it by: the photos it learned from, and barcodes scanned for it." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สิ่งที่ OneShot ใช้จดจำสินค้านี้: รูปที่เรียนรู้ และบาร์โค้ดที่สแกนไว้"
           }
         }
       }

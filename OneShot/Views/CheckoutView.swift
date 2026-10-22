@@ -14,6 +14,7 @@ struct CheckoutView: View {
     @State private var flash: Color?
     @State private var shutter = false
     @State private var addingByHand = false
+    @State private var addingByBarcode = false
     /// Demo camera: the photo in the zone and the boxes the detector draws on it, as the live preview would.
     @State private var demoFrame: CGImage?
     @State private var demoBoxes: [Box] = []
@@ -218,6 +219,12 @@ struct CheckoutView: View {
                 addingByHand = false
             })
         }
+        .sheet(isPresented: $addingByBarcode) {
+            PickListView(region: nil, catalog: app.catalog, onPick: { sku in
+                app.scan?.manual.append(sku)
+                addingByBarcode = false
+            }, startsWithBarcode: true)
+        }
     }
 
     private var billButtons: some View {
@@ -228,6 +235,7 @@ struct CheckoutView: View {
                     if app.demo { app.demoIndex += 1 }   // the next table, not the one just billed
                 }
                 Button("Add an item by hand", systemImage: "hand.tap") { addingByHand = true }
+                Button("Scan a barcode", systemImage: "barcode.viewfinder") { addingByBarcode = true }   // last: the least used
             } label: {
                 Label("Add items", systemImage: "plus")
             }

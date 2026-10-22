@@ -6,16 +6,64 @@ struct ProductsView: View {
     @State private var selected: Product?
     @State private var query = ""
 
+    /// The chips under the search field: every product, one shelf group, or what's running low.
+    private enum Filter: Hashable {
+        case all, lowStock
+        case category(ProductCategory)
+    }
+    @State private var filter = Filter.all
+
     private var products: [Product] {
-        guard !query.isEmpty else { return app.catalog.products }
-        return app.catalog.products.filter {
-            $0.nameEN.localizedCaseInsensitiveContains(query) || $0.nameTH.contains(query)
+        app.catalog.products.filter { product in
+            let matches = query.isEmpty || product.nameEN.localizedCaseInsensitiveContains(query) || product.nameTH.contains(query)
+            switch filter {
+            case .all: return matches
+            case .lowStock: return matches && app.stock[product.id]?.isLow == true
+            case .category(let category): return matches && (product.category ?? .other) == category
+            }
         }
+    }
+
+    /// Only the groups the shop actually sells, and Low stock only while something is low.
+    private var filters: [Filter] {
+        let present = Set(app.catalog.products.map { $0.category ?? .other })
+        let low = app.catalog.products.contains { app.stock[$0.id]?.isLow == true }
+        return [.all] + (low ? [.lowStock] : []) + ProductCategory.allCases.filter(present.contains).map(Filter.category)
+    }
+
+    private var chips: some View {
+        ScrollView(.horizontal) {
+            HStack(spacing: 8) {
+                ForEach(filters, id: \.self) { option in
+                    let on = option == filter
+                    Button { withAnimation(.snappy) { filter = option } } label: {
+                        Group {
+                            switch option {
+                            case .all: Text("All")
+                            case .lowStock: Label("Low stock", systemImage: "exclamationmark.triangle.fill")
+                            case .category(let category): Text(category.title)
+                            }
+                        }
+                        .font(.seed(.subheadline, .bold))
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 8)
+                        .foregroundStyle(on ? .white : Brand.ink)
+                        .background(on ? AnyShapeStyle(Brand.buttonFill) : AnyShapeStyle(Brand.card), in: .capsule)
+                        .contentShape(.capsule)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(on ? .isSelected : [])
+                }
+            }
+            .padding(.horizontal, 24)
+        }
+        .scrollIndicators(.hidden)
     }
 
     var body: some View {
         NavigationStack {
             ScrollView {
+                chips.padding(.top, 4)
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 16)], spacing: 16) {   // 2 across on iPhone
                     Button { app.startTeaching() } label: { teachCard }
                         .buttonStyle(.plain)
@@ -140,34 +188,45 @@ private struct ProductDetail: View {
     var body: some View {
         NavigationStack {
             Form {
+                // Apple Settings' header card: the product, big, with its price as the one accent.
                 Section {
-                    HStack(spacing: 16) {
+                    VStack(spacing: 8) {
                         ProductPhoto(product: product)
-                            .frame(width: 96, height: 96)
-                            .clipShape(.rect(cornerRadius: 18))
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(product.nameEN).font(.seed(.title2, .bold))
-                            Text(product.nameTH).foregroundStyle(Brand.muted)
-                        }
+                            .frame(width: 120, height: 120)
+                            .clipShape(.rect(cornerRadius: 26, style: .continuous))
+                            .padding(.bottom, 4)
+                        Text(product.nameEN).font(.seed(.title2, .bold)).foregroundStyle(Brand.ink).multilineTextAlignment(.center)
+                        Text(product.nameTH).font(.seed(.subheadline)).foregroundStyle(Brand.muted).multilineTextAlignment(.center)
+                        Text((Decimal(baht: price) ?? product.price).baht)
+                            .font(.seed(size: 30, .extraBold, relativeTo: .title))
+                            .foregroundStyle(Brand.accent)
+                            .contentTransition(.numericText())
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
                 }
-                .frostedRows()
+                .listRowBackground(Color.clear)
                 Section {
-                    TextField("Price ฿", text: $price).keyboardType(.decimalPad)
-                    TextField("Cost ฿ (what you pay)", text: $cost).keyboardType(.decimalPad)
-                    if let marginText { Text(marginText).font(.seed(.caption)).foregroundStyle(Brand.muted) }
+                    field("Price", icon: "tag.fill", tint: Brand.accent, text: $price, prompt: "0")
+                    field("Cost", icon: "cart.fill", tint: Brand.sand, text: $cost, prompt: String(localized: "Optional"))
                     if let error { Text(error).foregroundStyle(Brand.negative).font(.seed(.caption)) }
                 } header: {
-                    Text("Price")
+                    Text("Selling")
                 } footer: {
-                    Text("The cost is only used for profit in Reports. Leave it empty if you don't know it.")
+                    Text(marginText ?? String(localized: "Cost is what you pay for one. It's only used for profit in Reports."))
                 }
                 .frostedRows()
                 Section {
-                    Toggle("Track stock", isOn: $tracked)
+                    Toggle(isOn: $tracked) {
+                        IconRow("Track stock", icon: "shippingbox.fill", tint: Brand.sage)
+                    }
                     if tracked {
-                        Stepper("On the shelf: \(count)", value: $count, in: 0...9999)
-                        Stepper("Reorder at: \(reorderAt)", value: $reorderAt, in: 0...999)
+                        Stepper(value: $count, in: 0...9999) {
+                            LabeledContent("On the shelf") { Text("\(count)").monospacedDigit().foregroundStyle(Brand.ink) }
+                        }
+                        Stepper(value: $reorderAt, in: 0...999) {
+                            LabeledContent("Reorder at") { Text("\(reorderAt)").monospacedDigit().foregroundStyle(Brand.ink) }
+                        }
                         HStack {
                             Text("Stock in")
                             Spacer()
@@ -182,35 +241,19 @@ private struct ProductDetail: View {
                     Text("Sales take from the shelf, refunds put back. At or below the reorder point it shows on Home.")
                 }
                 .frostedRows()
-                if !catalog.barcodes(for: product.id).isEmpty {
-                    Section("Barcodes") {
-                        ForEach(catalog.barcodes(for: product.id), id: \.self) { Text($0).monospacedDigit() }
-                    }
-                    .frostedRows()
-                }
                 Section {
-                    if photos.isEmpty {
-                        Text(seedPhotos > 0
-                             ? "Known from \(seedPhotos) training photos. Each time you pick it from a yellow item, that photo is added here."
-                             : "No photos yet. Teach it, or pick it once from a yellow item.")
-                            .foregroundStyle(Brand.muted)
-                    } else {
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 84), spacing: 8)], spacing: 8) {
-                            ForEach(photos, id: \.self) { url in
-                                AsyncLocalImage(url: url)
-                                    .frame(height: 84)
-                                    .clipShape(.rect(cornerRadius: 10))
-                                    .contentShape(.contextMenuPreview, .rect(cornerRadius: 10))
-                                    .contextMenu {
-                                        Button("Delete photo", systemImage: "trash", role: .destructive) { delete(url) }
-                                    }
-                            }
-                        }
+                    NavigationLink { photosPage } label: {
+                        IconRow("Photos", icon: "photo.stack.fill", tint: Brand.sky,
+                                value: "\(photos.count + seedPhotos)")
+                    }
+                    NavigationLink { barcodesPage } label: {
+                        IconRow("Barcodes", icon: "barcode", tint: Brand.mauve,
+                                value: "\(catalog.barcodes(for: product.id).count)")
                     }
                 } header: {
-                    Text("Learned from ^[\(photos.count) photo](inflect: true)")
+                    Text("Recognition")
                 } footer: {
-                    if !photos.isEmpty { Text("Touch and hold a photo to delete it, for example a wrong pick or a blurry shot.") }
+                    Text("What OneShot knows it by: the photos it learned from, and barcodes scanned for it.")
                 }
                 .frostedRows()
                 if Catalog.isQuickAdd(product.id) {
@@ -244,6 +287,73 @@ private struct ProductDetail: View {
             count = stock?.count ?? 0
             reorderAt = stock?.reorderAt ?? 5
         }
+    }
+
+    /// A Settings-style row with the number typed on the right, like the iOS Settings fields.
+    private func field(_ title: LocalizedStringKey, icon: String, tint: Color, text: Binding<String>, prompt: String) -> some View {
+        HStack(spacing: 12) {
+            IconTile(icon: icon, tint: tint)
+            Text(title).foregroundStyle(Brand.ink)
+            Spacer(minLength: 8)
+            HStack(spacing: 3) {   // ฿ hugs the number
+                Text(verbatim: "฿").foregroundStyle(Brand.muted)
+                TextField(prompt, text: text)
+                    .keyboardType(.decimalPad)
+                    .multilineTextAlignment(.trailing)
+                    .fixedSize()
+            }
+        }
+    }
+
+    private var photosPage: some View {
+        Form {
+            Section {
+                if photos.isEmpty {
+                    Text(seedPhotos > 0
+                         ? "Known from \(seedPhotos) training photos. Each time you pick it from a yellow item, that photo is added here."
+                         : "No photos yet. Teach it, or pick it once from a yellow item.")
+                        .foregroundStyle(Brand.muted)
+                } else {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 84), spacing: 8)], spacing: 8) {
+                        ForEach(photos, id: \.self) { url in
+                            AsyncLocalImage(url: url)
+                                .frame(height: 84)
+                                .clipShape(.rect(cornerRadius: 10))
+                                .contentShape(.contextMenuPreview, .rect(cornerRadius: 10))
+                                .contextMenu {
+                                    Button("Delete photo", systemImage: "trash", role: .destructive) { delete(url) }
+                                }
+                        }
+                    }
+                }
+            } header: {
+                Text("Learned from ^[\(photos.count) photo](inflect: true)")
+            } footer: {
+                if !photos.isEmpty { Text("Touch and hold a photo to delete it, for example a wrong pick or a blurry shot.") }
+            }
+            .frostedRows()
+        }
+        .gridList()
+        .navigationTitle("Photos")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var barcodesPage: some View {
+        Form {
+            Section {
+                let codes = catalog.barcodes(for: product.id)
+                if codes.isEmpty {
+                    Text("None yet. Scan one from Add item › Scan a barcode, then pick this product, and it's remembered.")
+                        .foregroundStyle(Brand.muted)
+                } else {
+                    ForEach(codes, id: \.self) { Text($0).monospacedDigit() }
+                }
+            }
+            .frostedRows()
+        }
+        .gridList()
+        .navigationTitle("Barcodes")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     /// Gone from disk at once; the gallery forgets it in the background.

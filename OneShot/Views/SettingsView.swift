@@ -17,6 +17,8 @@ struct SettingsView: View {
     #endif
 
     @Bindable var app: AppModel
+    /// iPhone's Settings tab: nothing to close.
+    var inTab = false
     @AppStorage(SettingsKey.promptPayID) private var promptPayID = ""
     @AppStorage(SettingsKey.debugOverlay) private var debugOverlay = false
     @AppStorage(SettingsKey.shopName) private var shopName = ""
@@ -56,39 +58,39 @@ struct SettingsView: View {
                 }
                 Section("Shop") {
                     NavigationLink { shopPage } label: {
-                        row("Shop details", icon: "storefront.fill", tint: Brand.accent,
+                        IconRow("Shop details", icon: "storefront.fill", tint: Brand.accent,
                             value: maskedID)
                     }
                     NavigationLink { pinPage } label: {
-                        row("Refund PIN", icon: "lock.fill", tint: Brand.mauve,
+                        IconRow("Refund PIN", icon: "lock.fill", tint: Brand.mauve,
                             value: hasPIN ? String(localized: "On") : String(localized: "Off"))
                     }
                 }
                 .frostedRows()
                 Section("Data") {
                     NavigationLink { backupPage } label: {
-                        row("Backup & restore", icon: "externaldrive.fill", tint: Brand.sky)
+                        IconRow("Backup & restore", icon: "externaldrive.fill", tint: Brand.sky)
                     }
                     // ponytail: iOS's own per-app language page; an instant in-app switch only if a shop asks.
                     Button {
                         if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
                     } label: {
-                        row("Language", icon: "globe", tint: Brand.sage, value: language, external: true)
+                        IconRow("Language", icon: "globe", tint: Brand.sage, value: language, external: true)
                     }
                 }
                 .frostedRows()
                 Section("Help") {
                     NavigationLink { demoPage } label: {
-                        row("Demo & sample data", icon: "sparkles", tint: Brand.sand)
+                        IconRow("Demo & sample data", icon: "sparkles", tint: Brand.sand)
                     }
                     NavigationLink { diagnosticsPage } label: {
-                        row("Diagnostics", icon: "stethoscope", tint: Brand.muted)
+                        IconRow("Diagnostics", icon: "stethoscope", tint: Brand.muted)
                     }
                     Link(destination: URL(string: "https://oneshot-pos.pages.dev")!) {
-                        row("Privacy & support", icon: "hand.raised.fill", tint: Brand.sky, external: true)
+                        IconRow("Privacy & support", icon: "hand.raised.fill", tint: Brand.sky, external: true)
                     }
                     NavigationLink { aboutPage } label: {
-                        row("About", icon: "info.circle.fill", tint: Brand.muted)
+                        IconRow("About", icon: "info.circle.fill", tint: Brand.muted)
                     }
                 }
                 .frostedRows()
@@ -107,7 +109,9 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+                if !inTab {
+                    ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+                }
             }
         }
         // On the stack, not a page: the dialogs keep working whichever page is showing.
@@ -179,27 +183,6 @@ struct SettingsView: View {
         }
         .padding(.vertical, 6)
         .contentShape(.rect)
-    }
-
-    /// One Settings row: a white symbol on a coloured tile, the title, and the current value in grey.
-    private func row(_ title: LocalizedStringKey, icon: String, tint: Color, value: String? = nil,
-                     external: Bool = false) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(.white)
-                .frame(width: 30, height: 30)
-                .background(tint, in: .rect(cornerRadius: 8, style: .continuous))
-                .accessibilityHidden(true)
-            Text(title).foregroundStyle(Brand.ink)
-            Spacer(minLength: 8)
-            if let value {
-                Text(value).foregroundStyle(Brand.muted).lineLimit(1)
-            }
-            if external {
-                Image(systemName: "arrow.up.right").font(.footnote.weight(.semibold)).foregroundStyle(Brand.mutedSoft)
-            }
-        }
     }
 
     private var maskedID: String {

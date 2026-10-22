@@ -7,6 +7,8 @@ struct PickListView: View {
     let catalog: Catalog
     let onPick: (String) -> Void
     var onNotAnItem: (() -> Void)?
+    /// Add item › Scan a barcode: the scanner opens first; a code the shop hasn't seen yet falls back to the list.
+    var startsWithBarcode = false
 
     @State private var query = ""
     @State private var scanningBarcode = false
@@ -92,6 +94,7 @@ struct PickListView: View {
                     Button("Barcode", systemImage: "barcode.viewfinder") { scanningBarcode = true }
                 }
             }
+            .task { if startsWithBarcode { scanningBarcode = true } }
             .sheet(isPresented: $scanningBarcode) {
                 BarcodeSheet { code in
                     if let product = catalog.product(barcode: code) {

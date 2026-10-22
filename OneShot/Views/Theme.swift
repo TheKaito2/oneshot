@@ -303,3 +303,59 @@ struct ScanSweep: View {
         .onAppear { atBottom = true }
     }
 }
+
+/// Apple Settings' icon: a white symbol on a small coloured tile.
+struct IconTile: View {
+    let icon: String
+    let tint: Color
+
+    var body: some View {
+        Image(systemName: icon)
+            .font(.system(size: 15, weight: .semibold))
+            .foregroundStyle(.white)
+            .frame(width: 30, height: 30)
+            .background(tint, in: .rect(cornerRadius: 8, style: .continuous))
+            .accessibilityHidden(true)
+    }
+}
+
+/// One Settings-style row: the tile, the title (and a line under it), the current value in grey, and an arrow for a
+/// link that leaves the app.
+struct IconRow: View {
+    let title: LocalizedStringKey
+    var subtitle: LocalizedStringKey?
+    let icon: String
+    let tint: Color
+    var value: String?
+    var external = false
+
+    init(_ title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil, icon: String, tint: Color, value: String? = nil,
+         external: Bool = false) {
+        self.title = title
+        self.subtitle = subtitle
+        self.icon = icon
+        self.tint = tint
+        self.value = value
+        self.external = external
+    }
+
+    var body: some View {
+        HStack(spacing: 12) {
+            IconTile(icon: icon, tint: tint)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).foregroundStyle(Brand.ink)
+                if let subtitle {
+                    Text(subtitle).font(.seed(.caption)).foregroundStyle(Brand.muted)
+                }
+            }
+            Spacer(minLength: 8)
+            if let value {
+                Text(value).foregroundStyle(Brand.muted).lineLimit(1)
+            }
+            if external {
+                Image(systemName: "arrow.up.right").font(.footnote.weight(.semibold)).foregroundStyle(Brand.mutedSoft)
+            }
+        }
+        .contentShape(.rect)
+    }
+}
