@@ -4,7 +4,7 @@ Accounts are optional. The app works offline. A signed-in owner gets cloud backu
 devices. The device's SwiftData store stays the source of truth, and Supabase mirrors it. The sync engine pushes
 and pulls rows.
 
-- Project region: Singapore (`ap-southeast-1`).
+- Project: `OneShot-SG`, ref `begkzimadwrxnietomdp`, region Singapore (`ap-southeast-1`).
 - v1 model: one owner, one shop, many devices. No staff roles yet.
 - All backend code lives in `supabase/`:
 
@@ -14,7 +14,7 @@ and pulls rows.
 | `migrations/20261022000100_product_photos.sql` | Private Storage bucket `product-photos` and its policies |
 | `functions/delete-account/index.ts` | In-app account deletion (App Store guideline 5.1.1(v)) |
 | `tests/rls.sql` | pgTAP proof of the RLS rules (63 checks) |
-| `local-check/` | Runs the migrations and `tests/rls.sql` in PGlite. No Docker or project needed. |
+| `local-check/` | `run.ts` runs the migrations and `tests/rls.sql` in PGlite (offline). `remote.py` runs `tests/rls.sql` on the linked project. Neither needs Docker. |
 | `config.toml` | Supabase CLI config. `delete-account` has `verify_jwt = false` because it checks the token itself. |
 
 ## Tables
@@ -131,19 +131,21 @@ Run these from the repo root after creating the project (region Singapore) in th
    ```bash
    supabase db push
    ```
-3. Run the RLS proof against the linked project. It runs inside a transaction and rolls back, so it leaves
-   nothing behind.
+3. Run the RLS proof against the linked project. It runs inside a transaction that is always aborted, so it
+   leaves nothing behind. The last line should be `1..63`, with no `not ok`.
    ```bash
-   supabase test db --linked
+   python3 supabase/local-check/remote.py
    ```
+   With Docker installed, `supabase test db --linked` runs the same file through pg_prove.
 4. Lint the schema:
    ```bash
    supabase db lint --linked
    ```
 5. Deploy the function:
    ```bash
-   supabase functions deploy delete-account
+   supabase functions deploy delete-account --use-api
    ```
+   `--use-api` bundles on Supabase's side, so no Docker is needed.
    `SUPABASE_URL` and the secret key (`SUPABASE_SECRET_KEYS`, or `SUPABASE_SERVICE_ROLE_KEY` on legacy keys)
    are injected into the function's environment by the platform. There is nothing to set by hand.
 6. In the dashboard, under Authentication → Providers, enable the sign-in methods the app uses.
