@@ -60,9 +60,7 @@ struct AccountView: View {
                         }
                         .disabled(sync.running)
                     } header: {
-                        Text("Backup and sync")
-                    } footer: {
-                        Text("The shop is backed up and kept the same on every device you sign in on. The till never waits for it.")
+                        InfoHeader("Backup and sync", info: "The shop is backed up and kept the same on every device you sign in on. The till never waits for it.")
                     }
                     .frostedRows()
                     Section {

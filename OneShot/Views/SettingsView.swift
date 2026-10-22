@@ -221,9 +221,7 @@ struct SettingsView: View {
             Section {
                 TextField("Shop name", text: $shopName)
             } header: {
-                Text("Name")
-            } footer: {
-                Text("It goes on receipts and the monthly statement.")
+                InfoHeader("Name", info: "It goes on receipts and the monthly statement.")
             }
             .frostedRows()
             Section {
@@ -238,9 +236,7 @@ struct SettingsView: View {
                     Label("Saved", systemImage: "checkmark.circle.fill").font(.seed(.caption)).foregroundStyle(Brand.positive)
                 }
             } header: {
-                Text("PromptPay")
-            } footer: {
-                Text("Customers scan a QR with the amount already filled in, paid straight to this ID.")
+                InfoHeader("PromptPay", info: "Customers scan a QR with the amount already filled in, paid straight to this ID.")
             }
             .frostedRows()
         }
@@ -281,8 +277,10 @@ struct SettingsView: View {
                 if let restoreNote {
                     Text(restoreNote).font(.seed(.caption)).foregroundStyle(Brand.muted)
                 }
+            } header: {
+                InfoHeader("Backup", info: "One folder with sales, refunds, day closes, stock, taught products, prices, barcodes and product photos. Keep it outside OneShot, e.g. in iCloud Drive. Restoring adds the backup's sales to these books.")
             } footer: {
-                Text("One folder with sales, refunds, day closes, stock, taught products, prices, barcodes and product photos. Keep it outside OneShot, e.g. in iCloud Drive. Restoring adds the backup's sales to these books and replaces products, prices and photos with the backup's.")
+                Text("Restoring replaces products, prices and photos with the backup's.")   // a warning: stays in sight
             }
             .frostedRows()
         }
@@ -303,8 +301,8 @@ struct SettingsView: View {
                 if let sampleNote {
                     Text(sampleNote).font(.seed(.caption)).foregroundStyle(Brand.muted)
                 }
-            } footer: {
-                Text("For presenting without the snacks, or from the simulator. Sample sales can only be added while the books are empty, so they never mix with real ones.")
+            } header: {
+                InfoHeader("Demo", info: "For presenting without the snacks, or from the simulator. Sample sales can only be added while the books are empty, so they never mix with real ones.")
             }
             .frostedRows()
         }
@@ -321,8 +319,8 @@ struct SettingsView: View {
                         Label("Share \(reports.count) reports", systemImage: "stethoscope")
                     }
                 }
-            } footer: {
-                Text("Crash and hang reports from iOS, kept on this device. Share them when asking for help.")
+            } header: {
+                InfoHeader("Crash reports", info: "Crash and hang reports from iOS, kept on this device. Share them when asking for help.")
             }
             .frostedRows()
         }

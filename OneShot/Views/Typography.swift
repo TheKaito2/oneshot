@@ -85,26 +85,28 @@ struct SectionMarker: View {
     let index: Int
     let total: Int
     let title: LocalizedStringKey
+    /// What the section compares with: behind ⓘ, not a line of its own.
     var subtitle: LocalizedStringResource?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        HStack(spacing: 14) {
             HStack(spacing: 14) {
                 Text(verbatim: String(format: "%02d / %02d", index, total)).monospacedDigit()
                 Text(title).textCase(.uppercase)
-                Rectangle().fill(Brand.hairline).frame(height: 1)
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isHeader)
+            Rectangle().fill(Brand.hairline).frame(height: 1)
+            if let subtitle {
+                InfoButton(resource: subtitle).padding(-6)
+            } else {
                 Circle().fill(Brand.accent).frame(width: 6, height: 6)
             }
-            .font(.seed(.caption, .bold))
-            .tracking(Seed.capsTracking)
-            .foregroundStyle(Brand.muted)
-            if let subtitle {
-                Text(subtitle).font(.seed(.subheadline)).foregroundStyle(Brand.body)
-            }
         }
+        .font(.seed(.caption, .bold))
+        .tracking(Seed.capsTracking)
+        .foregroundStyle(Brand.muted)
         .padding(.top, 8)
-        .accessibilityElement(children: .combine)
-        .accessibilityAddTraits(.isHeader)
     }
 }
 

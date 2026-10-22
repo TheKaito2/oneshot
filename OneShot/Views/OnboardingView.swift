@@ -125,10 +125,10 @@ struct OnboardingView: View {
     private var content: some View {
         switch step {
         case .welcome:
-            title("Ring up the whole counter in one photo",
-                  "Hold the camera over the items and tap Ring up. Every pack is named and priced.")
+            title("Scan the whole counter in one photo",
+                  "Hold the camera over the items and tap Scan. Every pack is named and priced.")
             VStack(alignment: .leading, spacing: 16) {
-                feature("bolt.fill", "One tap rings up every item in view.")
+                feature("viewfinder", "One tap scans every item in view.")
                 feature("qrcode", "PromptPay QR or cash, with the total spoken in Thai.")
                 feature("chart.bar.xaxis", "Sales, stock and reports work offline.")
             }

@@ -191,6 +191,8 @@ struct ChangeLabel: View {
     let change: Double?
     let versus: LocalizedStringResource
     var upIsGood = true
+    /// Off where the screen already says what it's compared with (Reports' period pill on iPhone).
+    var showsVersus = true
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
@@ -203,7 +205,7 @@ struct ChangeLabel: View {
             } else {
                 Text(verbatim: "–")
             }
-            Text(versus).foregroundStyle(Brand.muted).lineLimit(1)
+            if showsVersus { Text(versus).foregroundStyle(Brand.muted).lineLimit(1) }
         }
         .font(.seed(.caption))
         .foregroundStyle(color)
@@ -357,5 +359,126 @@ struct IconRow: View {
             }
         }
         .contentShape(.rect)
+    }
+}
+
+/// ⓘ: the explanation of a card or section, one tap away instead of always on screen (Krist, 22 Oct: "a lot of text
+/// saying what something is"). A bubble on iPhone too, not a sheet.
+struct InfoButton: View {
+    let text: Text
+    @State private var showing = false
+
+    init(_ key: LocalizedStringKey) { text = Text(key) }
+    init(resource: LocalizedStringResource) { text = Text(resource) }
+
+    var body: some View {
+        Button { showing = true } label: {
+            Image(systemName: "info.circle")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(Brand.muted)
+                .frame(width: 30, height: 30)
+                .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text("About this"))
+        .popover(isPresented: $showing) {
+            text
+                .font(.seed(.callout))
+                .foregroundStyle(Brand.body)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(width: 260, alignment: .leading)
+                .padding(16)
+                .presentationCompactAdaptation(.popover)
+        }
+    }
+}
+
+/// A card's title row: the title, then ⓘ and ⤢ (open the full view) on the right, as Apple Health's cards.
+struct CardHeader: View {
+    let title: LocalizedStringKey
+    var icon: String?
+    var info: LocalizedStringKey?
+    var onExpand: (() -> Void)?
+
+    var body: some View {
+        HStack(spacing: 6) {
+            if let icon {
+                Image(systemName: icon).foregroundStyle(Brand.accent)
+            }
+            Text(title).font(.seed(.title3)).foregroundStyle(Brand.ink).lineLimit(1)
+            Spacer(minLength: 4)
+            if let info { InfoButton(info) }
+            if let onExpand {
+                Button(action: onExpand) {
+                    Image(systemName: "arrow.up.left.and.arrow.down.right")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(Brand.muted)
+                        .frame(width: 30, height: 30)
+                        .background(Brand.card, in: .circle)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("Show all"))
+            }
+        }
+        .font(.seed(.title3))
+    }
+}
+
+/// A form section's header with its explanation behind ⓘ instead of a footer paragraph.
+struct InfoHeader: View {
+    let title: LocalizedStringKey
+    let info: LocalizedStringKey
+
+    init(_ title: LocalizedStringKey, info: LocalizedStringKey) {
+        self.title = title
+        self.info = info
+    }
+
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            InfoButton(info).textCase(nil)
+        }
+    }
+}
+
+/// A card opened full screen: its chart big and every row, nothing cut off.
+struct DetailSheet<Content: View>: View {
+    let title: LocalizedStringKey
+    @ViewBuilder let content: Content
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) { content }
+                    .padding(20)
+                    .frame(maxWidth: 900)
+                    .frame(maxWidth: .infinity)
+            }
+            .background(GridBackground())
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+            }
+        }
+    }
+}
+
+/// Icon only on iPhone, icon and title on iPad: for buttons whose symbol says it all (share, add, start over).
+struct AdaptiveLabel: LabelStyle {
+    let iconOnly: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        if iconOnly {
+            configuration.icon
+        } else {
+            HStack(spacing: 6) {
+                configuration.icon
+                configuration.title
+            }
+        }
     }
 }

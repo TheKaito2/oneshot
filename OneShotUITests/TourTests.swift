@@ -13,10 +13,10 @@ final class TourTests: XCTestCase {
         guard thai else { return english }
         return [
             "Home": "หน้าหลัก", "Checkout": "ขายของ", "Products": "สินค้า", "Reports": "รายงาน", "Settings": "ตั้งค่า",
-            "Ring up the items in view": "คิดเงินสินค้าที่อยู่ในภาพ", "Back": "กลับ", "Charge": "เก็บเงิน",
+            "Scan the items in view": "สแกนสินค้าที่อยู่ในภาพ", "Back": "กลับ", "Charge": "เก็บเงิน",
             "Add two weeks of sample sales": "เพิ่มยอดขายตัวอย่าง 2 สัปดาห์", "Add sample sales": "เพิ่มยอดขายตัวอย่าง",
             "This month": "เดือนนี้", "Add items": "เพิ่มสินค้า", "Scan more items": "สแกนเพิ่ม",
-            "Start over": "เริ่มใหม่", "Done": "เสร็จ", "Demo & sample data": "เดโมและข้อมูลตัวอย่าง", "Scanner": "สแกน", "Cart": "ตะกร้า", "Add item": "เพิ่มสินค้า", "Scan with OneShot": "สแกนด้วย OneShot", "Cancel": "ยกเลิก",
+            "Start over": "เริ่มใหม่", "Done": "เสร็จ", "Demo & sample data": "เดโมและข้อมูลตัวอย่าง", "Scanner": "สแกน", "Cart": "ตะกร้า", "Add item": "เพิ่มสินค้า", "Scan with OneShot": "สแกนด้วย OneShot", "Cancel": "ยกเลิก", "Show all": "ดูทั้งหมด",
         ][english] ?? english
     }
 
@@ -113,7 +113,7 @@ final class TourTests: XCTestCase {
                 XCTAssertFalse(app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", label("Charge"))).firstMatch.isHittable,
                                "the empty cart shows before Ring up")
             }
-            let ringUp = button(label("Ring up the items in view"))
+            let ringUp = button(label("Scan the items in view"))
             XCTAssertTrue(ringUp.waitForExistence(timeout: 5), "Ring up missing")
             ringUp.tap()
             // The bill's own buttons mean it's built; detection runs on the simulator's CPU, slow on a busy Mac.
@@ -144,7 +144,7 @@ final class TourTests: XCTestCase {
                     addItem.tap()
                     if app.buttons.matching(NSPredicate(format: "label CONTAINS %@", label("Scan with OneShot"))).firstMatch.waitForExistence(timeout: 5) {
                         shot("\(o)-24-add-item-options")
-                        app.swipeDown(velocity: .fast)
+                        app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.12)).tap()   // above the sheet: closes it
                         sleep(1)
                     }
                 }
@@ -181,6 +181,19 @@ final class TourTests: XCTestCase {
             }
             go("Reports")
             shot("\(o)-10-reports")
+            if orientation == .portrait {
+                // A chart card opened full screen (⤢).
+                let expand = app.buttons.matching(NSPredicate(format: "label == %@", label("Show all"))).firstMatch
+                if expand.waitForExistence(timeout: 3), expand.isHittable {
+                    expand.tap()
+                    if button(label("Done")).waitForExistence(timeout: 5) {
+                        sleep(1)
+                        shot("\(o)-26-chart-detail")
+                        button(label("Done")).tap()
+                        sleep(1)
+                    }
+                }
+            }
             let month = button(label("This month"))
             if month.exists { month.tap() }
             app.swipeUp(velocity: .fast)
@@ -199,7 +212,7 @@ final class TourTests: XCTestCase {
                     sleep(2)
                     shot("\(o)-14-checkout-no-sidebar")
                     // The full-width layout with a bill on it (the thumbnail and store screenshots use this one).
-                    let ringUp = button(label("Ring up the items in view"))
+                    let ringUp = button(label("Scan the items in view"))
                     if ringUp.waitForExistence(timeout: 5), ringUp.isEnabled {
                         ringUp.tap()
                         if button(label("Add items")).waitForExistence(timeout: 30) {

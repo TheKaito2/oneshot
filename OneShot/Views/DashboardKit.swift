@@ -16,19 +16,21 @@ struct KPITile: View {
     var tint: Color = Brand.accent
     /// Shown instead of the change, e.g. what a profit figure leaves out.
     var note: LocalizedStringKey?
+    @Environment(\.horizontalSizeClass) private var sizeClass
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        let compact = sizeClass == .compact
+        VStack(alignment: .leading, spacing: compact ? 8 : 10) {
             HStack(spacing: 10) {
                 Image(systemName: symbol)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(tint)
                     .frame(width: 28, height: 28)
                     .background(Brand.card, in: .circle)
-                Text(title).eyebrow().lineLimit(1)
+                Text(title).eyebrow().lineLimit(1).minimumScaleFactor(0.75)
             }
             Text(value)
-                .font(.seed(size: 30, .extraBold))
+                .font(.seed(size: compact ? 24 : 30, .extraBold))
                 .foregroundStyle(Brand.ink)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
@@ -36,11 +38,11 @@ struct KPITile: View {
             if let note {
                 Text(note).font(.seed(.caption)).foregroundStyle(Brand.accent).fixedSize(horizontal: false, vertical: true)
             } else {
-                ChangeLabel(change: change, versus: versus, upIsGood: upIsGood)
+                ChangeLabel(change: change, versus: versus, upIsGood: upIsGood, showsVersus: !compact)
             }
         }
-        .frame(maxWidth: .infinity, minHeight: 120, alignment: .topLeading)
-        .card(padding: 18)
+        .frame(maxWidth: .infinity, minHeight: compact ? 0 : 120, alignment: .topLeading)
+        .card(padding: compact ? 14 : 18)
     }
 }
 
@@ -98,13 +100,13 @@ struct TrendCard: View {
     /// How far to move the period before so it lines up under this one.
     let shift: TimeInterval
 
+    @State private var expanded = false
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 12) {
+            CardHeader(title: title) { expanded = true }
             HStack(spacing: 16) {
-                Text(title).font(.seed(.title3)).foregroundStyle(Brand.ink)
-                Spacer()
-                legend("This period", color: Brand.accent)
-                legend("Period before", color: Brand.muted)
+                TrendLegend()
             }
             // Monotone curves: Catmull-Rom overshot below ฿0 between a quiet day and a busy one (19 Oct).
             Chart {
@@ -132,6 +134,17 @@ struct TrendCard: View {
             .frame(height: 240)
         }
         .card(padding: 20)
+        .sheet(isPresented: $expanded) {
+            DetailSheet(title: title) { TrendDetail(report: report, before: before, bucket: bucket, shift: shift) }
+        }
+    }
+}
+
+/// This period solid in coral, the period before dashed in grey.
+struct TrendLegend: View {
+    var body: some View {
+        legend("This period", color: Brand.accent)
+        legend("Period before", color: Brand.muted)
     }
 
     private func legend(_ text: LocalizedStringKey, color: Color) -> some View {
@@ -145,12 +158,13 @@ struct TrendCard: View {
 struct TopProductsCard: View {
     let report: Report
     var limit = 6
+    @State private var expanded = false
 
     var body: some View {
         let top = Array(report.items.filter { $0.net > 0 }.prefix(limit))
         let best = max(top.first?.net.double ?? 1, 1)
         VStack(alignment: .leading, spacing: 14) {
-            Text("Top products").font(.seed(.title3)).foregroundStyle(Brand.ink)
+            CardHeader(title: "Top products", onExpand: report.items.isEmpty ? nil : { expanded = true })
             if top.isEmpty {
                 Text("Nothing sold yet.").font(.seed(.subheadline)).foregroundStyle(Brand.muted)
             }
@@ -167,16 +181,20 @@ struct TopProductsCard: View {
         }
         .frame(maxHeight: .infinity, alignment: .top)
         .card(padding: 20)
+        .sheet(isPresented: $expanded) {
+            DetailSheet(title: "Top products") { ItemsDetail(report: report) }
+        }
     }
 }
 
 /// Money in per shelf group, one colour each ("Traffic by Device" in the reference).
 struct CategoryBarsCard: View {
     let report: Report
+    @State private var expanded = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Sales by category").font(.seed(.title3)).foregroundStyle(Brand.ink)
+            CardHeader(title: "Sales by category") { expanded = true }
             Chart {
                 ForEach(Array(report.categories.enumerated()), id: \.offset) { index, group in
                     BarMark(x: .value("Category", String(localized: group.category.title)), y: .value("Baht", group.net.double), width: .ratio(0.5))
@@ -188,54 +206,79 @@ struct CategoryBarsCard: View {
             .frame(height: 220)
         }
         .card(padding: 20)
+        .sheet(isPresented: $expanded) {
+            DetailSheet(title: "Sales by category") { CategoryDetail(report: report) }
+        }
     }
 }
 
 /// Cash against PromptPay as a donut with its legend ("Traffic by Location" in the reference).
 struct PaymentsDonutCard: View {
     let report: Report
+    @State private var expanded = false
 
     var body: some View {
         let slices = report.payments.filter { $0.net > 0 }
-        let total = slices.map(\.net).reduce(0, +)
         VStack(alignment: .leading, spacing: 16) {
-            Text("Payments").font(.seed(.title3)).foregroundStyle(Brand.ink)
-            HStack(spacing: 24) {
-                ZStack {
-                    Chart(slices) { payment in
-                        SectorMark(angle: .value("Baht", payment.net.double), innerRadius: .ratio(0.62), angularInset: 2)
-                            .cornerRadius(6)
-                            .foregroundStyle(Self.color(payment.method))
-                    }
-                    VStack(spacing: 2) {
-                        Text(total.baht).font(.seed(size: 20, .extraBold, relativeTo: .title3)).foregroundStyle(Brand.ink)
-                            .lineLimit(1).minimumScaleFactor(0.5)
-                        Text("Net").eyebrow()
-                    }
-                    .padding(28)
+            CardHeader(title: "Payments") { expanded = true }
+            // Beside the donut where the legend keeps one line; under it on a phone ("Prompt/Pay" wrapped, 22 Oct).
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 24) {
+                    Self.donut(slices, size: 150)
+                    legend(slices).frame(minWidth: 190)
                 }
-                .frame(width: 150, height: 150)
-                VStack(alignment: .leading, spacing: 14) {
-                    ForEach(slices) { payment in
-                        VStack(alignment: .leading, spacing: 2) {
-                            HStack(spacing: 8) {
-                                Circle().fill(Self.color(payment.method)).frame(width: 8, height: 8)
-                                Text(payment.method == .cash ? "Cash" : "PromptPay").font(.seed(.callout)).foregroundStyle(Brand.ink)
-                                Spacer()
-                                Text(total > 0 ? (payment.net.double / total.double).formatted(.percent.precision(.fractionLength(0))) : "–")
-                                    .font(.seed(.callout, .bold))
-                                    .foregroundStyle(Brand.ink)
-                            }
-                            Text("^[\(payment.sales) sale](inflect: true) · \(payment.net.baht)").font(.seed(.caption)).foregroundStyle(Brand.muted).padding(.leading, 16)
-                        }
-                    }
+                VStack(spacing: 18) {
+                    Self.donut(slices, size: 150)
+                    legend(slices)
                 }
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)
         .card(padding: 20)
+        .sheet(isPresented: $expanded) {
+            DetailSheet(title: "Payments") { PaymentsDetail(report: report) }
+        }
     }
 
+    static func donut(_ slices: [Report.Payment], size: CGFloat) -> some View {
+        let total = slices.map(\.net).reduce(0, +)
+        return ZStack {
+            Chart(slices) { payment in
+                SectorMark(angle: .value("Baht", payment.net.double), innerRadius: .ratio(0.62), angularInset: 2)
+                    .cornerRadius(6)
+                    .foregroundStyle(color(payment.method))
+            }
+            VStack(spacing: 2) {
+                Text(total.baht).font(.seed(size: 20, .extraBold, relativeTo: .title3)).foregroundStyle(Brand.ink)
+                    .lineLimit(1).minimumScaleFactor(0.5)
+                Text("Net").eyebrow()
+            }
+            .padding(size * 0.19)
+        }
+        .frame(width: size, height: size)
+    }
+
+    private func legend(_ slices: [Report.Payment]) -> some View {
+        let total = slices.map(\.net).reduce(0, +)
+        return VStack(alignment: .leading, spacing: 14) {
+            ForEach(slices) { payment in
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 8) {
+                        Circle().fill(Self.color(payment.method)).frame(width: 8, height: 8)
+                        Text(Self.name(payment.method)).font(.seed(.callout)).foregroundStyle(Brand.ink).lineLimit(1).fixedSize()
+                        Spacer(minLength: 8)
+                        Text(total > 0 ? (payment.net.double / total.double).formatted(.percent.precision(.fractionLength(0))) : "–")
+                            .font(.seed(.callout, .bold))
+                            .foregroundStyle(Brand.ink)
+                    }
+                    Text("^[\(payment.sales) sale](inflect: true) · \(payment.net.baht)").font(.seed(.caption)).foregroundStyle(Brand.muted)
+                        .lineLimit(1).padding(.leading, 16)
+                }
+            }
+        }
+    }
+
+    static func name(_ method: PaymentMethod) -> LocalizedStringKey { method == .cash ? "Cash" : "PromptPay" }
     static func color(_ method: PaymentMethod) -> Color { method == .cash ? Brand.accent : Brand.sky }
 }
 

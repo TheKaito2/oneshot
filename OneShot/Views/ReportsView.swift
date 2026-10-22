@@ -12,6 +12,11 @@ struct ReportsView: View {
     @Query(sort: \CloseRecord.date, order: .reverse) private var closes: [CloseRecord]
     @State private var period: ReportPeriod = .today
     @State private var itemsCSV: URL?
+    @State private var showing: Detail?
+    @Environment(\.horizontalSizeClass) private var sizeClass
+
+    /// Which card is open full screen.
+    private enum Detail: String, Identifiable { case items, pairs; var id: Self { self } }
 
     private var sales: [Sale] { records.map(\.sale) }
 
@@ -25,10 +30,7 @@ struct ReportsView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    Picker("Period", selection: $period) {
-                        ForEach(ReportPeriod.allCases) { Text($0.title).tag($0) }
-                    }
-                    .pickerStyle(.segmented)
+                    periodPicker
                     SectionMarker(index: 1, total: 4, title: "Summary", subtitle: period.comparison)
                     summary(report, before)
                     SectionMarker(index: 2, total: 4, title: "Over time")
@@ -82,6 +84,46 @@ struct ReportsView: View {
                 }
             }
             .task(id: "\(period)-\(records.count)") { itemsCSV = Self.writeCSV(report, period: period) }
+            .sheet(item: $showing) { detail in
+                switch detail {
+                case .items: DetailSheet(title: "Sales by item") { ItemsDetail(report: report) }
+                case .pairs: DetailSheet(title: "Bought together") { PairsDetail(report: report) }
+                }
+            }
+        }
+    }
+
+    // MARK: - Period
+
+    /// iPad: the four periods side by side. iPhone: one pill that opens them, as Shopify and Stripe pick a date range
+    /// (the four segments were cramped, 22 Oct).
+    @ViewBuilder
+    private var periodPicker: some View {
+        if sizeClass == .compact {
+            HStack(spacing: 10) {
+                Menu {
+                    Picker("Period", selection: $period) {
+                        ForEach(ReportPeriod.allCases) { Text($0.title).tag($0) }
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "calendar")
+                        Text(period.title).font(.seed(.headline))
+                        Image(systemName: "chevron.down").font(.caption.weight(.bold))
+                    }
+                    .foregroundStyle(Brand.ink)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 9)
+                    .background(Brand.card, in: .capsule)
+                }
+                Text(period.versus).font(.seed(.subheadline)).foregroundStyle(Brand.muted).lineLimit(1)
+                Spacer(minLength: 0)
+            }
+        } else {
+            Picker("Period", selection: $period) {
+                ForEach(ReportPeriod.allCases) { Text($0.title).tag($0) }
+            }
+            .pickerStyle(.segmented)
         }
     }
 
@@ -119,7 +161,7 @@ struct ReportsView: View {
         } else {
             Button { app.tab = .products } label: {
                 KPITile(title: "Gross profit", value: "–", symbol: "chart.line.uptrend.xyaxis", tint: Brand.sage,
-                        note: "Add what you pay for each product in Products to see profit.")
+                        note: "Add costs in Products to see profit.")
             }
             .buttonStyle(.plain)
         }
@@ -129,11 +171,16 @@ struct ReportsView: View {
 
     private func itemTable(_ r: Report) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Sales by item").font(.seed(.title3))
+            CardHeader(title: "Sales by item") { showing = .items }
             // All six columns on iPad; item, sold and net on iPhone, where six ran off the card.
             ViewThatFits(in: .horizontal) {
                 itemGrid(r, compact: false)
                 itemGrid(r, compact: true)
+            }
+            if r.items.count > 5, sizeClass == .compact {
+                Button("Show all \(r.items.count)") { showing = .items }
+                    .font(.seed(.subheadline, .bold))
+                    .foregroundStyle(Brand.accent)
             }
         }
         .card(padding: 18)
@@ -153,7 +200,8 @@ struct ReportsView: View {
             }
             .eyebrow()
             Divider()
-            ForEach(r.items) { item in
+            // iPhone: the top five; ⤢ or "Show all" opens every row.
+            ForEach(compact ? Array(r.items.prefix(5)) : r.items) { item in
                 GridRow {
                     HStack(spacing: 10) {
                         if let product = app.catalog[item.sku] {
@@ -179,22 +227,20 @@ struct ReportsView: View {
 
     private func together(_ r: Report) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("Bought together", systemImage: "link").font(.seed(.title3))
+            CardHeader(title: "Bought together", icon: "link", info: "Pairs that share a basket at least twice. Shelve them side by side, or price them as a set.",
+                       onExpand: r.pairs.isEmpty ? nil : { showing = .pairs })
             if r.pairs.isEmpty {
                 Text("Two items show up here once they share a basket at least twice.").foregroundStyle(Brand.muted)
             }
             ForEach(r.pairs) { pair in
                 HStack {
-                    Text("\(pair.first) + \(pair.second)").lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                    Text("\(pair.first) + \(pair.second)").lineLimit(1)
                     Spacer()
                     Text("^[\(pair.baskets) basket](inflect: true)").font(.seed(.body, .bold))
                     Text((Double(pair.baskets) / Double(max(r.sales, 1))).formatted(.percent.precision(.fractionLength(0))))
                         .foregroundStyle(Brand.muted)
                 }
                 .font(.seed(.subheadline))
-            }
-            if !r.pairs.isEmpty {
-                Text("Shelve them side by side, or price them as a set.").font(.seed(.caption)).foregroundStyle(Brand.muted)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -204,11 +250,12 @@ struct ReportsView: View {
     private func speed(_ r: Report) -> some View {
         let saved = r.speed.secondsSaved(at: Self.barcodeSecondsPerItem)
         return VStack(alignment: .leading, spacing: 12) {
-            Label { Text("OneShot speed").foregroundStyle(Brand.ink) } icon: { Image(systemName: "bolt.fill").foregroundStyle(Brand.accent) }.font(.seed(.title3))
+            CardHeader(title: "OneShot speed", icon: "viewfinder",
+                       info: "Time saved is measured against 22 barcode scans a minute, a staffed lane's pace.")
             if r.speed.checkouts.isEmpty {
-                Text("Ring-up times start with sales made in this version.").foregroundStyle(Brand.muted)
+                Text("Scan times start with sales made in this version.").foregroundStyle(Brand.muted)
             } else {
-                LabeledContent("Average ring-up") {
+                LabeledContent("Average scan time") {
                     Text("\(r.speed.averageSeconds.formatted(.number.precision(.fractionLength(1)))) s").font(.seed(.body, .bold)).foregroundStyle(Brand.ink)
                 }
                 LabeledContent("Named by the AI") {
@@ -218,9 +265,6 @@ struct ReportsView: View {
                     Text(Duration.seconds(saved).formatted(.units(allowed: [.hours, .minutes, .seconds], width: .abbreviated)))
                         .font(.seed(.body, .bold)).foregroundStyle(Brand.ink)
                 }
-                Text("Against 22 barcode scans a minute, a staffed lane's pace.")
-                    .font(.seed(.caption))
-                    .foregroundStyle(Brand.muted)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

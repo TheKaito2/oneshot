@@ -186,22 +186,15 @@ struct StatementCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("Monthly statement for the bank", systemImage: "building.columns").font(.seed(.headline))
-            Text("A month of takings on one page: daily totals, refunds, and the PromptPay share a bank can check against its own records. For a loan application or your own books.")
-                .font(.seed(.callout))
-                .foregroundStyle(Brand.muted)
-            // One row on iPad; on iPhone the buttons go under the month (squeezed into one row they read
-            // "Thi…" and "Previe/w").
-            if sizeClass == .compact {
-                VStack(spacing: 10) {
-                    monthPicker
-                    HStack { actions }
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                }
-            } else {
-                HStack {
-                    monthPicker.frame(maxWidth: 320)
-                    Spacer()
+            CardHeader(title: "Bank statement", icon: "building.columns",
+                       info: "A month of takings on one page: daily totals, refunds, and the PromptPay share a bank can check against its own records. For a loan application or your own books.")
+            // One row everywhere; on iPhone the buttons are icons (preview and share read without words).
+            HStack(spacing: 10) {
+                monthPicker.frame(maxWidth: 320)
+                Spacer(minLength: 0)
+                if sizeClass == .compact {
+                    actions.labelStyle(.iconOnly)
+                } else {
                     actions
                 }
             }

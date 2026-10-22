@@ -83,6 +83,16 @@
         }
       }
     },
+    "%lld refunded" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คืน %lld"
+          }
+        }
+      }
+    },
     "%lld sales, %lld day closes, %lld taught products, %lld photos. Products, prices and photos on this device are replaced." : {
       "localizations" : {
         "th" : {
@@ -105,6 +115,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld/%lld"
+          }
+        }
+      }
+    },
+    "+ %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ %@"
           }
         }
       }
@@ -209,6 +229,16 @@
         }
       }
     },
+    "About this" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คำอธิบาย"
+          }
+        }
+      }
+    },
     "Account" : {
       "localizations" : {
         "th" : {
@@ -265,6 +295,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เพิ่มสินค้าเอง"
+          }
+        }
+      }
+    },
+    "Add costs in Products to see profit." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใส่ต้นทุนในหน้าสินค้าเพื่อดูกำไร"
           }
         }
       }
@@ -339,32 +379,12 @@
         }
       }
     },
-    "Add what you pay for each product in Products to see profit." : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ใส่ต้นทุนของสินค้าแต่ละอย่างในหน้าสินค้า เพื่อดูกำไร"
-          }
-        }
-      }
-    },
     "Added %lld sample sales." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "เพิ่มยอดขายตัวอย่าง %lld รายการแล้ว"
-          }
-        }
-      }
-    },
-    "Against 22 barcode scans a minute, a staffed lane's pace." : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เทียบกับการสแกนบาร์โค้ดนาทีละ 22 ชิ้น ความเร็วของแคชเชียร์ทั่วไป"
           }
         }
       }
@@ -409,6 +429,16 @@
         }
       }
     },
+    "Average %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เฉลี่ย %@"
+          }
+        }
+      }
+    },
     "Average a day open" : {
       "localizations" : {
         "th" : {
@@ -419,22 +449,22 @@
         }
       }
     },
-    "Average ring-up" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เวลาคิดเงินเฉลี่ย"
-          }
-        }
-      }
-    },
     "Average sale" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ยอดเฉลี่ยต่อบิล"
+          }
+        }
+      }
+    },
+    "Average scan time" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เวลาสแกนเฉลี่ย"
           }
         }
       }
@@ -509,6 +539,16 @@
         }
       }
     },
+    "Backup" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สำรองข้อมูล"
+          }
+        }
+      }
+    },
     "Backup & restore" : {
       "localizations" : {
         "th" : {
@@ -555,6 +595,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "บาท"
+          }
+        }
+      }
+    },
+    "Bank statement" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รายงานยอดขายสำหรับธนาคาร"
           }
         }
       }
@@ -631,6 +681,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "แยกตามรายการ"
+          }
+        }
+      }
+    },
+    "By money" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตามยอดเงิน"
+          }
+        }
+      }
+    },
+    "By units" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตามจำนวนชิ้น"
           }
         }
       }
@@ -961,22 +1031,22 @@
         }
       }
     },
-    "Couldn't ring up" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "คิดเงินไม่ได้"
-          }
-        }
-      }
-    },
     "Couldn't save the item: %@" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "บันทึกสินค้าไม่ได้: %@"
+          }
+        }
+      }
+    },
+    "Couldn't scan" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สแกนไม่สำเร็จ"
           }
         }
       }
@@ -1037,6 +1107,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "รายงานแอปค้างหรือปิดตัวจาก iOS เก็บไว้ในเครื่องนี้ แชร์เมื่อขอความช่วยเหลือ"
+          }
+        }
+      }
+    },
+    "Crash reports" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รายงานแอปค้าง"
           }
         }
       }
@@ -1547,12 +1627,12 @@
         }
       }
     },
-    "Hold over the items, then tap Ring up" : {
+    "Hold over the items, then tap Scan" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ถือ iPad เหนือสินค้า แล้วแตะคิดเงิน"
+            "value" : "ถือกล้องเหนือสินค้า แล้วแตะ สแกน"
           }
         }
       }
@@ -1567,32 +1647,32 @@
         }
       }
     },
-    "Hold the camera over the items and tap Ring up. Every pack is named and priced." : {
+    "Hold the camera over the items and tap Scan. Every pack is named and priced." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ส่องกล้องเหนือสินค้าแล้วแตะคิดเงิน สินค้าทุกชิ้นจะขึ้นชื่อและราคา"
+            "value" : "ถือกล้องเหนือสินค้าแล้วแตะ สแกน ทุกห่อจะขึ้นชื่อและราคา"
           }
         }
       }
     },
-    "Hold the camera over the items, then tap Ring up." : {
+    "Hold the camera over the items, then tap Scan." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ส่องกล้องเหนือสินค้า แล้วแตะคิดเงิน"
+            "value" : "ถือกล้องเหนือสินค้า แล้วแตะ สแกน"
           }
         }
       }
     },
-    "Hold the camera over the items. One tap rings them all up." : {
+    "Hold the camera over the items. One tap scans them all." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ส่องกล้องเหนือสินค้า แตะครั้งเดียวคิดเงินได้ทั้งหมด"
+            "value" : "ถือกล้องเหนือสินค้า แตะครั้งเดียวสแกนได้ทั้งหมด"
           }
         }
       }
@@ -1813,16 +1893,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เดือน"
-          }
-        }
-      }
-    },
-    "Monthly statement for the bank" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "รายงานยอดขายรายเดือนสำหรับธนาคาร"
           }
         }
       }
@@ -2147,32 +2217,32 @@
         }
       }
     },
-    "One folder with sales, refunds, day closes, stock, taught products, prices, barcodes and product photos. Keep it outside OneShot, e.g. in iCloud Drive. Restoring adds the backup's sales to these books and replaces products, prices and photos with the backup's." : {
+    "One folder with sales, refunds, day closes, stock, taught products, prices, barcodes and product photos. Keep it outside OneShot, e.g. in iCloud Drive. Restoring adds the backup's sales to these books." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "โฟลเดอร์เดียวที่มียอดขาย การคืนเงิน การปิดยอดรายวัน สต็อก สินค้าที่สอน ราคา บาร์โค้ด และรูปสินค้า เก็บไว้นอก OneShot เช่น ใน iCloud Drive การกู้คืนจะเพิ่มยอดขายจากข้อมูลสำรองเข้าบัญชีนี้ และแทนที่สินค้า ราคา และรูปด้วยของข้อมูลสำรอง"
+            "value" : "โฟลเดอร์เดียวรวมยอดขาย การคืนเงิน การปิดยอด สต็อก สินค้าที่สอน ราคา บาร์โค้ด และรูปสินค้า เก็บไว้นอก OneShot เช่น iCloud Drive การกู้คืนจะเพิ่มยอดขายจากไฟล์สำรองเข้ามา"
           }
         }
       }
     },
-    "One photo rings up the whole pile." : {
+    "One photo adds the whole pile." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ถ่ายรูปเดียว คิดเงินได้ทั้งกอง"
+            "value" : "ถ่ายรูปเดียวได้สินค้าทั้งกอง"
           }
         }
       }
     },
-    "One tap rings up every item in view." : {
+    "One tap scans every item in view." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "แตะครั้งเดียว คิดเงินทุกชิ้นที่อยู่ในภาพ"
+            "value" : "แตะครั้งเดียว สแกนทุกชิ้นที่อยู่ในภาพ"
           }
         }
       }
@@ -2347,6 +2417,16 @@
         }
       }
     },
+    "Pairs that share a basket at least twice. Shelve them side by side, or price them as a set." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สินค้าที่ซื้อด้วยกันอย่างน้อยสองครั้ง วางไว้ใกล้กัน หรือจัดเป็นชุดราคาพิเศษ"
+          }
+        }
+      }
+    },
     "Past sales" : {
       "localizations" : {
         "th" : {
@@ -2493,6 +2573,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "กำไร"
+          }
+        }
+      }
+    },
+    "Profit %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำไร %@"
           }
         }
       }
@@ -2763,62 +2853,22 @@
         }
       }
     },
+    "Restoring replaces products, prices and photos with the backup's." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การกู้คืนจะแทนที่สินค้า ราคา และรูป ด้วยข้อมูลจากไฟล์สำรอง"
+          }
+        }
+      }
+    },
     "Results" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ผลการค้นหา"
-          }
-        }
-      }
-    },
-    "Ring up" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "คิดเงิน"
-          }
-        }
-      }
-    },
-    "Ring up the items in view" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "คิดเงินสินค้าที่อยู่ในภาพ"
-          }
-        }
-      }
-    },
-    "Ring up the whole counter in one photo" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "คิดเงินทั้งเคาน์เตอร์ในภาพเดียว"
-          }
-        }
-      }
-    },
-    "Ring-up times start with sales made in this version." : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เวลาคิดเงินจะเริ่มเก็บจากการขายในเวอร์ชันนี้"
-          }
-        }
-      }
-    },
-    "Ringing up…" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "กำลังคิดเงิน…"
           }
         }
       }
@@ -2983,6 +3033,16 @@
         }
       }
     },
+    "Scan" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สแกน"
+          }
+        }
+      }
+    },
     "Scan a barcode" : {
       "localizations" : {
         "th" : {
@@ -3013,6 +3073,36 @@
         }
       }
     },
+    "Scan the items in view" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สแกนสินค้าที่อยู่ในภาพ"
+          }
+        }
+      }
+    },
+    "Scan the whole counter in one photo" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สแกนสินค้าทั้งเคาน์เตอร์ในรูปเดียว"
+          }
+        }
+      }
+    },
+    "Scan times start with sales made in this version." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เวลาสแกนเริ่มนับจากยอดขายในเวอร์ชันนี้"
+          }
+        }
+      }
+    },
     "Scan with OneShot" : {
       "localizations" : {
         "th" : {
@@ -3029,6 +3119,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "สแกน"
+          }
+        }
+      }
+    },
+    "Scanning…" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำลังสแกน…"
           }
         }
       }
@@ -3179,16 +3279,6 @@
         }
       }
     },
-    "Shelve them side by side, or price them as a set." : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "วางไว้ใกล้กัน หรือจัดเป็นชุดขายคู่กัน"
-          }
-        }
-      }
-    },
     "Shop" : {
       "localizations" : {
         "th" : {
@@ -3235,6 +3325,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "แสดง"
+          }
+        }
+      }
+    },
+    "Show all" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ดูทั้งหมด"
+          }
+        }
+      }
+    },
+    "Show all %lld" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ดูทั้งหมด %lld"
           }
         }
       }
@@ -3345,6 +3455,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "หมดแล้ว"
+          }
+        }
+      }
+    },
+    "Sort" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เรียง"
           }
         }
       }
@@ -3665,12 +3785,12 @@
         }
       }
     },
-    "The simulator has no camera here. Turn on Demo to ring up table photos." : {
+    "The simulator has no camera here. Turn on Demo to scan table photos." : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ซิมูเลเตอร์ไม่มีกล้อง เปิดเดโมเพื่อคิดเงินจากรูปโต๊ะ"
+            "value" : "ซิมูเลเตอร์ไม่มีกล้อง เปิดเดโมเพื่อสแกนรูปโต๊ะ"
           }
         }
       }
@@ -3745,6 +3865,16 @@
         }
       }
     },
+    "Time saved is measured against 22 barcode scans a minute, a staffed lane's pace." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เวลาที่ประหยัดได้เทียบกับการสแกนบาร์โค้ด 22 ครั้งต่อนาที ซึ่งเป็นความเร็วของแคชเชียร์"
+          }
+        }
+      }
+    },
     "Time saved vs barcodes" : {
       "localizations" : {
         "th" : {
@@ -3797,6 +3927,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ยอดรวม"
+          }
+        }
+      }
+    },
+    "Total · touch the chart for one %@" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รวม · แตะกราฟเพื่อดูราย%@"
           }
         }
       }
@@ -4127,6 +4267,16 @@
         }
       }
     },
+    "^[%lld sale](inflect: true)" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld รายการขาย"
+          }
+        }
+      }
+    },
     "^[%lld sale](inflect: true) · %@" : {
       "localizations" : {
         "en" : {
@@ -4143,6 +4293,16 @@
         }
       }
     },
+    "^[%lld sold](inflect: true)" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขาย %lld"
+          }
+        }
+      }
+    },
     "counted" : {
       "localizations" : {
         "th" : {
@@ -4153,12 +4313,32 @@
         }
       }
     },
+    "day" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "วัน"
+          }
+        }
+      }
+    },
     "even" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "พอดี"
+          }
+        }
+      }
+    },
+    "hour" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ชั่วโมง"
           }
         }
       }
@@ -4239,6 +4419,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "× %lld"
+          }
+        }
+      }
+    },
+    "×%lld" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "×%lld"
           }
         }
       }

@@ -46,7 +46,7 @@ struct RootView: View {
             Tab("Products", systemImage: "square.grid.2x2.fill", value: AppModel.Tab.products) {
                 phoneBar(ProductsView(app: app))
             }
-            Tab("Checkout", systemImage: "bolt.fill", value: AppModel.Tab.checkout) {
+            Tab("Checkout", systemImage: "viewfinder", value: AppModel.Tab.checkout) {
                 phoneBar(CheckoutView(app: app))
             }
             Tab("Reports", systemImage: "chart.bar.xaxis", value: AppModel.Tab.reports) {
@@ -152,7 +152,7 @@ struct PhoneTabBar: View {
 
     private var checkout: some View {
         Button { tab = .checkout } label: {
-            Image(systemName: "bolt.fill")
+            Image(systemName: "viewfinder")
                 .font(.system(size: 26, weight: .bold))
                 .foregroundStyle(.white)
                 .frame(width: 64, height: 64)

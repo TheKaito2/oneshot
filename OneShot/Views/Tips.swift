@@ -4,8 +4,8 @@ import TipKit
 // First-run guidance for a judge (or cashier) picking the iPad up cold. Settings › Show tips again resets them.
 
 struct LockTip: Tip {
-    var title: Text { Text("Hold over the items, then tap Ring up") }
-    var message: Text? { Text("One photo rings up the whole pile.") }
+    var title: Text { Text("Hold over the items, then tap Scan") }
+    var message: Text? { Text("One photo adds the whole pile.") }
     var image: Image? { Image(systemName: "bolt.fill") }
 }
 

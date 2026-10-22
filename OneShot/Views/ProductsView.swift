@@ -211,9 +211,9 @@ private struct ProductDetail: View {
                     field("Cost", icon: "cart.fill", tint: Brand.sand, text: $cost, prompt: String(localized: "Optional"))
                     if let error { Text(error).foregroundStyle(Brand.negative).font(.seed(.caption)) }
                 } header: {
-                    Text("Selling")
+                    InfoHeader("Selling", info: "Cost is what you pay for one. It's only used for profit in Reports.")
                 } footer: {
-                    Text(marginText ?? String(localized: "Cost is what you pay for one. It's only used for profit in Reports."))
+                    if let marginText { Text(marginText) }
                 }
                 .frostedRows()
                 Section {
@@ -236,9 +236,7 @@ private struct ProductDetail: View {
                         }
                     }
                 } header: {
-                    Text("Stock")
-                } footer: {
-                    Text("Sales take from the shelf, refunds put back. At or below the reorder point it shows on Home.")
+                    InfoHeader("Stock", info: "Sales take from the shelf, refunds put back. At or below the reorder point it shows on Home.")
                 }
                 .frostedRows()
                 Section {
@@ -251,9 +249,7 @@ private struct ProductDetail: View {
                                 value: "\(catalog.barcodes(for: product.id).count)")
                     }
                 } header: {
-                    Text("Recognition")
-                } footer: {
-                    Text("What OneShot knows it by: the photos it learned from, and barcodes scanned for it.")
+                    InfoHeader("Recognition", info: "What OneShot knows it by: the photos it learned from, and barcodes scanned for it.")
                 }
                 .frostedRows()
                 if Catalog.isQuickAdd(product.id) {

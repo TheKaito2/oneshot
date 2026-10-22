@@ -15,6 +15,7 @@ struct SalesInsight {
 /// The shop's day at a glance, laid out like the Dashboard Overview reference: a header, the way into a sale,
 /// today's numbers in glass, the trend and breakdowns, and a rail of what needs attention and what just happened.
 struct HomeView: View {
+    @Environment(\.horizontalSizeClass) private var sizeClass
     let app: AppModel
 
     @AppStorage(SettingsKey.shopName) private var shopName = ""
@@ -157,17 +158,26 @@ struct HomeView: View {
     /// The way into a sale, set like the site's headlines (eyebrow, display line, accent rule, lede), with the
     /// chameleon engraving watching from the right.
     private var hero: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text("One-tap checkout").eyebrow()
-            Text("Start a sale").font(.seed(size: 44, .heavy)).foregroundStyle(Brand.ink)
+        let compact = sizeClass == .compact
+        return VStack(alignment: .leading, spacing: compact ? 10 : 14) {
+            HStack {
+                Text("One-tap checkout").eyebrow()
+                if compact {
+                    Spacer()
+                    InfoButton("Hold the camera over the items. One tap scans them all.")
+                }
+            }
+            Text("Start a sale").font(.seed(size: compact ? 32 : 44, .heavy)).foregroundStyle(Brand.ink)
             AccentRule()
-            Text("Hold the camera over the items. One tap rings them all up.")
-                .font(.seed(.title3, .regular))
-                .foregroundStyle(Brand.body)
+            if !compact {   // iPhone: behind ⓘ, the Scan button says it
+                Text("Hold the camera over the items. One tap scans them all.")
+                    .font(.seed(.title3, .regular))
+                    .foregroundStyle(Brand.body)
+            }
             GlassEffectContainer(spacing: 12) {
                 VStack(alignment: .leading, spacing: 12) {
                     Button { app.tab = .checkout } label: {
-                        Label("Ring up", systemImage: "bolt.fill").font(.seed(.title3, .bold)).padding(.horizontal, 10).padding(.vertical, 2)
+                        Label("Scan", systemImage: "viewfinder").font(.seed(.title3, .bold)).padding(.horizontal, 10).padding(.vertical, 2)
                     }
                     .primaryButton()
                     .controlSize(.large)
@@ -182,8 +192,8 @@ struct HomeView: View {
             .padding(.top, 6)
         }
         .frame(maxWidth: 560, alignment: .leading)
-        .padding(28)
-        .frame(maxWidth: .infinity, minHeight: 250, alignment: .leading)
+        .padding(compact ? 20 : 28)
+        .frame(maxWidth: .infinity, minHeight: compact ? 0 : 250, alignment: .leading)
         .background {
             // Only the backdrop is clipped: clipping the content too would make it its own layer, and the secondary
             // text's vibrancy has nothing to blend with there (the subtitle vanished).
@@ -191,7 +201,7 @@ struct HomeView: View {
                 Image("Chameleon")
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 250)
+                    .frame(height: compact ? 190 : 250)
                     .offset(x: 40, y: 30)
                     .accessibilityHidden(true)
             }

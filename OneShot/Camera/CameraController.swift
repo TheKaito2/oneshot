@@ -87,7 +87,7 @@ final class CameraController: NSObject, @unchecked Sendable {
         #if targetEnvironment(simulator)
         // No live camera in the simulator: Vision aborts the app on the frames the simulator's camera passes in
         // (SIGABRT in Detector.perform from captureOutput, 19 Oct). The demo photos stand in for it there.
-        state = .failed(String(localized: "The simulator has no camera here. Turn on Demo to ring up table photos."))
+        state = .failed(String(localized: "The simulator has no camera here. Turn on Demo to scan table photos."))
         return
         #endif
         guard await AVCaptureDevice.requestAccess(for: .video) else {

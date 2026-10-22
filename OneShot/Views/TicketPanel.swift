@@ -6,6 +6,7 @@ struct TicketPanel: View {
     @Bindable var app: AppModel
 
     @Environment(\.modelContext) private var context
+    @Environment(\.horizontalSizeClass) private var sizeClass
     @State private var picking: Region?
     @State private var adding = false
     /// The Add item option picked, opened once the options sheet is gone.
@@ -29,6 +30,8 @@ struct TicketPanel: View {
                 if app.scan != nil {
                     Button("Add item", systemImage: "plus") { adding = true }
                         .font(.seed(.subheadline, .bold))
+                        .labelStyle(AdaptiveLabel(iconOnly: sizeClass == .compact))
+                        .accessibilityLabel(Text("Add item"))
                         .buttonStyle(.glass)
                 } else {
                     TimelineView(.everyMinute) { context in
@@ -114,7 +117,7 @@ struct TicketPanel: View {
                     .font(.system(size: 60, weight: .light))
                     .foregroundStyle(Brand.accent)
                 Text("Ready for the next customer").font(.seed(.title3)).foregroundStyle(Brand.ink)
-                Text("Hold the camera over the items, then tap Ring up.")
+                Text("Hold the camera over the items, then tap Scan.")
                     .font(.seed(.callout))
                     .foregroundStyle(Brand.body)
                     .multilineTextAlignment(.center)
@@ -256,7 +259,9 @@ struct TicketPanel: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             HStack {
-                Button("Start over", role: .destructive) { app.clearSale() }
+                Button("Start over", systemImage: "arrow.counterclockwise", role: .destructive) { app.clearSale() }
+                    .labelStyle(AdaptiveLabel(iconOnly: sizeClass == .compact))   // iPhone: Charge gets the width
+                    .accessibilityLabel(Text("Start over"))
                     .buttonStyle(.glass)
                     .disabled(app.scan == nil)
                 // Never a QR for a sale with unchecked items.

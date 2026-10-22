@@ -109,7 +109,7 @@ struct CheckoutView: View {
         .background(GridBackground())
         .animation(.easeOut(duration: 0.3), value: flash)
         .animation(.spring, value: app.teaching)
-        .alert("Couldn't ring up", isPresented: Binding(get: { lockError != nil }, set: { if !$0 { lockError = nil } })) {
+        .alert("Couldn't scan", isPresented: Binding(get: { lockError != nil }, set: { if !$0 { lockError = nil } })) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(lockError ?? "")
@@ -416,7 +416,7 @@ struct CheckoutView: View {
         Button {
             Task { await lock() }
         } label: {
-            Label(locking ? "Ringing up…" : "Ring up", systemImage: "bolt.fill")
+            Label(locking ? "Scanning…" : "Scan", systemImage: "viewfinder")
                 .font(.seed(.title2, .bold))
                 .lineLimit(1)
                 .fixedSize()
@@ -426,7 +426,7 @@ struct CheckoutView: View {
         .primaryButton()
         .disabled(locking || !canRingUp || billOpen || app.teaching)
         .opacity(billOpen || app.teaching ? 0.4 : 1)
-        .accessibilityLabel("Ring up the items in view")
+        .accessibilityLabel("Scan the items in view")
     }
 
     /// A frozen bill is on the counter (not reopened with Scan more).
