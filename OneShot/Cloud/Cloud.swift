@@ -1,3 +1,4 @@
+import AuthenticationServices
 import CryptoKit
 import Foundation
 import Observation
@@ -78,7 +79,11 @@ final class Account {
     /// service key). App Store 5.1.1(v). The device's own copy is a separate choice (`Store.eraseEverything`).
     func deleteAccount() async throws {
         let client = try require()
-        try await client.functions.invoke("delete-account")
+        // An Apple account confirms with Apple once more, for a fresh code the server uses to revoke the Apple token.
+        let viaApple = client.auth.currentUser?.identities?.contains { $0.provider == "apple" } ?? false
+        let code = viaApple ? try await AppleReauth.authorizationCode() : nil
+        try await client.functions.invoke("delete-account",
+                                          options: FunctionInvokeOptions(body: ["apple_authorization_code": code ?? ""]))
         try? await client.auth.signOut()   // the user is gone; clear the local session either way
         email = nil
         SyncEngine.shared.reset()
@@ -102,5 +107,44 @@ enum AppleNonce {
 
     static func sha256(_ nonce: String) -> String {
         SHA256.hash(data: Data(nonce.utf8)).map { String(format: "%02x", $0) }.joined()
+    }
+}
+
+/// One Sign in with Apple prompt, for the authorization code Apple's token revocation needs.
+@MainActor
+final class AppleReauth: NSObject, ASAuthorizationControllerDelegate {
+    private var continuation: CheckedContinuation<String, Error>?
+
+    static func authorizationCode() async throws -> String {
+        let reauth = AppleReauth()
+        return try await withCheckedThrowingContinuation { continuation in
+            reauth.continuation = continuation
+            let request = ASAuthorizationAppleIDProvider().createRequest()
+            let controller = ASAuthorizationController(authorizationRequests: [request])
+            controller.delegate = reauth
+            controller.performRequests()
+            objc_setAssociatedObject(controller, "reauth", reauth, .OBJC_ASSOCIATION_RETAIN)   // lives as long as the sheet
+        }
+    }
+
+    nonisolated func authorizationController(controller: ASAuthorizationController,
+                                             didCompleteWithAuthorization authorization: ASAuthorization) {
+        let code = (authorization.credential as? ASAuthorizationAppleIDCredential)?.authorizationCode
+            .flatMap { String(data: $0, encoding: .utf8) }
+        MainActor.assumeIsolated {
+            if let code {
+                continuation?.resume(returning: code)
+            } else {
+                continuation?.resume(throwing: CocoaError(.userCancelled))
+            }
+            continuation = nil
+        }
+    }
+
+    nonisolated func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        MainActor.assumeIsolated {
+            continuation?.resume(throwing: error)
+            continuation = nil
+        }
     }
 }

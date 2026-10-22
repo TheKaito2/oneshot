@@ -1,6 +1,7 @@
 // Deletes the caller's account and everything it owns (App Store Review Guideline 5.1.1(v)).
 //
-// POST with the user's access token: `Authorization: Bearer <access_token>`. Steps, each safe to repeat,
+// POST with the user's access token: `Authorization: Bearer <access_token>`, and for an account that signed in with
+// Apple, JSON {"apple_authorization_code": "<fresh code>"} so its Apple token can be revoked. Steps, each safe to repeat,
 // so a failed call can simply be retried:
 //   1. verify the JWT with the Auth server
 //   2. remove the shop's Storage objects (product-photos/<shop_id>/...)
@@ -8,6 +9,7 @@
 //   4. delete the auth user (would cascade the shop too; step 3 makes the order explicit)
 // Responds 200 {"deleted": true}, 401 for a missing or bad token, 405 for other methods, 500 on failure.
 import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2";
+import { importPKCS8, SignJWT } from "npm:jose@5";
 
 const BUCKET = "product-photos";
 
@@ -21,6 +23,40 @@ function secretKey(): string {
 
 function reply(status: number, body: Record<string, unknown>): Response {
   return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+}
+
+// Sign in with Apple: Apple requires an app to revoke the user's Apple token when the account is deleted. The app sends
+// a fresh authorization code (the user confirms with Apple once); it is exchanged for a token, which is revoked.
+// The client secret is a 5-minute ES256 JWT signed with the Sign in with Apple key (function secrets APPLE_*).
+async function revokeApple(code: string): Promise<void> {
+  const env = (name: string) => {
+    const value = Deno.env.get(name);
+    if (!value) throw new Error(`missing ${name}`);
+    return value;
+  };
+  const clientId = env("APPLE_CLIENT_ID");
+  const key = await importPKCS8(env("APPLE_PRIVATE_KEY").replace(/\\+n/g, "\n"), "ES256");
+  const now = Math.floor(Date.now() / 1000);
+  const clientSecret = await new SignJWT({})
+    .setProtectedHeader({ alg: "ES256", kid: env("APPLE_KEY_ID") })
+    .setIssuer(env("APPLE_TEAM_ID")).setSubject(clientId).setAudience("https://appleid.apple.com")
+    .setIssuedAt(now).setExpirationTime(now + 300)
+    .sign(key);
+  const form = (fields: Record<string, string>) => ({
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams(fields),
+  });
+  const exchanged = await fetch("https://appleid.apple.com/auth/token",
+    form({ client_id: clientId, client_secret: clientSecret, code, grant_type: "authorization_code" }));
+  if (!exchanged.ok) throw new Error(`apple token exchange ${exchanged.status}`);
+  const tokens = await exchanged.json();
+  const token = tokens.refresh_token ?? tokens.access_token;
+  const revoked = await fetch("https://appleid.apple.com/auth/revoke", form({
+    client_id: clientId, client_secret: clientSecret, token,
+    token_type_hint: tokens.refresh_token ? "refresh_token" : "access_token",
+  }));
+  if (!revoked.ok) throw new Error(`apple revoke ${revoked.status}`);
 }
 
 // Every object path under `prefix`, walking folders (Storage lists one level at a time).
@@ -65,10 +101,17 @@ Deno.serve(async (req) => {
       if (error) throw error;
     }
 
-    // TODO(sign-in-with-apple): once Apple sign-in is enabled, revoke the user's Apple token here, before the
-    // user is deleted: POST https://appleid.apple.com/auth/revoke with client_id, a client_secret JWT signed by
-    // the Sign in with Apple key (secret APPLE_PRIVATE_KEY etc. in this function's env), and the refresh token
-    // from the authorization code the app sends. Apple requires this for apps offering Sign in with Apple.
+    // An Apple account: revoke its Apple token first. A failure is logged and the deletion goes on (the user asked
+    // for it; the Apple link then shows in their Apple ID settings, where they can remove it themselves).
+    const body = await req.json().catch(() => ({}));
+    const appleCode = typeof body?.apple_authorization_code === "string" ? body.apple_authorization_code : null;
+    if (user.identities?.some((identity) => identity.provider === "apple")) {
+      if (appleCode) {
+        await revokeApple(appleCode).catch((error) => console.error("apple revoke failed", error));
+      } else {
+        console.error("apple user deleted without an authorization code; token not revoked");
+      }
+    }
 
     const { error: deleteError } = await admin.auth.admin.deleteUser(user.id);
     if (deleteError) throw deleteError;
