@@ -6,8 +6,8 @@ cd "$(dirname "$0")/.."
 OUT=${1:-$PWD/../OneShot.zip}
 STAGE=$(mktemp -d)
 mkdir -p "$STAGE/OneShot"
-# Devpost's file upload caps at 35 MB: the light and Thai screenshot sets, the iPhone onboarding, teach and scrolled-down shots and the training labels stay on GitHub only.
-git archive HEAD -- . ':!docs/screens/en-light' ':!docs/screens/th-dark' ':!data/labels' ':(glob,exclude)docs/screens/iphone/portrait-1[4-9]-*' ':(glob,exclude)docs/screens/iphone/portrait-2?-*' ':(glob,exclude)docs/screens/iphone/*-lower.jpg' ':(glob,exclude)docs/screens/iphone/*-month.jpg' ':(glob,exclude)docs/screens/iphone/portrait-0[568]-*' | tar -x -C "$STAGE/OneShot"
+# Devpost's file upload caps at 35 MB: the light and Thai screenshot sets, the iPhone onboarding, teach and scrolled-down shots, the iPad scrolled-down shots and the training labels stay on GitHub only.
+git archive HEAD -- . ':!docs/screens/en-light' ':!docs/screens/th-dark' ':!data/labels' ':(glob,exclude)docs/screens/iphone/portrait-1[4-9]-*' ':(glob,exclude)docs/screens/iphone/portrait-2?-*' ':(glob,exclude)docs/screens/iphone/*-lower.jpg' ':(glob,exclude)docs/screens/iphone/*-month.jpg' ':(glob,exclude)docs/screens/iphone/portrait-0[568]-*' ':(glob,exclude)docs/screens/en-dark/*-lower.jpg' ':(glob,exclude)docs/screens/en-dark/*-month.jpg' | tar -x -C "$STAGE/OneShot"
 xcodebuild -project OneShot.xcodeproj -scheme OneShot -configuration Release \
   -destination 'generic/platform=iOS Simulator' -derivedDataPath build -quiet build
 cp -R build/Build/Products/Release-iphonesimulator/OneShot.app "$STAGE/OneShot-simulator.app"
