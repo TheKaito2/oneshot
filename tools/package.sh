@@ -6,11 +6,15 @@ cd "$(dirname "$0")/.."
 OUT=${1:-$PWD/../OneShot.zip}
 STAGE=$(mktemp -d)
 mkdir -p "$STAGE/OneShot"
-# Devpost's file upload caps at 35 MB: the light and Thai screenshot sets stay on GitHub only.
-git archive HEAD -- . ':!docs/screens/en-light' ':!docs/screens/th-dark' | tar -x -C "$STAGE/OneShot"
+# Devpost's file upload caps at 35 MB: the light and Thai screenshot sets and the training labels stay on GitHub only.
+git archive HEAD -- . ':!docs/screens/en-light' ':!docs/screens/th-dark' ':!data/labels' | tar -x -C "$STAGE/OneShot"
 xcodebuild -project OneShot.xcodeproj -scheme OneShot -configuration Release \
   -destination 'generic/platform=iOS Simulator' -derivedDataPath build -quiet build
 cp -R build/Build/Products/Release-iphonesimulator/OneShot.app "$STAGE/OneShot-simulator.app"
+# Symbols out (29 -> 12 MB with the Supabase SDK linked: the zip has a 35 MB upload cap), then the simulator's ad-hoc
+# signature again, which stripping invalidates.
+xcrun strip "$STAGE/OneShot-simulator.app/OneShot" 2>/dev/null
+codesign --force --sign - "$STAGE/OneShot-simulator.app"
 cat > "$STAGE/README-FIRST.txt" <<'TXT'
 OneShot — iPad cashier with on-device AI
 
@@ -23,6 +27,6 @@ OneShot-simulator.app    Ready-made build for the iPad simulator:
                          Settings › Demo adds two weeks of sample sales for Home and Reports.
 TXT
 rm -f "$OUT"
-(cd "$STAGE" && zip -qry "$OUT" .)   # -y keeps the .app's symlinks
+(cd "$STAGE" && zip -9qry "$OUT" .)   # -y keeps the .app's symlinks; -9: the 35 MB cap is close
 rm -rf "$STAGE"
 ls -lh "$OUT"
