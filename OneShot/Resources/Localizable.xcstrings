@@ -685,6 +685,16 @@
         }
       }
     },
+    "Cart (%lld)" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตะกร้า (%lld)"
+          }
+        }
+      }
+    },
     "Cash" : {
       "localizations" : {
         "th" : {
@@ -2893,6 +2903,16 @@
         }
       }
     },
+    "Scanner" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สแกน"
+          }
+        }
+      }
+    },
     "Search items" : {
       "localizations" : {
         "th" : {
@@ -3075,6 +3095,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ขาด %@"
+          }
+        }
+      }
+    },
+    "Show" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แสดง"
           }
         }
       }

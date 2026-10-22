@@ -16,7 +16,7 @@ final class TourTests: XCTestCase {
             "Ring up the items in view": "คิดเงินสินค้าที่อยู่ในภาพ", "Back": "กลับ", "Charge": "เก็บเงิน",
             "Add two weeks of sample sales": "เพิ่มยอดขายตัวอย่าง 2 สัปดาห์", "Add sample sales": "เพิ่มยอดขายตัวอย่าง",
             "This month": "เดือนนี้", "Add items": "เพิ่มสินค้า", "Scan more items": "สแกนเพิ่ม",
-            "Start over": "เริ่มใหม่", "Done": "เสร็จ", "Demo & sample data": "เดโมและข้อมูลตัวอย่าง",
+            "Start over": "เริ่มใหม่", "Done": "เสร็จ", "Demo & sample data": "เดโมและข้อมูลตัวอย่าง", "Scanner": "สแกน", "Cart": "ตะกร้า",
         ][english] ?? english
     }
 
@@ -109,8 +109,8 @@ final class TourTests: XCTestCase {
             sleep(3)   // demo photo and its boxes
             shot("\(o)-03-checkout-live")
             if UIDevice.current.userInterfaceIdiom == .phone {
-                // iPhone: the cart stays hidden until Ring up, then slides in.
-                XCTAssertFalse(app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", label("Charge"))).firstMatch.exists,
+                // iPhone: the cart is the page beside the scanner, off screen until Ring up.
+                XCTAssertFalse(app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", label("Charge"))).firstMatch.isHittable,
                                "the empty cart shows before Ring up")
             }
             let ringUp = button(label("Ring up the items in view"))
@@ -121,6 +121,7 @@ final class TourTests: XCTestCase {
             XCTAssertTrue(addItems.waitForExistence(timeout: 30), "no bill after Ring up")
             sleep(1)
             shot("\(o)-04-checkout-bill")
+            showPage("Scanner")   // stacked layouts page between the scanner and the cart
             do {
                 addItems.tap()
                 let scanMore = button(label("Scan more items"))
@@ -136,6 +137,7 @@ final class TourTests: XCTestCase {
                 XCTAssertTrue(addItems.waitForExistence(timeout: 30), "no merged bill after the second Ring up")
                 sleep(1)
                 shot("\(o)-07-bill-merged")
+                showPage("Cart")
             }
             let charge = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", label("Charge"))).firstMatch
             if charge.waitForExistence(timeout: 3), charge.isEnabled {
@@ -150,7 +152,7 @@ final class TourTests: XCTestCase {
             } else {
                 shot("\(o)-08-charge-disabled")
             }
-            button(label("Start over")).tap()
+            visible(label("Start over")).tap()
             sleep(1)
 
             go("Products")
@@ -258,6 +260,21 @@ final class TourTests: XCTestCase {
             springboard.buttons[title].tap()
             return
         }
+    }
+
+    /// Stacked Checkout: the Scanner / Cart switch, when there is one.
+    private func showPage(_ name: String) {
+        let segment = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", label(name))).firstMatch   // "Cart (12)"
+        if segment.exists, segment.isHittable {
+            segment.tap()
+            sleep(1)
+        }
+    }
+
+    /// The on-screen one of several same-named buttons (the zone's and the cart's Start over).
+    private func visible(_ label: String) -> XCUIElement {
+        let all = app.buttons.matching(NSPredicate(format: "label == %@", label))
+        return (0..<all.count).map { all.element(boundBy: $0) }.first { $0.isHittable } ?? all.firstMatch
     }
 
     /// A Settings row (a navigation link reads its title, then its value).

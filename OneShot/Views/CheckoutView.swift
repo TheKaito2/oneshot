@@ -26,6 +26,54 @@ struct CheckoutView: View {
 
     private var camera: CameraController { app.camera }
 
+    /// Stacked layouts (iPhone, iPad portrait): the scanner and the cart are two pages side by side.
+    private enum Page: Hashable { case scanner, cart }
+    @State private var page: Page? = .scanner
+
+    /// Swipe between the scanner and the cart to double-check a bill against the photo (Krist, 22 Oct). Ring up
+    /// turns to the cart; Scan more and Start over turn back. With no bill the cart is empty, so it stays shut.
+    private func pager(height: CGFloat) -> some View {
+        VStack(spacing: 12) {
+            if billOpen {
+                Picker("Show", selection: Binding(get: { page ?? .scanner }, set: { new in withAnimation(.snappy) { page = new } })) {
+                    Text("Scanner").tag(Page.scanner)
+                    Text("Cart (\(app.scan?.lines(catalog: app.catalog).reduce(0) { $0 + $1.quantity } ?? 0))").tag(Page.cart)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 20)
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+            ScrollView(.horizontal) {
+                HStack(spacing: 0) {
+                    VStack(spacing: 14) {
+                        scanZone.frame(maxHeight: .infinity)
+                        // A bill on the counter: its own Add items / Start over buttons are in the zone.
+                        if !billOpen {
+                            controls(tipsFit: true)
+                        }
+                    }
+                    .padding(20)
+                    .containerRelativeFrame(.horizontal)
+                    .id(Page.scanner)
+                    TicketPanel(app: app)
+                        .padding(20)
+                        .containerRelativeFrame(.horizontal)
+                        .id(Page.cart)
+                }
+                .scrollTargetLayout()
+            }
+            .scrollTargetBehavior(.paging)
+            .scrollPosition(id: $page)
+            .scrollIndicators(.hidden)
+            .scrollDisabled(!billOpen)
+        }
+        .padding(.top, billOpen ? 12 : 0)
+        .animation(.snappy, value: billOpen)
+        .onChange(of: billOpen) { _, open in
+            withAnimation(.spring(duration: 0.45, bounce: 0.15)) { page = open ? .cart : .scanner }
+        }
+    }
+
     var body: some View {
         GeometryReader { geometry in
             // Side by side only when the zone keeps room for its controls beside the ticket. Decided by the width
@@ -33,33 +81,27 @@ struct CheckoutView: View {
             // side by side there crushed the controls until Ring up wrapped one letter a line (seen 18 Oct).
             // The ticket keeps a full 400 pt beside it: at ~320 its item names wrapped one letter a line (seen 18 Oct).
             let wide = geometry.size.width >= 960
-            // Stacked (iPhone, iPad portrait): no empty ticket under the camera. The camera gets the screen, upright
-            // and tall, until Ring up; then the cart slides in from the right (Krist, 22 Oct).
-            let cameraOnly = !wide && !billOpen && !app.teaching
-            let layout = wide ? AnyLayout(HStackLayout(spacing: 20)) : AnyLayout(VStackLayout(spacing: 20))
-            layout {
-                VStack(spacing: 14) {
-                    // Stacked: the zone takes its 36 % first and the ticket's list scrolls in the rest. Without the
-                    // priority, landscape with the sidebar docked squeezed the zone to ~200 pt (19 Oct).
-                    // iPhone with a bill open: the frozen photo shrinks so the ticket shows more than one line.
-                    let zoneShare = billOpen && geometry.size.height < 800 ? 0.22 : 0.36
-                    scanZone.frame(maxHeight: wide || cameraOnly ? .infinity : geometry.size.height * zoneShare)
-                        .frame(minHeight: wide || cameraOnly ? nil : geometry.size.height * min(zoneShare, 0.3))
-                    // Tips only where they fit: on a short stacked screen they pushed Charge off the bottom.
-                    // iPhone with a bill open or teaching: the greyed controls took the panel's room (seen 19–20 Oct);
-                    // the bill's own Add items / Start over buttons and the panel's Cancel cover what's left to do.
-                    if !((billOpen || app.teaching) && geometry.size.height < 800) {
-                        controls(tipsFit: wide || cameraOnly || geometry.size.height > 1000)
+            if wide || app.teaching {
+                let layout = wide ? AnyLayout(HStackLayout(spacing: 20)) : AnyLayout(VStackLayout(spacing: 20))
+                layout {
+                    VStack(spacing: 14) {
+                        // Stacked while teaching: the zone takes its 36 % first and the panel scrolls in the rest.
+                        // Without the priority, landscape with the sidebar docked squeezed the zone to ~200 pt (19 Oct).
+                        scanZone.frame(maxHeight: wide ? .infinity : geometry.size.height * 0.36)
+                            .frame(minHeight: wide ? nil : geometry.size.height * 0.3)
+                        // iPhone teaching: the greyed controls took the panel's room (seen 19–20 Oct); its Cancel
+                        // covers what's left to do.
+                        if !(app.teaching && geometry.size.height < 800) {
+                            controls(tipsFit: wide || geometry.size.height > 1000)
+                        }
                     }
-                }
-                if !cameraOnly {
                     sidePanel
                         .frame(width: wide ? 400 : nil)
-                        .transition(.move(edge: .trailing).combined(with: .opacity))
                 }
+                .padding(20)
+            } else {
+                pager(height: geometry.size.height)
             }
-            .padding(20)
-            .animation(.spring(duration: 0.45, bounce: 0.15), value: cameraOnly)
         }
         // The workspace doesn't scroll: at accessibility text sizes the ticket pushed Charge off the screen (18 Oct).
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
