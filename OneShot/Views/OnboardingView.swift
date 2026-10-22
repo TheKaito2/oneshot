@@ -23,6 +23,7 @@ struct OnboardingView: View {
     @State private var problem: String?
     @State private var cameraStatus = AVCaptureDevice.authorizationStatus(for: .video)
     @State private var signingIn = false
+    @State private var account = Account.shared
     @FocusState private var typing: Bool
 
     /// The account step only exists in a build that has a backend to sign in to.
@@ -142,7 +143,7 @@ struct OnboardingView: View {
     private var primaryTitle: LocalizedStringKey {
         switch step {
         case .welcome: "Get started"
-        case .account: "Not now"
+        case .account: account.isSignedIn ? "Done" : "Not now"
         case .camera where cameraStatus == .notDetermined: "Skip"
         case .promptPay where draftID.isEmpty: "Skip"
         case .pin where pin.isEmpty: "Skip"

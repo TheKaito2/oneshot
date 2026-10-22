@@ -4040,6 +4040,46 @@
           }
         }
       }
+    },
+    "You're signed in" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลงชื่อเข้าใช้แล้ว"
+          }
+        }
+      }
+    },
+    "Backing up your shop…" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำลังสำรองข้อมูลร้าน…"
+          }
+        }
+      }
+    },
+    "Your shop is backed up." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สำรองข้อมูลร้านแล้ว"
+          }
+        }
+      }
+    },
+    "Your shop backs up in a moment." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำลังจะเริ่มสำรองข้อมูลร้าน"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

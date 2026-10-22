@@ -14,6 +14,8 @@ struct AccountView: View {
     @State private var problem: String?
     @State private var confirmingDelete = false
     @State private var offeringErase = false
+    /// Just signed in on this screen: the confirmation shows until it's closed.
+    @State private var justSignedIn = false
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
@@ -22,6 +24,23 @@ struct AccountView: View {
         NavigationStack {
             Form {
                 if let signedIn = account.email {
+                    if justSignedIn {
+                        Section {
+                            VStack(spacing: 10) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.system(size: 56))
+                                    .foregroundStyle(Brand.positive)
+                                    .symbolEffect(.bounce, value: justSignedIn)
+                                Text("You're signed in").font(.seed(.title3, .bold)).foregroundStyle(Brand.ink)
+                                Text(sync.running ? "Backing up your shop…" : sync.lastSynced != nil ? "Your shop is backed up." : "Your shop backs up in a moment.")
+                                    .font(.seed(.subheadline)).foregroundStyle(Brand.body)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .accessibilityElement(children: .combine)
+                        }
+                        .frostedRows()
+                    }
                     Section {
                         LabeledContent("Signed in as", value: signedIn)
                         Button("Sign out") { run { try await account.signOut() } }
@@ -72,7 +91,7 @@ struct AccountView: View {
                                 let nonce = appleNonce
                                 run {
                                     try await account.signInWithApple(idToken: token, nonce: nonce)
-                                    dismiss()
+                                    signedInNow()
                                 }
                             case .failure(let error):
                                 if (error as? ASAuthorizationError)?.code != .canceled { problem = error.localizedDescription }
@@ -83,7 +102,7 @@ struct AccountView: View {
                         Button {
                             run {
                                 try await account.signInWithGoogle()
-                                dismiss()
+                                signedInNow()
                             }
                         } label: {
                             Label("Continue with Google", systemImage: "globe")
@@ -104,6 +123,7 @@ struct AccountView: View {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
             .disabled(busy)
+            .sensoryFeedback(.success, trigger: justSignedIn) { _, now in now }
             .onAppear { sync.countPending() }
             .confirmationDialog("Delete your account?", isPresented: $confirmingDelete, titleVisibility: .visible) {
                 Button("Delete account", role: .destructive) {
@@ -131,6 +151,11 @@ struct AccountView: View {
                 Text("The shop is still on this device. Erase it too?")
             }
         }
+    }
+
+    private func signedInNow() {
+        withAnimation(.spring) { justSignedIn = true }
+        Task { await sync.sync(app) }   // the first backup starts now, and the card shows it
     }
 
     private func run(_ work: @escaping () async throws -> Void) {
