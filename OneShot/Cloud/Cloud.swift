@@ -40,6 +40,17 @@ final class Account {
         try await require().auth.signInWithOTP(email: email, shouldCreateUser: true)
     }
 
+    /// Where Google sends the user back; must be in the project's Auth › URL Configuration › Redirect URLs.
+    static let redirect = URL(string: "oneshot://login-callback")!
+
+    /// Google, in the system's sign-in sheet (Supabase OAuth; no Google SDK). Offering it means Sign in with Apple must
+    /// be offered too before App Store review (guideline 4.8).
+    func signInWithGoogle() async throws {
+        try await require().auth.signInWithOAuth(provider: .google, redirectTo: Self.redirect) { session in
+            session.prefersEphemeralWebBrowserSession = true   // no shared Safari cookies: always the account picker
+        }
+    }
+
     /// Accounts given a password in the Supabase dashboard (App Review's demo account) can sign in without a code.
     func signIn(email: String, password: String) async throws {
         try await require().auth.signIn(email: email, password: password)

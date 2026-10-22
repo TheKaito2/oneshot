@@ -58,6 +58,17 @@ struct AccountView: View {
                     .frostedRows()
                 } else if !codeSent {
                     Section {
+                        Button {
+                            run {
+                                try await account.signInWithGoogle()
+                                dismiss()
+                            }
+                        } label: {
+                            Label("Continue with Google", systemImage: "globe")
+                        }
+                    }
+                    .frostedRows()
+                    Section {
                         TextField("Email", text: $email)
                             .keyboardType(.emailAddress).textContentType(.emailAddress)
                             .textInputAutocapitalization(.never).autocorrectionDisabled()
