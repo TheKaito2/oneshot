@@ -140,6 +140,8 @@ struct AccountView: View {
             defer { busy = false }
             do {
                 try await work()
+            } catch let error as ASWebAuthenticationSessionError where error.code == .canceledLogin {
+                return   // the sheet was closed: nothing to report
             } catch {
                 problem = error.localizedDescription
             }
