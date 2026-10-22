@@ -149,6 +149,10 @@ struct StatementCard: View {
     @State private var lastMonth = false
     @State private var pdf: URL?
     @State private var previewing = false
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    /// The preview's width and the page's own height, to fit the page on a phone.
+    @State private var available: CGFloat = 595 + 32
+    @State private var pageHeight: CGFloat = 842
 
     private var month: DateInterval {
         let calendar = Calendar.current
@@ -161,25 +165,44 @@ struct StatementCard: View {
         StatementView(month: month, sales: sales, catalog: catalog, shopName: shopName, promptPayID: promptPayID)
     }
 
+    private var monthPicker: some View {
+        Picker("Month", selection: $lastMonth) {
+            Text("This month").tag(false)
+            Text("Last month").tag(true)
+        }
+        .pickerStyle(.segmented)
+    }
+
+    @ViewBuilder
+    private var actions: some View {
+        Button("Preview", systemImage: "doc.text.magnifyingglass") { previewing = true }
+            .buttonStyle(.glass)
+            .lineLimit(1)
+        if let pdf {
+            ShareLink(item: pdf) { Label("Share PDF", systemImage: "square.and.arrow.up").lineLimit(1) }
+                .primaryButton()
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Label("Monthly statement for the bank", systemImage: "building.columns").font(.seed(.headline))
             Text("A month of takings on one page: daily totals, refunds, and the PromptPay share a bank can check against its own records. For a loan application or your own books.")
                 .font(.seed(.callout))
                 .foregroundStyle(Brand.muted)
-            HStack {
-                Picker("Month", selection: $lastMonth) {
-                    Text("This month").tag(false)
-                    Text("Last month").tag(true)
+            // One row on iPad; on iPhone the buttons go under the month (squeezed into one row they read
+            // "Thi…" and "Previe/w").
+            if sizeClass == .compact {
+                VStack(spacing: 10) {
+                    monthPicker
+                    HStack { actions }
+                        .frame(maxWidth: .infinity, alignment: .trailing)
                 }
-                .pickerStyle(.segmented)
-                .frame(maxWidth: 320)
-                Spacer()
-                Button("Preview", systemImage: "doc.text.magnifyingglass") { previewing = true }
-                    .buttonStyle(.glass)
-                if let pdf {
-                    ShareLink(item: pdf) { Label("Share PDF", systemImage: "square.and.arrow.up") }
-                        .primaryButton()
+            } else {
+                HStack {
+                    monthPicker.frame(maxWidth: 320)
+                    Spacer()
+                    actions
                 }
             }
         }
@@ -188,11 +211,18 @@ struct StatementCard: View {
         .sheet(isPresented: $previewing) {
             NavigationStack {
                 ScrollView {
+                    // The A4 page is 595 pt wide: on iPhone it's shown scaled down whole, as a PDF viewer would.
+                    let scale = min(1, (available - 32) / 595)
                     statement
+                        .fixedSize(horizontal: false, vertical: true)   // its own height, not the scaled frame's
+                        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { pageHeight = $0 }
+                        .scaleEffect(scale, anchor: .topLeading)
+                        .frame(width: 595 * scale, height: pageHeight * scale, alignment: .topLeading)
                         .shadow(color: .black.opacity(0.15), radius: 12, y: 4)
-                        .padding(24)
+                        .padding(.vertical, 24)
                         .frame(maxWidth: .infinity)
                 }
+                .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { available = $0 }
                 .background(GridBackground())
                 .navigationTitle("Statement")
                 .navigationBarTitleDisplayMode(.inline)
