@@ -268,11 +268,30 @@ struct ProductPhoto: View {
         .onGeometryChange(for: CGFloat.self) { min($0.size.width, $0.size.height) } action: { side = $0 }
         .task(id: product.id) {
             let sku = product.id
-            (image, isCutout) = await Task.detached(priority: .utility) {
+            if let cached = Self.cache.object(forKey: sku as NSString) {
+                (image, isCutout) = (cached.image, cached.isCutout)
+                return
+            }
+            let loaded = await Task.detached(priority: .utility) {
                 let cutout = Bundle.main.url(forResource: "product-\(sku)", withExtension: "png")
                 let url = cutout ?? Bundle.main.url(forResource: "product-\(sku)", withExtension: "jpg") ?? CropStore.photos(for: sku).first
-                return (url.flatMap { UIImage(contentsOfFile: $0.path()) }, cutout != nil)
+                return Cached(image: url.flatMap { UIImage(contentsOfFile: $0.path()) }, isCutout: cutout != nil)
             }.value
+            Self.cache.setObject(loaded, forKey: sku as NSString)
+            (image, isCutout) = (loaded.image, loaded.isCutout)
+        }
+    }
+
+    /// Decoded once per product: each visit to Products read and decoded every picture from disk again (22 Oct).
+    /// CropStore forgets a product's entry when its learned photos change.
+    nonisolated(unsafe) static let cache = NSCache<NSString, Cached>()   // NSCache is thread-safe
+
+    final class Cached: NSObject, @unchecked Sendable {   // immutable after init
+        let image: UIImage?
+        let isCutout: Bool
+        init(image: UIImage?, isCutout: Bool) {
+            self.image = image
+            self.isCutout = isCutout
         }
     }
 }

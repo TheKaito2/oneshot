@@ -135,6 +135,7 @@ struct LockedScan: Identifiable {
 /// Every cashier pick becomes a training photo: Documents/Crops/<sku>/, visible in the Files app.
 enum CropStore {
     static func save(_ crop: CGImage, sku: String) {
+        ProductPhoto.cache.removeObject(forKey: sku as NSString)   // its first photo may be this one
         // Quick-add saves 8 crops in a burst, so the timestamp alone would collide.
         write(crop, to: "Crops/\(sku)/\(Int(Date().timeIntervalSince1970 * 1000))-\(UUID().uuidString.prefix(8)).jpg")
     }
@@ -150,6 +151,7 @@ enum CropStore {
     /// The owner removes a learned photo (a wrong pick, a blurry shot); rebuild the gallery for its SKU after.
     static func delete(_ url: URL) throws {
         try FileManager.default.removeItem(at: url)
+        ProductPhoto.cache.removeObject(forKey: url.deletingLastPathComponent().lastPathComponent as NSString)
     }
 
     /// JPEG under Documents. A failed save must not block the sale; it only costs one photo, so it is logged.
@@ -157,6 +159,7 @@ enum CropStore {
     static func write(_ data: Data, to relativePath: String) {
         do {
             let url = URL.documentsDirectory.appending(path: relativePath)
+            ProductPhoto.cache.removeObject(forKey: url.deletingLastPathComponent().lastPathComponent as NSString)
             try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
             try data.write(to: url, options: .atomic)
         } catch {

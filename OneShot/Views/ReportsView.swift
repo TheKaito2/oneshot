@@ -89,7 +89,7 @@ struct ReportsView: View {
                 }
             }
             .onChange(of: salesKey, initial: true) {
-                sales = records.map(\.sale)
+                if sales.count != records.count || sales.last?.id != records.last?.id { sales = records.map(\.sale) }
                 refresh()
             }
             .onChange(of: period) { refresh() }

@@ -153,7 +153,6 @@ struct SettingsView: View {
             draftID = promptPayID
             hasPIN = RefundPIN.isSet()
         }
-        .task { await writeBackup() }
     }
 
     // MARK: - Root pieces
@@ -265,7 +264,13 @@ struct SettingsView: View {
         }
     }
 
+    /// The backup folder is written when this page opens, not on every visit to Settings: it copies every sale and
+    /// photo, and as a tab Settings appeared on each tap of the bar (22 Oct).
     private var backupPage: some View {
+        backupForm.task { await writeBackup() }
+    }
+
+    private var backupForm: some View {
         page("Backup & restore") {
             Section {
                 Button("Back up…", systemImage: "externaldrive") { exporting = true }

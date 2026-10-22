@@ -117,7 +117,7 @@ struct HomeView: View {
         .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
         .background(GridBackground())
         .task(id: insightInputs) { await generateInsight() }
-        .onChange(of: salesKey, initial: true) { sales = records.map(\.sale) }
+        .onChange(of: salesKey, initial: true) { if sales.count != records.count || sales.last?.id != records.last?.id { sales = records.map(\.sale) } }
     }
 
     // MARK: - Header and hero
