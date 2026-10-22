@@ -18,7 +18,6 @@ struct CheckoutView: View {
     @State private var demoFrame: CGImage?
     @State private var demoBoxes: [Box] = []
     @AppStorage(SettingsKey.debugOverlay) private var debugOverlay = false
-    @Environment(\.horizontalSizeClass) private var sizeClass
     /// One tip at a time under the zone: how to ring up first, then how to teach a product.
     @State private var tips = TipGroup(.ordered) {
         LockTip()
@@ -34,9 +33,9 @@ struct CheckoutView: View {
             // side by side there crushed the controls until Ring up wrapped one letter a line (seen 18 Oct).
             // The ticket keeps a full 400 pt beside it: at ~320 its item names wrapped one letter a line (seen 18 Oct).
             let wide = geometry.size.width >= 960
-            // iPhone: no empty ticket under the camera. The camera gets the screen until Ring up, then the cart
-            // slides in from the right (Krist, 22 Oct: the empty "Current sale" card made it look cramped).
-            let cameraOnly = sizeClass == .compact && !wide && !billOpen && !app.teaching
+            // Stacked (iPhone, iPad portrait): no empty ticket under the camera. The camera gets the screen, upright
+            // and tall, until Ring up; then the cart slides in from the right (Krist, 22 Oct).
+            let cameraOnly = !wide && !billOpen && !app.teaching
             let layout = wide ? AnyLayout(HStackLayout(spacing: 20)) : AnyLayout(VStackLayout(spacing: 20))
             layout {
                 VStack(spacing: 14) {
@@ -119,8 +118,8 @@ struct CheckoutView: View {
                 switch camera.state {
                 case .idle:
                     ProgressView().tint(.white)
-                case .running(let device):
-                    CameraPreview(session: camera.session, device: device, onAngle: camera.setPreviewAngle)
+                case .running:
+                    CameraPreview(session: camera.session, onAngle: camera.setPreviewAngle)
                     if !app.teaching {
                         BoxOverlay(marks: liveMarks(camera.boxes), imageSize: camera.frameSize)
                     }
