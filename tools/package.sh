@@ -22,7 +22,7 @@ OneShot/                 Source code (open OneShot/README.md). Build: xcodegen g
 OneShot/docs/screens/    Screenshots of every page (dark, iPad and iPhone). Light and Thai sets: github.com/TheKaito2/oneshot.
 OneShot-simulator.app    Ready-made build for the iPad simulator:
                            xcrun simctl install booted OneShot-simulator.app
-                           xcrun simctl launch booted com.krist.hackday.oneshot
+                           xcrun simctl launch booted com.kristpaul.oneshot
                          The demo camera is on in the simulator (table photos stand in for the camera).
                          Settings › Demo adds two weeks of sample sales for Home and Reports.
 TXT

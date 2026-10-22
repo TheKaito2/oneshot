@@ -9,4 +9,4 @@ xcodegen generate --quiet
 xcodebuild -project OneShot.xcodeproj -scheme OneShot -configuration Release \
   -destination 'generic/platform=iOS' -derivedDataPath build -allowProvisioningUpdates -quiet build
 xcrun devicectl device install app --device "$DEVICE" build/Build/Products/Release-iphoneos/OneShot.app
-xcrun devicectl device process launch --device "$DEVICE" --terminate-existing com.krist.hackday.oneshot
+xcrun devicectl device process launch --device "$DEVICE" --terminate-existing com.kristpaul.oneshot

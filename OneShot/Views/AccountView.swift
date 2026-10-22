@@ -1,3 +1,4 @@
+import AuthenticationServices
 import SwiftData
 import SwiftUI
 
@@ -11,6 +12,8 @@ struct AccountView: View {
     @State private var code = ""
     @State private var codeSent = false
     @State private var usePassword = false
+    /// The nonce for the Apple request in flight; its hash went into the request.
+    @State private var appleNonce = ""
     @State private var password = ""
     @State private var busy = false
     @State private var problem: String?
@@ -18,6 +21,7 @@ struct AccountView: View {
     @State private var offeringErase = false
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         NavigationStack {
@@ -58,6 +62,29 @@ struct AccountView: View {
                     .frostedRows()
                 } else if !codeSent {
                     Section {
+                        SignInWithAppleButton(.continue) { request in
+                            appleNonce = AppleNonce.make()
+                            request.requestedScopes = [.email]
+                            request.nonce = AppleNonce.sha256(appleNonce)
+                        } onCompletion: { result in
+                            switch result {
+                            case .success(let authorization):
+                                guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
+                                      let token = credential.identityToken.flatMap({ String(data: $0, encoding: .utf8) }) else {
+                                    problem = String(localized: "Apple didn't return a sign-in token. Try again.")
+                                    return
+                                }
+                                let nonce = appleNonce
+                                run {
+                                    try await account.signInWithApple(idToken: token, nonce: nonce)
+                                    dismiss()
+                                }
+                            case .failure(let error):
+                                if (error as? ASAuthorizationError)?.code != .canceled { problem = error.localizedDescription }
+                            }
+                        }
+                        .signInWithAppleButtonStyle(colorScheme == .dark ? .white : .black)
+                        .frame(height: 48)
                         Button {
                             run {
                                 try await account.signInWithGoogle()

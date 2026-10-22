@@ -1,6 +1,6 @@
 name: OneShot
 options:
-  bundleIdPrefix: com.krist.hackday
+  bundleIdPrefix: com.kristpaul
   developmentLanguage: en
   deploymentTarget:
     iOS: "26.0"
@@ -57,7 +57,8 @@ targets:
           - UIInterfaceOrientationLandscapeRight
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.krist.hackday.oneshot
+        PRODUCT_BUNDLE_IDENTIFIER: com.kristpaul.oneshot
+        CODE_SIGN_ENTITLEMENTS: OneShot/OneShot.entitlements   # Sign in with Apple
         TARGETED_DEVICE_FAMILY: "1,2"   # iPhone and iPad
         COREML_CODEGEN_LANGUAGE: None
         SWIFT_EMIT_LOC_STRINGS: YES

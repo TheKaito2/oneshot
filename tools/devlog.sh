@@ -12,7 +12,7 @@ for i in {1..180}; do
   sleep 10
 done
 xcrun devicectl device install app --device "$DEVICE" build/Build/Products/Release-iphoneos/OneShot.app | grep -E "installed|rror"
-xcrun devicectl device process launch --console --terminate-existing --device "$DEVICE" com.krist.hackday.oneshot > "$LOG" 2>&1 &
+xcrun devicectl device process launch --console --terminate-existing --device "$DEVICE" com.kristpaul.oneshot > "$LOG" 2>&1 &
 PID=$!
 sleep "$SECONDS_TO_LOG"
 kill $PID 2>/dev/null

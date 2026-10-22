@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import Observation
 import Supabase
@@ -51,6 +52,12 @@ final class Account {
         }
     }
 
+    /// Sign in with Apple: the identity token from the system sheet, checked by Supabase against the nonce whose
+    /// SHA-256 went into the request (so a captured token can't be replayed). Guideline 4.8, since Google is offered.
+    func signInWithApple(idToken: String, nonce: String) async throws {
+        try await require().auth.signInWithIdToken(credentials: OpenIDConnectCredentials(provider: .apple, idToken: idToken, nonce: nonce))
+    }
+
     /// Accounts given a password in the Supabase dashboard (App Review's demo account) can sign in without a code.
     func signIn(email: String, password: String) async throws {
         try await require().auth.signIn(email: email, password: password)
@@ -82,5 +89,18 @@ final class Account {
             throw CocoaError(.featureUnsupported, userInfo: [NSLocalizedDescriptionKey: String(localized: "Accounts aren't available in this build.")])
         }
         return client
+    }
+}
+
+/// A fresh random nonce for Sign in with Apple, and its SHA-256 for the request.
+enum AppleNonce {
+    static func make() -> String {
+        var bytes = [UInt8](repeating: 0, count: 32)
+        guard SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes) == errSecSuccess else { return UUID().uuidString + UUID().uuidString }
+        return bytes.map { String(format: "%02x", $0) }.joined()
+    }
+
+    static func sha256(_ nonce: String) -> String {
+        SHA256.hash(data: Data(nonce.utf8)).map { String(format: "%02x", $0) }.joined()
     }
 }

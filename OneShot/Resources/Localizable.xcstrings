@@ -4020,6 +4020,16 @@
           }
         }
       }
+    },
+    "Apple didn't return a sign-in token. Try again." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple ไม่ได้ส่งข้อมูลลงชื่อเข้าใช้กลับมา ลองอีกครั้ง"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
