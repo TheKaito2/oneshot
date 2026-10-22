@@ -10,6 +10,7 @@ struct OneShotApp: App {
         SeedAppearance.apply()
         AudioMode.mixed()   // the first ring-up chime was silent in Silent Mode until a payment set the session
         Diagnostics.shared.start()
+        TrainingSamples.startWatching()
         // An install already in use (its catalog came over from the old files) never sees onboarding.
         if UserDefaults.standard.object(forKey: OnboardingKey.done) == nil, !Catalog.isEmpty(Store.context) {
             UserDefaults.standard.set(true, forKey: OnboardingKey.done)

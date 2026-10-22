@@ -389,6 +389,26 @@
         }
       }
     },
+    "After each paid sale, the counter photo (faces blurred on this device) and the items you confirmed are sent on Wi-Fi, at most 50 a day, to train OneShot's own recognition. Never prices or payment details. Kept up to 2 years; turn it off in Settings any time and they're deleted." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หลังการขายที่ชำระเงินแล้วแต่ละครั้ง รูปเคาน์เตอร์ (เบลอใบหน้าบนเครื่องนี้) และสินค้าที่คุณยืนยันจะถูกส่งผ่าน Wi-Fi ไม่เกิน 50 รูปต่อวัน เพื่อฝึกการจดจำของ OneShot เอง ไม่มีราคาหรือข้อมูลการชำระเงิน เก็บไว้ไม่เกิน 2 ปี ปิดได้ทุกเมื่อในตั้งค่า แล้วรูปจะถูกลบ"
+          }
+        }
+      }
+    },
+    "After each paid sale, the counter photo and the items you confirmed are kept." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หลังการขายที่ชำระเงินแล้วแต่ละครั้ง จะเก็บรูปเคาน์เตอร์และสินค้าที่คุณยืนยันไว้"
+          }
+        }
+      }
+    },
     "All" : {
       "localizations" : {
         "th" : {
@@ -405,6 +425,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "สินค้าทั้งหมด"
+          }
+        }
+      }
+    },
+    "Allow" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อนุญาต"
           }
         }
       }
@@ -1507,6 +1537,16 @@
         }
       }
     },
+    "Faces are blurred on this device before anything is sent." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ใบหน้าจะถูกเบลอบนเครื่องนี้ก่อนส่ง"
+          }
+        }
+      }
+    },
     "Float at opening" : {
       "localizations" : {
         "th" : {
@@ -1627,6 +1667,26 @@
         }
       }
     },
+    "Help improve OneShot" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ช่วยพัฒนา OneShot"
+          }
+        }
+      }
+    },
+    "Help improve OneShot?" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ช่วยพัฒนา OneShot ไหม?"
+          }
+        }
+      }
+    },
     "Hold over the items, then tap Scan" : {
       "localizations" : {
         "th" : {
@@ -1743,6 +1803,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เก็บไว้ในเครื่องนี้"
+          }
+        }
+      }
+    },
+    "Kept up to 2 years, or until you turn this off or delete your account." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เก็บไว้ไม่เกิน 2 ปี หรือจนกว่าคุณจะปิดหรือลบบัญชี"
           }
         }
       }
@@ -2187,6 +2257,16 @@
         }
       }
     },
+    "Off unless you turn it on. Turning it off deletes every photo already sent." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ปิดไว้จนกว่าคุณจะเปิด การปิดจะลบรูปที่ส่งไปแล้วทั้งหมด"
+          }
+        }
+      }
+    },
     "On" : {
       "localizations" : {
         "th" : {
@@ -2323,6 +2403,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เฉพาะคนที่รู้รหัสเท่านั้นที่คืนเงินได้ ตั้งภายหลังในการตั้งค่าได้"
+          }
+        }
+      }
+    },
+    "Only the OneShot developer sees them, to train OneShot's own recognition. Never sold, shared, or sent to other AI services." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เฉพาะผู้พัฒนา OneShot เท่านั้นที่เห็น เพื่อฝึกการจดจำของ OneShot เอง ไม่ขาย ไม่แบ่งปัน และไม่ส่งให้บริการ AI อื่น"
           }
         }
       }
@@ -2553,6 +2643,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ความเป็นส่วนตัวและช่วยเหลือ"
+          }
+        }
+      }
+    },
+    "Privacy policy" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "นโยบายความเป็นส่วนตัว"
           }
         }
       }
@@ -3189,6 +3289,26 @@
         }
       }
     },
+    "Sent" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ส่งแล้ว"
+          }
+        }
+      }
+    },
+    "Sent on Wi-Fi only, at most 50 photos a day. Never prices, shop name or payment details." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ส่งผ่าน Wi-Fi เท่านั้น ไม่เกิน 50 รูปต่อวัน ไม่มีราคา ชื่อร้าน หรือข้อมูลการชำระเงิน"
+          }
+        }
+      }
+    },
     "Series" : {
       "localizations" : {
         "th" : {
@@ -3259,12 +3379,32 @@
         }
       }
     },
+    "Share counter photos from your sales so OneShot recognises more products. Off unless you allow it." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แชร์รูปเคาน์เตอร์จากการขาย เพื่อให้ OneShot จดจำสินค้าได้มากขึ้น ปิดไว้จนกว่าคุณจะอนุญาต"
+          }
+        }
+      }
+    },
     "Share or print" : {
       "localizations" : {
         "th" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "แชร์หรือพิมพ์"
+          }
+        }
+      }
+    },
+    "Share photos to improve OneShot" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แชร์รูปเพื่อพัฒนา OneShot"
           }
         }
       }
@@ -3365,6 +3505,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "แสดงคำแนะนำอีกครั้ง"
+          }
+        }
+      }
+    },
+    "Sign in first, so the photos belong to your account and you can delete them at any time." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลงชื่อเข้าใช้ก่อน เพื่อให้รูปเป็นของบัญชีคุณ และลบได้ทุกเมื่อ"
           }
         }
       }
@@ -3661,6 +3811,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "การสอนสินค้าต้องใช้กล้องของเครื่อง ในซิมูเลเตอร์ให้สาธิตด้วยสินค้าที่สอนไว้แล้ว"
+          }
+        }
+      }
+    },
+    "Thank you. Photos are kept from your next sale." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขอบคุณ จะเริ่มเก็บรูปตั้งแต่การขายครั้งถัดไป"
           }
         }
       }
@@ -4021,6 +4181,16 @@
         }
       }
     },
+    "Turned off. Deleted %lld photos from our server." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ปิดแล้ว ลบรูป %lld รูปจากเซิร์ฟเวอร์ของเรา"
+          }
+        }
+      }
+    },
     "Two items show up here once they share a basket at least twice." : {
       "localizations" : {
         "th" : {
@@ -4051,6 +4221,16 @@
         }
       }
     },
+    "Waiting for Wi-Fi" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รอ Wi-Fi"
+          }
+        }
+      }
+    },
     "Waiting to sync" : {
       "localizations" : {
         "th" : {
@@ -4077,6 +4257,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ร้านของคุณขายอะไร?"
+          }
+        }
+      }
+    },
+    "What happens" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สิ่งที่เกิดขึ้น"
           }
         }
       }

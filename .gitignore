@@ -25,3 +25,4 @@ third_party/
 
 # Supabase project values (host + anon key) for local builds
 OneShot/Secrets.xcconfig
+data/collected/

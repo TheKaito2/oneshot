@@ -22,6 +22,7 @@ struct SettingsView: View {
     @AppStorage(SettingsKey.promptPayID) private var promptPayID = ""
     @AppStorage(SettingsKey.debugOverlay) private var debugOverlay = false
     @AppStorage(SettingsKey.shopName) private var shopName = ""
+    @AppStorage(TrainingSamples.optInKey) private var trainingOn = false
     @State private var draftID = ""
     @State private var hasPIN = false
     @State private var newPIN = ""
@@ -70,6 +71,12 @@ struct SettingsView: View {
                 Section("Data") {
                     NavigationLink { backupPage } label: {
                         IconRow("Backup & restore", icon: "externaldrive.fill", tint: Brand.sky)
+                    }
+                    if Cloud.isConfigured {
+                        NavigationLink { TrainingConsentView(app: app) } label: {
+                            IconRow("Help improve OneShot", icon: "sparkles", tint: Brand.sage,
+                                    value: trainingOn ? String(localized: "On") : String(localized: "Off"))
+                        }
                     }
                     // ponytail: iOS's own per-app language page; an instant in-app switch only if a shop asks.
                     Button {

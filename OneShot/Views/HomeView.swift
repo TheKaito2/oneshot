@@ -19,6 +19,8 @@ struct HomeView: View {
     let app: AppModel
 
     @AppStorage(SettingsKey.shopName) private var shopName = ""
+    @AppStorage(TrainingSamples.askedKey) private var trainingAsked = false
+    @State private var account = Account.shared
     /// Live from the store: a sale paid in Checkout or a refund in history shows here at once.
     @Query private var records: [SaleRecord]
     @Query(sort: \CloseRecord.date) private var closeRecords: [CloseRecord]
@@ -80,6 +82,10 @@ struct HomeView: View {
                         .card(padding: 18)
                 }
                 hero
+                // Asked once, only after the shop has used OneShot for real (5 sales) and only when signed in.
+                if Cloud.isConfigured, account.isSignedIn, !trainingAsked, records.count >= 5 {
+                    TrainingAskCard { trainingAsked = true }
+                }
                 SectionMarker(index: 1, total: 3, title: "Today", subtitle: ReportPeriod.today.comparison)
                 KPIRows {
                     KPITile(title: "Net sales", value: report.net.baht, symbol: "banknote",

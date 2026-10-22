@@ -96,6 +96,7 @@ struct TicketPanel: View {
                                                    ringUp: chargedAt.flatMap { charged in app.scan.map { charged.timeIntervalSince($0.lockedAt) } },
                                                    autoUnits: app.scan?.autoUnits, in: context)
                     app.applyToStock(sale)
+                    if let scan = app.scan { TrainingSamples.keep(scan) }   // opt-in only; checked inside
                     return sale
                 } catch {
                     // The customer has paid: PayView says so, and the next customer isn't blocked.

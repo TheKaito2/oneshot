@@ -38,6 +38,10 @@ insert into stock_moves (id, shop_id, sku, delta, reason, at) values
   ('bbbbbbbb-30be-0000-0000-000000000001', 'bbbbbbbb-0000-0000-0000-00000000000b', 'lays', 5, 'receive', now());
 insert into storage.objects (bucket_id, name, owner) values
   ('product-photos', 'bbbbbbbb-0000-0000-0000-00000000000b/lays/1.jpg', 'bbbbbbbb-0000-0000-0000-000000000001');
+-- B opted in to training photos and sent one.
+insert into training_consent (shop_id, policy_version) values ('bbbbbbbb-0000-0000-0000-00000000000b', '2026-10-22');
+insert into storage.objects (bucket_id, name, owner) values
+  ('training-frames', 'bbbbbbbb-0000-0000-0000-00000000000b/1.jpg', 'bbbbbbbb-0000-0000-0000-000000000001');
 
 -- ---------------------------------------------------------------------------------------------------------------
 -- Signed in as A.
@@ -144,6 +148,24 @@ do $$ begin
 exception when others then null;
 end $$;
 
+-- Training photos: only with A's own consent, only in A's folder; never B's.
+select throws_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'aaaaaaaa-0000-0000-0000-00000000000a/1.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
+  '42501', null, 'A cannot send a training photo before opting in');
+select is((select count(*)::int from training_consent), 0, 'A cannot see B''s consent');
+select throws_ok($$insert into training_consent (shop_id, policy_version) values ('bbbbbbbb-0000-0000-0000-00000000000b', 'x')$$,
+  '42501', null, 'A cannot consent for B');
+select lives_ok($$insert into training_consent (shop_id, policy_version) values ('aaaaaaaa-0000-0000-0000-00000000000a', '2026-10-22')$$,
+  'A opts in for its own shop');
+select lives_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'aaaaaaaa-0000-0000-0000-00000000000a/1.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
+  'A sends a training photo after opting in');
+select throws_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'bbbbbbbb-0000-0000-0000-00000000000b/2.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
+  '42501', null, 'A cannot send into B''s training folder');
+select is((select count(*)::int from storage.objects where bucket_id = 'training-frames' and name like 'bbbbbbbb-%'), 0,
+  'A cannot list B''s training photos');
+update training_consent set withdrawn_at = now() where shop_id = 'aaaaaaaa-0000-0000-0000-00000000000a';
+select throws_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'aaaaaaaa-0000-0000-0000-00000000000a/2.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
+  '42501', null, 'after withdrawing, A cannot send training photos');
+
 -- anon reaches nothing.
 set local role anon;
 select set_config('request.jwt.claims', '{"role": "anon"}', true);
@@ -152,6 +174,7 @@ select throws_ok($$select * from shops$$, '42501', null, 'anon cannot select sho
 select throws_ok($$insert into sales (id, shop_id, date, total) values (gen_random_uuid(), 'bbbbbbbb-0000-0000-0000-00000000000b', now(), 1)$$,
   '42501', null, 'anon cannot insert sales');
 select is((select count(*)::int from storage.objects where bucket_id = 'product-photos'), 0, 'anon cannot list photos');
+select is((select count(*)::int from storage.objects where bucket_id = 'training-frames'), 0, 'anon cannot list training photos');
 
 -- ---------------------------------------------------------------------------------------------------------------
 -- Back as the owner: B's rows are all still there, unchanged.
@@ -162,8 +185,10 @@ select is((select sku from barcodes where shop_id = 'bbbbbbbb-0000-0000-0000-000
 select is((select count from stock_levels where shop_id = 'bbbbbbbb-0000-0000-0000-00000000000b'), 10, 'B stock unchanged');
 select is((select counted from day_closes where shop_id = 'bbbbbbbb-0000-0000-0000-00000000000b'), 600::numeric, 'B close unchanged');
 select is((select count(*)::int from sales where shop_id = 'bbbbbbbb-0000-0000-0000-00000000000b'), 1, 'B sales unchanged');
-select is((select name from storage.objects where owner = 'bbbbbbbb-0000-0000-0000-000000000001'),
+select is((select name from storage.objects where owner = 'bbbbbbbb-0000-0000-0000-000000000001' and bucket_id = 'product-photos'),
   'bbbbbbbb-0000-0000-0000-00000000000b/lays/1.jpg', 'B photo still there, same path');
+select is((select count(*)::int from storage.objects where bucket_id = 'training-frames' and name like 'bbbbbbbb-%'), 1,
+  'B training photo still there');
 
 -- Deleting a user cascades to the shop and every row under it.
 delete from auth.users where id = 'bbbbbbbb-0000-0000-0000-000000000001';

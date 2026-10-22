@@ -65,6 +65,7 @@ final class SyncEngine {
             try await push(client, shop, context, generation: generation, failures: &failures)
             try await pull(client, shop, context, app, restoring: false, generation: generation)
             try await syncPhotos(client, shop, app, generation: generation)
+            try await sendTraining(client, shop, generation: generation)
             lastSynced = .now
             defaults.set(lastSynced, forKey: "sync.lastSynced")
             problem = failures.isEmpty ? nil : failures.joined(separator: "\n")
@@ -546,6 +547,60 @@ final class SyncEngine {
                 }
             }
         }
+    }
+
+    // MARK: - Training photos (opt-in)
+
+    /// Sends waiting training photos on Wi-Fi, at most `TrainingSamples.dailyLimit` a day. The server refuses them
+    /// without this shop's consent row, so a photo can't go up for a shop that didn't agree.
+    private func sendTraining(_ client: SupabaseClient, _ shop: UUID, generation: Int) async throws {
+        guard TrainingSamples.isOn, TrainingSamples.onWiFi else { return }
+        let bucket = client.storage.from("training-frames")
+        let prefix = shop.uuidString.lowercased()
+        for jpg in TrainingSamples.waiting().prefix(TrainingSamples.sendableToday) {
+            try check(generation)
+            let json = jpg.deletingPathExtension().appendingPathExtension("json")
+            let name = jpg.deletingPathExtension().lastPathComponent
+            try await bucket.upload("\(prefix)/\(name).json", data: try Data(contentsOf: json),
+                                    options: FileOptions(contentType: "application/json", upsert: true))
+            try await bucket.upload("\(prefix)/\(name).jpg", data: try Data(contentsOf: jpg),
+                                    options: FileOptions(contentType: "image/jpeg", upsert: true))
+            try? FileManager.default.removeItem(at: jpg)
+            try? FileManager.default.removeItem(at: json)
+            TrainingSamples.countSent()
+        }
+    }
+
+    /// Opt in or out on the server. Out also deletes every training photo this shop sent; returns how many.
+    func setTrainingConsent(_ on: Bool) async throws -> Int {
+        guard let client = Cloud.client else { throw CocoaError(.featureUnsupported) }
+        let shop = try await shopID(client)
+        struct Consent: Encodable {
+            let shop_id: UUID
+            let policy_version: String
+            let granted_at: Date
+            let withdrawn_at: Date?
+        }
+        if on {
+            try await client.from("training_consent")
+                .upsert(Consent(shop_id: shop, policy_version: TrainingSamples.policyVersion, granted_at: .now, withdrawn_at: nil))
+                .execute()
+            return 0
+        }
+        struct Withdrawal: Encodable { let withdrawn_at: Date }
+        try await client.from("training_consent").update(Withdrawal(withdrawn_at: .now)).eq("shop_id", value: shop).execute()
+        let bucket = client.storage.from("training-frames")
+        let prefix = shop.uuidString.lowercased()
+        var deleted = 0
+        while true {
+            let files = try await bucket.list(path: prefix, options: SearchOptions(limit: 1000))
+            let paths = files.map { "\(prefix)/\($0.name)" }
+            guard !paths.isEmpty else { break }
+            _ = try await bucket.remove(paths: paths)
+            deleted += paths.count
+            if files.count < 1000 { break }
+        }
+        return deleted / 2   // a photo and its labels
     }
 
     // MARK: - Days

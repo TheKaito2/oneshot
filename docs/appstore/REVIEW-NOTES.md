@@ -24,6 +24,13 @@ sync across the owner's devices. App Review can use Sign in with Apple with any 
 Account deletion: Settings › Account › Delete account. It removes the account and all its server data at once
 (guideline 5.1.1(v)).
 
+**Training photos (optional, off by default).** Settings › Help improve OneShot, or a one-time card on Home
+after 5 sales (signed in only), asks the owner to share counter photos of paid sales to train OneShot's own
+recognition models. Nothing is collected before the owner taps Allow or turns the switch on. Faces are blurred on
+the device before upload; Wi-Fi only, at most 50 a day; no prices, shop name or payment details. Turning it off
+deletes every photo already sent; account deletion does too. Not shared with any third party or third-party AI
+(guidelines 5.1.1, 5.1.2). Policy: https://oneshot-pos.pages.dev/#training
+
 **Payments.** PromptPay QR codes request payment for the physical goods the shop sells, from the customer's bank app
 to the shop's account. OneShot never handles money and sells no digital content (guideline 3.1.3(e)).
 
@@ -39,3 +46,5 @@ to the shop's account. OneShot never handles money and sells no digital content 
 2. Check that Demo mode is on in the review build's Settings and that the backend is
    running.
 3. Support email on https://oneshot-pos.pages.dev.
+4. App Store Connect › App Privacy: Photos or Videos → purposes App Functionality **and Analytics** (training photos),
+   linked to the user, not used for tracking. Matches OneShot/PrivacyInfo.xcprivacy.
