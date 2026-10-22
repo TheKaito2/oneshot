@@ -64,23 +64,29 @@ extension Decimal {
 /// while content scrolls over it, like the site's `background-attachment: fixed`.
 struct GridBackground: View {
     static let cell: CGFloat = 80
+    @Environment(\.colorScheme) private var scheme
+
+    // One 80 pt tile per appearance, tiled by the GPU. A Canvas restroked every line on each layout pass, on every page
+    // and behind every sheet (profiled on an iPhone 14, 22 Oct).
+    private static let light = tile(.light)
+    private static let dark = tile(.dark)
 
     var body: some View {
-        Canvas { context, size in
-            var lines = Path()
-            for x in stride(from: 0, through: size.width, by: Self.cell) {
-                lines.move(to: CGPoint(x: x + 0.5, y: 0))
-                lines.addLine(to: CGPoint(x: x + 0.5, y: size.height))
-            }
-            for y in stride(from: 0, through: size.height, by: Self.cell) {
-                lines.move(to: CGPoint(x: 0, y: y + 0.5))
-                lines.addLine(to: CGPoint(x: size.width, y: y + 0.5))
-            }
-            context.stroke(lines, with: .color(Brand.hairline.opacity(0.45)), lineWidth: 1)
+        Image(uiImage: scheme == .dark ? Self.dark : Self.light)
+            .resizable(resizingMode: .tile)
+            .background(Brand.canvas)
+            .ignoresSafeArea()
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+    }
+
+    private static func tile(_ style: UIUserInterfaceStyle) -> UIImage {
+        let line = UIColor(Brand.hairline).resolvedColor(with: UITraitCollection(userInterfaceStyle: style)).withAlphaComponent(0.45)
+        return UIGraphicsImageRenderer(size: CGSize(width: cell, height: cell)).image { context in
+            line.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: cell, height: 1))
+            context.fill(CGRect(x: 0, y: 0, width: 1, height: cell))
         }
-        .background(Brand.canvas)
-        .ignoresSafeArea()
-        .allowsHitTesting(false)
     }
 }
 
@@ -111,6 +117,7 @@ struct LiquidGlass: ViewModifier {
                     edge(shape, dark ? .black.opacity(0.15) : ink.opacity(0.05), .trailing)
                     shape.strokeBorder(Self.rim(dark ? .white : ink, edge: dark ? 0.45 : 0.25, near: dark ? 0.15 : 0.08), lineWidth: 1.4)
                 }
+                .drawingGroup()   // the edge lines and rim gradient as one GPU layer: drawn on the CPU per card before
                 .allowsHitTesting(false)
             }
     }
@@ -449,14 +456,25 @@ struct DetailSheet<Content: View>: View {
     let title: LocalizedStringKey
     @ViewBuilder let content: Content
     @Environment(\.dismiss) private var dismiss
+    /// The charts are built once the sheet is up: built first, they held the slide-up back ~280 ms on an iPhone 14.
+    @State private var ready = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) { content }
-                    .padding(20)
-                    .frame(maxWidth: 900)
-                    .frame(maxWidth: .infinity)
+                if ready {
+                    VStack(alignment: .leading, spacing: 20) { content }
+                        .padding(20)
+                        .frame(maxWidth: 900)
+                        .frame(maxWidth: .infinity)
+                        .transition(.opacity)
+                } else {
+                    ProgressView().frame(maxWidth: .infinity).padding(.top, 120)
+                }
+            }
+            .task {
+                guard (try? await Task.sleep(for: .milliseconds(300))) != nil else { return }
+                withAnimation(.easeOut(duration: 0.2)) { ready = true }
             }
             .background(GridBackground())
             .navigationTitle(title)

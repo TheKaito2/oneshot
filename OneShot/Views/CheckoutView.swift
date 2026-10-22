@@ -71,7 +71,7 @@ struct CheckoutView: View {
         .padding(.top, billOpen ? 12 : 0)
         .animation(.snappy, value: billOpen)
         .onChange(of: billOpen) { _, open in
-            withAnimation(.spring(duration: 0.45, bounce: 0.15)) { page = open ? .cart : .scanner }
+            withAnimation(.snappy(duration: 0.3)) { page = open ? .cart : .scanner }
         }
     }
 

@@ -253,6 +253,9 @@ struct PayView: View {
 @MainActor
 final class CounterVoice: NSObject, AVSpeechSynthesizerDelegate {
     private let synthesizer = AVSpeechSynthesizer()
+    /// Looked up once: listing every installed voice on each Say it again cost a pause.
+    private static let thaiVoice = AVSpeechSynthesisVoice.speechVoices().filter { $0.language == "th-TH" }
+        .max { $0.quality.rawValue < $1.quality.rawValue } ?? AVSpeechSynthesisVoice(language: "th-TH")
 
     override init() {
         super.init()
@@ -269,8 +272,7 @@ final class CounterVoice: NSObject, AVSpeechSynthesizerDelegate {
         let utterance = AVSpeechUtterance(string: text)
         // The best Thai voice installed: Kanya (Enhanced), a free download in Settings › Accessibility › Spoken Content
         // › Voices › Thai, sounds far more natural than the compact Kanya that `AVSpeechSynthesisVoice(language:)` returns.
-        utterance.voice = AVSpeechSynthesisVoice.speechVoices().filter { $0.language == "th-TH" }
-            .max { $0.quality.rawValue < $1.quality.rawValue } ?? AVSpeechSynthesisVoice(language: "th-TH")
+        utterance.voice = Self.thaiVoice
         synthesizer.stopSpeaking(at: .immediate)
         synthesizer.speak(utterance)
     }
@@ -288,13 +290,19 @@ final class CounterVoice: NSObject, AVSpeechSynthesizerDelegate {
         }
     }
 
+    /// Off the main thread: deactivating waits on the audio server, and held the screen ~0.5 s after each spoken
+    /// total (profiled on an iPhone 14, 22 Oct).
     private func release() {
-        do {
-            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        } catch {
-            Log.error("audio session: \(error)")
+        Task.detached(priority: .userInitiated) { [weak self] in
+            // Say it again may have started meanwhile: leave its session on.
+            if await MainActor.run(body: { self?.synthesizer.isSpeaking ?? false }) { return }
+            do {
+                try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            } catch {
+                Log.error("audio session: \(error)")
+            }
+            AudioMode.mixed()
         }
-        AudioMode.mixed()
     }
 }
 
