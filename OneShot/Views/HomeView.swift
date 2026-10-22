@@ -40,7 +40,10 @@ struct HomeView: View {
         _records = Query(filter: #Predicate<SaleRecord> { $0.date >= since }, sort: \.date)
     }
 
-    private var sales: [Sale] { records.map(\.sale) }
+    /// The records as values, converted once per change: every render used to load each sale's lines from the store
+    /// four or five times over, and every tap waited on it (Krist, 22 Oct: "a bit of delay to everything").
+    @State private var sales: [Sale] = []
+    private var salesKey: String { "\(records.count)-\(records.last?.id.uuidString ?? "")" }
     private var summary: DaySummary { DaySummary.of(sales, catalog: app.catalog) }
 
     private var restockNotes: [String] { Restock.notes(stock: app.stock, sales: sales, catalog: app.catalog) }
@@ -114,6 +117,7 @@ struct HomeView: View {
         .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
         .background(GridBackground())
         .task(id: insightInputs) { await generateInsight() }
+        .onChange(of: salesKey, initial: true) { sales = records.map(\.sale) }
     }
 
     // MARK: - Header and hero

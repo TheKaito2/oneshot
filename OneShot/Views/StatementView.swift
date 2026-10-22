@@ -149,6 +149,8 @@ struct StatementCard: View {
     @State private var lastMonth = false
     @State private var pdf: URL?
     @State private var previewing = false
+    @MainActor private static var made: [String: URL] = [:]
+    private var pdfKey: String { "\(lastMonth)-\(sales.count)-\(sales.last?.id?.uuidString ?? "")-\(shopName)-\(promptPayID)" }
     @Environment(\.horizontalSizeClass) private var sizeClass
     /// The preview's width and the page's own height, to fit the page on a phone.
     @State private var available: CGFloat = 595 + 32
@@ -200,7 +202,14 @@ struct StatementCard: View {
             }
         }
         .card(padding: 18)
-        .task(id: "\(lastMonth)-\(sales.count)") { pdf = statement.pdf() }
+        .task(id: pdfKey) {
+            // Drawn once per month and set of sales, after the page has settled: drawing it on every visit to
+            // Reports held up the tab switch (22 Oct).
+            if let cached = Self.made[pdfKey] { pdf = cached; return }
+            guard (try? await Task.sleep(for: .milliseconds(350))) != nil else { return }
+            pdf = statement.pdf()
+            Self.made[pdfKey] = pdf
+        }
         .sheet(isPresented: $previewing) {
             NavigationStack {
                 ScrollView {

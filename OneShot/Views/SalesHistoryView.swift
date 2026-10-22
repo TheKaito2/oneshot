@@ -12,10 +12,11 @@ struct SalesHistoryView: View {
     @State private var problem: String?
     @AppStorage(SettingsKey.shopName) private var shopName = ""
 
+    /// Converted once per change and passed down: each row used to rebuild every Sale from the store (O(days ×
+    /// sales²)), then every render did, so each tap on a sale waited for the whole history (22 Oct).
+    @State private var sales: [Sale] = []
+
     var body: some View {
-        // Built once per render and passed down: each row used to rebuild every Sale from the store, which froze the
-        // screen with a few hundred sales (O(days × sales²)).
-        let sales = records.map(\.sale)
         let refundedIDs = Set(sales.compactMap(\.refundOf))
         let byDay = Dictionary(grouping: sales.indices) { Calendar.current.startOfDay(for: sales[$0].date) }
         List {
@@ -35,6 +36,7 @@ struct SalesHistoryView: View {
             }
         }
         .gridList()
+        .onChange(of: "\(records.count)-\(records.last?.id.uuidString ?? "")", initial: true) { sales = records.map(\.sale) }
         .navigationTitle("Sales")
         .toolbar {
             if let csvURL {
@@ -47,7 +49,7 @@ struct SalesHistoryView: View {
                            shopName: shopName, catalog: app.catalog, onRefund: { refund(sales[box.id]) })
             }
         }
-        .task(id: records.count) { writeCSV(sales) }
+        .task(id: sales.count) { writeCSV(sales) }
         .alert("Refund not saved", isPresented: Binding(get: { problem != nil }, set: { if !$0 { problem = nil } })) {
             Button("OK", role: .cancel) {}
         } message: {

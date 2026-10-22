@@ -18,15 +18,20 @@ struct ReportsView: View {
     /// Which card is open full screen.
     private enum Detail: String, Identifiable { case items, pairs; var id: Self { self } }
 
-    private var sales: [Sale] { records.map(\.sale) }
+    /// Converted once per change, not per render: loading every sale's lines from the store on each render made
+    /// every tap here wait (22 Oct).
+    @State private var sales: [Sale] = []
+    /// This period's report and the one before, worked out when the period or the sales change, not on every render.
+    @State private var reports: (key: String, now: Report, before: Report)?
+    private var salesKey: String { "\(records.count)-\(records.last?.id.uuidString ?? "")" }
 
     /// Barcode pace for "time saved": 22 scans a minute, a staffed lane's rate (ONESHOT-MARKET-RESEARCH.md).
     private static let barcodeSecondsPerItem = 60.0 / 22
 
     var body: some View {
         let spans = period.spans()
-        let report = Report(sales, in: spans.current, by: period.bucket, catalog: app.catalog)
-        let before = Report(sales, in: spans.previous, by: period.bucket, catalog: app.catalog)
+        let report = reports?.now ?? Report([], in: spans.current, by: period.bucket, catalog: app.catalog)
+        let before = reports?.before ?? Report([], in: spans.previous, by: period.bucket, catalog: app.catalog)
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
@@ -83,13 +88,31 @@ struct ReportsView: View {
                     ShareLink(item: itemsCSV) { Label("Export items CSV", systemImage: "square.and.arrow.up") }
                 }
             }
-            .task(id: "\(period)-\(records.count)") { itemsCSV = Self.writeCSV(report, period: period) }
+            .onChange(of: salesKey, initial: true) {
+                sales = records.map(\.sale)
+                refresh()
+            }
+            .onChange(of: period) { refresh() }
             .sheet(item: $showing) { detail in
                 switch detail {
                 case .items: DetailSheet(title: "Sales by item") { ItemsDetail(report: report) }
                 case .pairs: DetailSheet(title: "Bought together") { PairsDetail(report: report) }
                 }
             }
+        }
+    }
+
+    /// Reports and the items CSV for the current period, only when the period or the sales changed.
+    private func refresh() {
+        let key = "\(period)-\(salesKey)"
+        guard reports?.key != key else { return }
+        let spans = period.spans()
+        let now = Report(sales, in: spans.current, by: period.bucket, catalog: app.catalog)
+        reports = (key, now, Report(sales, in: spans.previous, by: period.bucket, catalog: app.catalog))
+        let period = period
+        Task.detached(priority: .utility) {
+            let url = Self.writeCSV(now, period: period)
+            await MainActor.run { itemsCSV = url }
         }
     }
 
@@ -316,7 +339,7 @@ struct ReportsView: View {
     }
 
     /// Loyverse's "Sales by item" export: one row per product for the period.
-    private static func writeCSV(_ r: Report, period: ReportPeriod) -> URL? {
+    nonisolated private static func writeCSV(_ r: Report, period: ReportPeriod) -> URL? {
         var rows = ["item,category,sold,refunded,net,cost,profit"]
         for item in r.items {
             let name = "\"" + item.name.replacingOccurrences(of: "\"", with: "\"\"") + "\""

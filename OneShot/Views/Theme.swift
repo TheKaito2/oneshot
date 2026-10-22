@@ -98,7 +98,8 @@ struct LiquidGlass: ViewModifier {
         return content
             .background {
                 ZStack {
-                    shape.stroke(dark ? Color.black.opacity(0.4) : ink.opacity(0.04), lineWidth: 1).blur(radius: 1).offset(y: 1)
+                    // A plain 2 pt line, not a blurred one: a blur pass under every card slowed each page (22 Oct).
+                    shape.stroke(dark ? Color.black.opacity(0.3) : ink.opacity(0.03), lineWidth: 2).offset(y: 1)
                     shape.fill(dark ? Color.white.opacity(0.03) : ink.opacity(0.03))
                 }
             }
