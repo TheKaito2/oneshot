@@ -37,11 +37,6 @@ final class Account {
         }
     }
 
-    /// Emails a 6-digit code; a new address gets an account.
-    func sendCode(to email: String) async throws {
-        try await require().auth.signInWithOTP(email: email, shouldCreateUser: true)
-    }
-
     /// Where Google sends the user back; must be in the project's Auth › URL Configuration › Redirect URLs.
     static let redirect = URL(string: "oneshot://login-callback")!
 
@@ -57,15 +52,6 @@ final class Account {
     /// SHA-256 went into the request (so a captured token can't be replayed). Guideline 4.8, since Google is offered.
     func signInWithApple(idToken: String, nonce: String) async throws {
         try await require().auth.signInWithIdToken(credentials: OpenIDConnectCredentials(provider: .apple, idToken: idToken, nonce: nonce))
-    }
-
-    /// Accounts given a password in the Supabase dashboard (App Review's demo account) can sign in without a code.
-    func signIn(email: String, password: String) async throws {
-        try await require().auth.signIn(email: email, password: password)
-    }
-
-    func verify(email: String, code: String) async throws {
-        try await require().auth.verifyOTP(email: email, token: code, type: .email)
     }
 
     /// Signs out; the shop stays on this device.

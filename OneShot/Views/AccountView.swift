@@ -8,13 +8,8 @@ struct AccountView: View {
     @Bindable var app: AppModel
     @State private var account = Account.shared
     @State private var sync = SyncEngine.shared
-    @State private var email = ""
-    @State private var code = ""
-    @State private var codeSent = false
-    @State private var usePassword = false
     /// The nonce for the Apple request in flight; its hash went into the request.
     @State private var appleNonce = ""
-    @State private var password = ""
     @State private var busy = false
     @State private var problem: String?
     @State private var confirmingDelete = false
@@ -60,7 +55,7 @@ struct AccountView: View {
                         Text("Deletes your account and the shop's copy on our server: products, sales, day closes, stock and photos.")
                     }
                     .frostedRows()
-                } else if !codeSent {
+                } else {
                     Section {
                         SignInWithAppleButton(.continue) { request in
                             appleNonce = AppleNonce.make()
@@ -93,49 +88,8 @@ struct AccountView: View {
                         } label: {
                             Label("Continue with Google", systemImage: "globe")
                         }
-                    }
-                    .frostedRows()
-                    Section {
-                        TextField("Email", text: $email)
-                            .keyboardType(.emailAddress).textContentType(.emailAddress)
-                            .textInputAutocapitalization(.never).autocorrectionDisabled()
-                        if usePassword {
-                            SecureField("Password", text: $password).textContentType(.password)
-                            Button("Sign in") {
-                                run {
-                                    try await account.signIn(email: email.trimmingCharacters(in: .whitespaces), password: password)
-                                    dismiss()
-                                }
-                            }
-                            .disabled(!email.contains("@") || password.isEmpty || busy)
-                        } else {
-                            Button("Email me a code") {
-                                run {
-                                    try await account.sendCode(to: email.trimmingCharacters(in: .whitespaces))
-                                    codeSent = true
-                                }
-                            }
-                            .disabled(!email.contains("@") || busy)
-                        }
-                        Button(usePassword ? "Use an emailed code instead" : "Use a password instead") { usePassword.toggle() }
-                            .font(.seed(.footnote))
                     } footer: {
-                        Text("Back up the shop and use it on your other devices. No password: we email you a code.")
-                    }
-                    .frostedRows()
-                } else {
-                    Section {
-                        TextField("6-digit code", text: $code).keyboardType(.numberPad).textContentType(.oneTimeCode)
-                        Button("Sign in") {
-                            run {
-                                try await account.verify(email: email.trimmingCharacters(in: .whitespaces), code: code)
-                                dismiss()
-                            }
-                        }
-                        .disabled(code.count < 6 || busy)
-                        Button("Use a different email") { codeSent = false; code = "" }
-                    } footer: {
-                        Text("We sent a code to \(email).")
+                        Text("Back up the shop and use it on your other devices.")
                     }
                     .frostedRows()
                 }

@@ -18,11 +18,8 @@ includes a Demo mode:
 Onboarding's "Try it with 12 sample snacks" adds the products those photos contain. Settings › Demo › "Add two
 weeks of sample sales" fills Home and Reports (only while the books are empty).
 
-**Account (optional).** The app works fully without an account. Signing in (an emailed one-time code) adds backup and
-sync across the owner's devices. Demo account for review:
-
-- Email: `<review account email>`
-- Password: `<review account password>`. On the sign-in screen, tap "Use a password instead".
+**Account (optional).** The app works fully without an account. Signing in with Apple or Google adds backup and
+sync across the owner's devices. App Review can use Sign in with Apple with any Apple ID; no demo account is needed.
 
 Account deletion: Settings › Account › Delete account. It removes the account and all its server data at once
 (guideline 5.1.1(v)).
@@ -38,8 +35,7 @@ to the shop's account. OneShot never handles money and sells no digital content 
 
 ## Before submitting (Krist)
 
-1. Create the review account with a password in the Supabase dashboard (Authentication › Users › Add user), and
-   give it a sample shop: sign in once on a simulator, add the 12 samples and two weeks of sample sales, and sync.
-2. Fill in the email above. Check that Demo mode is on in the review build's Settings and that the backend is
+1. Check that Sign in with Apple works in the review build (it needs the production bundle ID).
+2. Check that Demo mode is on in the review build's Settings and that the backend is
    running.
 3. Support email on https://oneshot-pos.pages.dev.

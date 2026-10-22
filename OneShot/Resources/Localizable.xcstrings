@@ -4030,6 +4030,16 @@
           }
         }
       }
+    },
+    "Back up the shop and use it on your other devices." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สำรองข้อมูลร้านและใช้บนเครื่องอื่นของคุณ"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
