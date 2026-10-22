@@ -10,8 +10,8 @@ photo and bills them; customers pay by PromptPay QR or cash.
 **Testing without products or a counter.** Recognition needs real products in front of the camera, so OneShot
 includes a Demo mode:
 
-1. Settings (gear on Home) › Demo › turn on **Demo camera**.
-2. Open **Checkout** and tap **Ring up**. A bundled table photo stands in for the camera and is billed through the
+1. Settings (tab on iPhone, gear on Home on iPad) › Demo & sample data › turn on **Demo camera**.
+2. Open **Checkout** (the centre button) and tap **Scan**. A bundled table photo stands in for the camera and is billed through the
    same recognition pipeline.
 3. Tap **Next photo** for another table.
 

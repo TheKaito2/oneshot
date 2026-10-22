@@ -7,6 +7,7 @@ struct TicketPanel: View {
 
     @Environment(\.modelContext) private var context
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @AppStorage(TrainingSamples.optInKey) private var trainingOn = false
     @State private var picking: Region?
     @State private var adding = false
     /// The Add item option picked, opened once the options sheet is gone.
@@ -252,6 +253,13 @@ struct TicketPanel: View {
                     .foregroundStyle(Brand.ink)
                     .contentTransition(.numericText())
                     .animation(.snappy, value: total)
+            }
+            // App Store 2.5.14: a visible sign whenever this sale's photo will be kept for training.
+            if trainingOn, app.scan != nil {
+                Label("This photo helps improve OneShot", systemImage: "sparkles")
+                    .font(.seed(.caption))
+                    .foregroundStyle(Brand.muted)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
             if !unsure.isEmpty {
                 Label("^[\(unsure.count) item](inflect: true) to check before paying", systemImage: "exclamationmark.triangle.fill")

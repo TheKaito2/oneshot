@@ -945,6 +945,16 @@
         }
       }
     },
+    "Common Thai shop snacks that OneShot knows already." : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขนมที่ร้านค้าไทยขายกันทั่วไป ที่ OneShot รู้จักอยู่แล้ว"
+          }
+        }
+      }
+    },
     "Compared with the day before." : {
       "localizations" : {
         "th" : {
@@ -981,6 +991,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "เทียบกับเมื่อวานจนถึงเวลานี้"
+          }
+        }
+      }
+    },
+    "Contact support" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ติดต่อฝ่ายช่วยเหลือ"
           }
         }
       }
@@ -1867,16 +1887,6 @@
         }
       }
     },
-    "Lay's, KitKat, M&M's and more, the packs OneShot knows already." : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เลย์ คิทแคท เอ็มแอนด์เอ็ม และอื่น ๆ สินค้าที่ OneShot รู้จักอยู่แล้ว"
-          }
-        }
-      }
-    },
     "Learned from ^[%lld photo](inflect: true)" : {
       "localizations" : {
         "th" : {
@@ -2633,16 +2643,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ราคา ฿"
-          }
-        }
-      }
-    },
-    "Privacy & support" : {
-      "localizations" : {
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ความเป็นส่วนตัวและช่วยเหลือ"
           }
         }
       }
@@ -3991,6 +3991,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ช่วงนี้"
+          }
+        }
+      }
+    },
+    "This photo helps improve OneShot" : {
+      "localizations" : {
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รูปนี้ช่วยพัฒนา OneShot"
           }
         }
       }

@@ -165,7 +165,7 @@ struct OnboardingView: View {
                 choice("plus.viewfinder", "Teach my first product", "Open the camera and teach it now.") {
                     finish(teach: true)
                 }
-                choice("sparkles", "Try it with 12 sample snacks", "Lay's, KitKat, M&M's and more, the packs OneShot knows already.") {
+                choice("sparkles", "Try it with 12 sample snacks", "Common Thai shop snacks that OneShot knows already.") {
                     app.addSampleProducts()
                     next()
                 }

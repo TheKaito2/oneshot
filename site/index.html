@@ -35,6 +35,16 @@
   nav { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
   nav a { text-decoration: none; padding: 6px 14px; border: 1px solid var(--hairline); border-radius: 999px; }
   .meta { font-size: 13px; color: var(--muted); }
+  form { display: grid; gap: 12px; margin-top: 16px; }
+  label { display: grid; gap: 4px; font-size: 14px; color: var(--muted); }
+  input, textarea { font: inherit; color: var(--ink); background: var(--canvas); border: 1px solid var(--hairline);
+                    border-radius: 12px; padding: 10px 12px; width: 100%; }
+  textarea { min-height: 140px; resize: vertical; }
+  button { font: inherit; font-weight: 700; color: #fff; background: #A9583E; border: 0; border-radius: 999px;
+           padding: 12px 20px; justify-self: start; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+  .trap { position: absolute; left: -9999px; }
+  #status { font-size: 14px; margin: 0; }
 </style>
 </head>
 <body>
@@ -55,7 +65,8 @@
         can restore it and use it on your other devices: your email address and account ID; the shop's name and
         PromptPay ID; products, prices and costs; sales, refunds, day closes and stock; and photos of products you
         teach. It is stored with Supabase in Singapore, encrypted in transit, readable only by your account, and used
-        only to run this feature. We never sell it, share it for advertising, or use it to track you.</li>
+        only to run this feature. It is kept until you delete your account. We never sell it, share it for
+        advertising, or use it to track you.</li>
       <li><strong>Deleting your data.</strong> In Settings › Account › Delete account you can delete your account and
         everything stored for it on our server, at once. Signing out keeps the shop on your device; deleting the app
         deletes the device's copy. Under Thailand's PDPA you may also ask us for a copy of your data, a correction, or
@@ -94,7 +105,8 @@
       <li><strong>บัญชี (ไม่บังคับ) สำหรับสำรองและซิงก์ข้อมูล</strong> หากคุณลงชื่อเข้าใช้ OneShot จะเก็บสำเนาข้อมูลร้านไว้
         เพื่อให้กู้คืนและใช้บนอุปกรณ์อื่นของคุณได้ ได้แก่ อีเมลและรหัสบัญชี ชื่อร้านและหมายเลขพร้อมเพย์ สินค้า ราคาและต้นทุน
         ยอดขาย การคืนเงิน การปิดยอดรายวันและสต็อก และรูปสินค้าที่คุณสอน ข้อมูลเก็บกับ Supabase ที่สิงคโปร์
-        เข้ารหัสระหว่างส่ง เข้าถึงได้เฉพาะบัญชีของคุณ และใช้เพื่อฟีเจอร์นี้เท่านั้น เราไม่ขาย ไม่แบ่งปันเพื่อโฆษณา และไม่ใช้ติดตามคุณ</li>
+        เข้ารหัสระหว่างส่ง เข้าถึงได้เฉพาะบัญชีของคุณ และใช้เพื่อฟีเจอร์นี้เท่านั้น เก็บไว้จนกว่าคุณจะลบบัญชี
+        เราไม่ขาย ไม่แบ่งปันเพื่อโฆษณา และไม่ใช้ติดตามคุณ</li>
       <li><strong>การลบข้อมูล</strong> ไปที่ ตั้งค่า › บัญชี › ลบบัญชี เพื่อลบบัญชีและข้อมูลทั้งหมดบนเซิร์ฟเวอร์ได้ทันที
         การออกจากระบบจะเก็บข้อมูลไว้ในเครื่อง การลบแอปจะลบข้อมูลในเครื่อง ตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA)
         คุณขอสำเนา แก้ไข หรือลบข้อมูลของคุณได้</li>
@@ -124,8 +136,47 @@
       <em>Settings › Diagnostics › Share reports</em> helps us find it.</p>
     <p lang="th">มีคำถาม ปัญหา หรือข้อเสนอแนะ ติดต่อผู้พัฒนาได้ หากแอปมีปัญหา ใช้
       <em>ตั้งค่า › Diagnostics › แชร์รายงาน</em> แนบมาด้วย</p>
-    <!-- TODO(Krist): add the support contact (email or LINE OA) before App Store submission. -->
+    <form id="contact" novalidate>
+      <label>Your email or LINE ID · อีเมลหรือ LINE ID ของคุณ
+        <input name="contact" required maxlength="200" autocomplete="email">
+      </label>
+      <label>Message · ข้อความ
+        <textarea name="message" required minlength="5" maxlength="4000"></textarea>
+      </label>
+      <input class="trap" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button type="submit">Send · ส่ง</button>
+      <p id="status" role="status" aria-live="polite"></p>
+    </form>
+    <p class="meta">What you send is used only to answer you, and is deleted once your question is resolved.
+      · ข้อมูลที่ส่งใช้เพื่อตอบกลับคุณเท่านั้น และจะลบเมื่อเรื่องเสร็จสิ้น</p>
   </section>
+<script>
+  const form = document.getElementById("contact"), status = document.getElementById("status");
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(form));
+    if (data.contact.trim().length < 3 || data.message.trim().length < 5) {
+      status.textContent = "Please add a way to reach you and a message. · กรุณาใส่ช่องทางติดต่อและข้อความ";
+      return;
+    }
+    form.querySelector("button").disabled = true;
+    status.textContent = "Sending… · กำลังส่ง…";
+    try {
+      const response = await fetch("https://begkzimadwrxnietomdp.supabase.co/functions/v1/support", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, lang: navigator.language }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "Couldn't send.");
+      form.reset();
+      status.textContent = "Sent. We'll reply soon. · ส่งแล้ว เราจะตอบกลับโดยเร็ว";
+    } catch (error) {
+      status.textContent = error.message + " · ส่งไม่สำเร็จ ลองใหม่อีกครั้ง";
+    } finally {
+      form.querySelector("button").disabled = false;
+    }
+  });
+</script>
 
   <p class="meta">Last updated 22 October 2026 · ปรับปรุงล่าสุด 22 ตุลาคม 2569</p>
 </main>

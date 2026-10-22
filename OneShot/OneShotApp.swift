@@ -107,6 +107,10 @@ extension RootView {
     func phoneBar(_ page: some View) -> some View {
         if sizeClass == .compact {
             page
+                // Lists and scroll views inside each tab's NavigationStack didn't get the bar's inset, so their last
+                // rows stayed under it (Krist, 23 Oct). A bottom margin on all scroll content clears the bar and the
+                // raised Scan circle; the inset still lifts fixed layouts (Checkout's cart) above it.
+                .contentMargins(.bottom, PhoneTabBar.clearance, for: .scrollContent)
                 .toolbarVisibility(.hidden, for: .tabBar)
                 .safeAreaInset(edge: .bottom, spacing: 0) { PhoneTabBar(tab: $app.tab) }
         } else {
@@ -119,6 +123,8 @@ extension RootView {
 /// action where the thumb rests, as Instagram, TikTok and Venmo place theirs (Krist, 22 Oct).
 struct PhoneTabBar: View {
     @Binding var tab: AppModel.Tab
+    /// The bar (62) and the circle rising 16 above it, plus breathing room.
+    static let clearance: CGFloat = 100
 
     var body: some View {
         HStack(spacing: 0) {

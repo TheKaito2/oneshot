@@ -7,7 +7,7 @@ Fields as App Store Connect asks for them. Character limits are in brackets; eve
 | Field | English | Thai |
 |---|---|---|
 | Name [30] | OneShot POS | OneShot POS |
-| Subtitle [30] | One photo rings up the counter | ถ่ายครั้งเดียว คิดเงินทั้งเคาน์เตอร์ |
+| Subtitle [30] | One photo scans the counter | ถ่ายครั้งเดียว คิดเงินทั้งเคาน์เตอร์ |
 
 "OneShot" alone may already be taken on the App Store; check in App Store Connect when creating the app record.
 
@@ -22,7 +22,7 @@ Fields as App Store Connect asks for them. Character limits are in brackets; eve
 
 **EN**
 
-OneShot is a cashier for small shops. Hold your iPad or iPhone over the counter and tap Ring up: every pack in view
+OneShot is a cashier for small shops. Hold your iPad or iPhone over the counter and tap Scan: every pack in view
 is recognised and priced from one photo. No barcode scanning one item at a time.
 
 - One-tap checkout: the whole pile at once, recognised on the device.
@@ -37,7 +37,7 @@ is recognised and priced from one photo. No barcode scanning one item at a time.
 
 **TH**
 
-OneShot คือแอปแคชเชียร์สำหรับร้านค้าขนาดเล็ก ถือ iPad หรือ iPhone เหนือเคาน์เตอร์แล้วแตะ "คิดเงิน"
+OneShot คือแอปแคชเชียร์สำหรับร้านค้าขนาดเล็ก ถือ iPad หรือ iPhone เหนือเคาน์เตอร์แล้วแตะ "สแกน"
 สินค้าทุกชิ้นในภาพจะถูกจดจำและคิดราคาจากภาพเดียว ไม่ต้องสแกนบาร์โค้ดทีละชิ้น
 
 - คิดเงินแตะเดียว: ทั้งกองในครั้งเดียว ประมวลผลบนเครื่อง

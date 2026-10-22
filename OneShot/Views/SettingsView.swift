@@ -10,10 +10,12 @@ enum SettingsKey {
 }
 
 struct SettingsView: View {
+    /// Development builds only. A release build has no hidden switch to turn it on (App Store 2.5.19: no hidden or
+    /// undocumented features).
     #if DEBUG
     static let showsDebug = true
     #else
-    static let showsDebug = UserDefaults.standard.bool(forKey: "debugMenu")
+    static let showsDebug = false
     #endif
 
     @Bindable var app: AppModel
@@ -93,15 +95,19 @@ struct SettingsView: View {
                     NavigationLink { diagnosticsPage } label: {
                         IconRow("Diagnostics", icon: "stethoscope", tint: Brand.muted)
                     }
+                    // App Store 1.5: a way to reach the developer from inside the app.
+                    Link(destination: URL(string: "https://oneshot-pos.pages.dev/#support")!) {
+                        IconRow("Contact support", icon: "envelope.fill", tint: Brand.accent, external: true)
+                    }
                     Link(destination: URL(string: "https://oneshot-pos.pages.dev")!) {
-                        IconRow("Privacy & support", icon: "hand.raised.fill", tint: Brand.sky, external: true)
+                        IconRow("Privacy policy", icon: "hand.raised.fill", tint: Brand.sky, external: true)
                     }
                     NavigationLink { aboutPage } label: {
                         IconRow("About", icon: "info.circle.fill", tint: Brand.muted)
                     }
                 }
                 .frostedRows()
-                // Development builds, and a test build launched with -debugMenu YES; a shop never sees it.
+                // Development builds only; a shop never sees it.
                 if Self.showsDebug {
                     Section("Debug") {
                         Toggle("Show speed HUD and save lock photos", isOn: $debugOverlay)

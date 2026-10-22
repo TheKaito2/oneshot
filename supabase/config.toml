@@ -422,3 +422,7 @@ verify_jwt = false
 [functions.training-retention]
 # Called by pg_cron with x-cron-secret, not a user JWT; the function checks the secret itself.
 verify_jwt = false
+
+[functions.support]
+# A public form: no user JWT. It validates, rate-limits and writes with the service role itself.
+verify_jwt = false
