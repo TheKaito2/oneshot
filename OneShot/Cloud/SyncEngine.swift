@@ -65,7 +65,18 @@ final class SyncEngine {
             try await push(client, shop, context, generation: generation, failures: &failures)
             try await pull(client, shop, context, app, restoring: false, generation: generation)
             try await syncPhotos(client, shop, app, generation: generation)
-            try await sendTraining(client, shop, generation: generation)
+            // Training photos never hold up the shop's own backup: their trouble is logged, not reported.
+            do {
+                if defaults.bool(forKey: TrainingSamples.withdrawPendingKey) {
+                    _ = try await setTrainingConsent(false)
+                    defaults.set(false, forKey: TrainingSamples.withdrawPendingKey)
+                }
+                try await sendTraining(client, shop, generation: generation)
+            } catch is Cancelled {
+                throw Cancelled()
+            } catch {
+                Log.error("training photos: \(error)")
+            }
             lastSynced = .now
             defaults.set(lastSynced, forKey: "sync.lastSynced")
             problem = failures.isEmpty ? nil : failures.joined(separator: "\n")
@@ -559,12 +570,18 @@ final class SyncEngine {
         let prefix = shop.uuidString.lowercased()
         for jpg in TrainingSamples.waiting().prefix(TrainingSamples.sendableToday) {
             try check(generation)
+            guard TrainingSamples.isOn else { return }   // turned off mid-way: send nothing more
             let json = jpg.deletingPathExtension().appendingPathExtension("json")
             let name = jpg.deletingPathExtension().lastPathComponent
-            try await bucket.upload("\(prefix)/\(name).json", data: try Data(contentsOf: json),
-                                    options: FileOptions(contentType: "application/json", upsert: true))
-            try await bucket.upload("\(prefix)/\(name).jpg", data: try Data(contentsOf: jpg),
-                                    options: FileOptions(contentType: "image/jpeg", upsert: true))
+            // No overwriting (there's no update policy): a file already up from an interrupted try counts as sent.
+            for (path, file, type) in [("\(prefix)/\(name).json", json, "application/json"), ("\(prefix)/\(name).jpg", jpg, "image/jpeg")] {
+                do {
+                    try await bucket.upload(path, data: try Data(contentsOf: file), options: FileOptions(contentType: type, upsert: false))
+                } catch where "\(error)".contains("409") || "\(error)".localizedCaseInsensitiveContains("already exists")
+                                || "\(error)".localizedCaseInsensitiveContains("Duplicate") {
+                    continue
+                }
+            }
             try? FileManager.default.removeItem(at: jpg)
             try? FileManager.default.removeItem(at: json)
             TrainingSamples.countSent()
@@ -578,27 +595,32 @@ final class SyncEngine {
         struct Consent: Encodable {
             let shop_id: UUID
             let policy_version: String
-            let granted_at: Date
-            let withdrawn_at: Date?
+            let withdrawing: Bool
         }
+        // The times are the server's (a trigger sets granted_at / withdrawn_at), not this device's clock.
         if on {
             try await client.from("training_consent")
-                .upsert(Consent(shop_id: shop, policy_version: TrainingSamples.policyVersion, granted_at: .now, withdrawn_at: nil))
+                .upsert(Consent(shop_id: shop, policy_version: TrainingSamples.policyVersion, withdrawing: false))
                 .execute()
             return 0
         }
-        struct Withdrawal: Encodable { let withdrawn_at: Date }
-        try await client.from("training_consent").update(Withdrawal(withdrawn_at: .now)).eq("shop_id", value: shop).execute()
+        try await client.from("training_consent")
+            .upsert(Consent(shop_id: shop, policy_version: TrainingSamples.policyVersion, withdrawing: true))
+            .execute()
         let bucket = client.storage.from("training-frames")
         let prefix = shop.uuidString.lowercased()
         var deleted = 0
-        while true {
-            let files = try await bucket.list(path: prefix, options: SearchOptions(limit: 1000))
-            let paths = files.map { "\(prefix)/\($0.name)" }
-            guard !paths.isEmpty else { break }
-            _ = try await bucket.remove(paths: paths)
-            deleted += paths.count
-            if files.count < 1000 { break }
+        // Twice: an upload that was already past the server's check when consent was withdrawn lands after the first.
+        for pass in 0..<2 {
+            if pass == 1 { try await Task.sleep(for: .seconds(2)) }
+            while true {
+                let files = try await bucket.list(path: prefix, options: SearchOptions(limit: 1000))
+                let paths = files.map { "\(prefix)/\($0.name)" }
+                guard !paths.isEmpty else { break }
+                let removed = try await bucket.remove(paths: paths)
+                deleted += removed.count
+                if removed.isEmpty || files.count < 1000 { break }   // nothing removed: don't spin
+            }
         }
         return deleted / 2   // a photo and its labels
     }

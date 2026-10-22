@@ -13,6 +13,8 @@ import Vision
 enum TrainingSamples {
     static let optInKey = "training.optIn"
     static let askedKey = "training.asked"
+    /// Turned off but the server hasn't confirmed yet: retried on every sync until it has.
+    static let withdrawPendingKey = "training.withdrawPending"
     /// The policy text the owner agreed to (site/index.html, "Helping improve OneShot").
     static let policyVersion = "2026-10-22"
     static let dailyLimit = 50
@@ -55,8 +57,9 @@ enum TrainingSamples {
 
     /// The photos waiting to go up, oldest first.
     static func waiting() -> [URL] {
-        let files = (try? FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil)) ?? []
-        return files.filter { $0.pathExtension == "jpg" }.sorted { $0.lastPathComponent < $1.lastPathComponent }
+        let files = (try? FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: [.creationDateKey])) ?? []
+        func made(_ url: URL) -> Date { (try? url.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? .distantPast }
+        return files.filter { $0.pathExtension == "jpg" }.sorted { made($0) < made($1) }
     }
 
     /// Keeps a paid sale's photo for training, off the main thread. Does nothing unless opted in.
@@ -70,11 +73,12 @@ enum TrainingSamples {
             do {
                 try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
                 guard waiting().count < queueLimit else { return }   // offline for weeks: stop, don't fill the phone
-                let blurred = blurFaces(image)
-                guard let jpeg = jpeg(blurred) else { return }
+                guard let blurred = blurFaces(image), let jpeg = jpeg(blurred) else { return }
                 let sample = Sample(app: appVersion, device: deviceModel, date: today, width: blurred.width,
                                     height: blurred.height, boxes: boxes)
-                let name = "\(Int(Date().timeIntervalSince1970 * 1000))-\(UUID().uuidString.prefix(8))"
+                // A random name: no time of day in it, only the date inside (what the policy says).
+                let name = UUID().uuidString.lowercased()
+                guard isOn else { return }   // turned off while this was being made
                 try JSONEncoder().encode(sample).write(to: folder.appending(path: "\(name).json"))
                 try jpeg.write(to: folder.appending(path: "\(name).jpg"))   // last: a .jpg means its pair is complete
             } catch {
@@ -91,14 +95,16 @@ enum TrainingSamples {
     // MARK: - Privacy
 
     /// Every face in the photo pixellated before it's stored: customers and the cashier aren't what's being learned.
-    static func blurFaces(_ image: CGImage) -> CGImage {
+    /// Fails closed: if detection or the blur fails, there's no photo at all, never an unblurred one.
+    static func blurFaces(_ image: CGImage) -> CGImage? {
         let request = VNDetectFaceRectanglesRequest()
         do {
             try VNImageRequestHandler(cgImage: image).perform([request])
         } catch {
             Log.error("face detection: \(error)")
+            return nil
         }
-        let faces = request.results ?? []
+        guard let faces = request.results else { return nil }
         guard !faces.isEmpty else { return image }
         var output = CIImage(cgImage: image)
         let extent = output.extent
@@ -111,10 +117,10 @@ enum TrainingSamples {
             pixellate.inputImage = output.clampedToExtent()
             pixellate.scale = Float(max(box.width, box.height) / 6)
             pixellate.center = CGPoint(x: box.midX, y: box.midY)
-            guard let blocks = pixellate.outputImage?.cropped(to: box) else { continue }
+            guard let blocks = pixellate.outputImage?.cropped(to: box) else { return nil }
             output = blocks.composited(over: output)
         }
-        return context.createCGImage(output, from: extent) ?? image
+        return context.createCGImage(output, from: extent)
     }
 
     nonisolated(unsafe) private static let context = CIContext()   // CIContext is thread-safe

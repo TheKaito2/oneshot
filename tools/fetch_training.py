@@ -11,6 +11,8 @@ import os
 import pathlib
 import re
 import sys
+import math
+import urllib.parse
 import urllib.request
 
 root = pathlib.Path(__file__).resolve().parent.parent
@@ -30,7 +32,7 @@ def call(url, body=None):
     data = json.dumps(body).encode() if body is not None else None
     request = urllib.request.Request(url, data=data, headers={**headers, "Content-Type": "application/json"},
                                      method="POST" if body is not None else "GET")
-    with urllib.request.urlopen(request) as response:
+    with urllib.request.urlopen(request, timeout=60) as response:
         return response.read()
 
 
@@ -46,27 +48,60 @@ def listing(prefix):
 
 classes = [line.strip() for line in (root / "data/labels/classes.txt").read_text().splitlines() if line.strip()]
 index = {name: i for i, name in enumerate(classes)}
+uuid_name = re.compile(r"^[0-9a-f-]{36}$")
+sku_name = re.compile(r"^[A-Za-z0-9_.-]{1,64}$")
+
+
+def box_line(box):
+    """A YOLO line for a known product, None for an unknown one; raises on anything malformed."""
+    values = [float(box[k]) for k in ("cx", "cy", "w", "h")]
+    if not all(math.isfinite(v) and 0 <= v <= 1 for v in values) or values[2] <= 0 or values[3] <= 0:
+        raise ValueError(f"box out of range: {values}")
+    sku = str(box["sku"])
+    if not sku_name.match(sku):
+        raise ValueError(f"odd sku: {sku!r}")
+    return (f"{index[sku]} " + " ".join(f"{v:.6f}" for v in values)) if sku in index else sku
+
+
 (out / "images").mkdir(parents=True, exist_ok=True)
 (out / "labels").mkdir(parents=True, exist_ok=True)
-new_skus, fetched = {}, 0
-for shop in (item["name"] for item in listing("") if item.get("id") is None):   # folders = shops
+new_skus, fetched, skipped = {}, 0, 0
+shops = [item["name"] for item in listing("") if item.get("id") is None and uuid_name.match(item["name"])]
+for shop in shops:
     for item in listing(shop):
         name = item["name"]
-        if not name.endswith(".json"):
+        if not name.endswith(".json") or not uuid_name.match(name[:-5]):
             continue
         stem = name[:-5]
         target = f"{shop[:8]}-{stem}"
         if (out / "images" / f"{target}.jpg").exists():
             continue
-        sample = json.loads(call(f"{base}/training-frames/{shop}/{name}"))
-        lines = []
-        for box in sample["boxes"]:
-            if box["sku"] in index:
-                lines.append(f'{index[box["sku"]]} {box["cx"]:.6f} {box["cy"]:.6f} {box["w"]:.6f} {box["h"]:.6f}')
-            else:
-                new_skus[box["sku"]] = new_skus.get(box["sku"], 0) + 1
-        (out / "images" / f"{target}.jpg").write_bytes(call(f"{base}/training-frames/{shop}/{stem}.jpg"))
+        try:
+            sample = json.loads(call(f"{base}/training-frames/{urllib.parse.quote(shop)}/{urllib.parse.quote(name)}"))
+            lines, unknown = [], []
+            for box in sample["boxes"]:
+                line = box_line(box)
+                (lines if " " in line else unknown).append(line)
+            image = call(f"{base}/training-frames/{urllib.parse.quote(shop)}/{urllib.parse.quote(stem)}.jpg")
+            if not image.startswith(b"\xff\xd8"):
+                raise ValueError("not a JPEG")
+        except Exception as error:   # one bad upload never stops the rest
+            print(f"skipped {shop}/{stem}: {error}", file=sys.stderr)
+            skipped += 1
+            continue
+        for sku in unknown:
+            new_skus[sku] = new_skus.get(sku, 0) + 1
+        (out / "images" / f"{target}.jpg").write_bytes(image)
         (out / "labels" / f"{target}.txt").write_text("\n".join(lines) + ("\n" if lines else ""))
         fetched += 1
+
+# A shop that withdrew had its photos deleted on the server: drop the copies pulled before, too.
+kept = {shop[:8] for shop in shops}
+dropped = 0
+for path in list((out / "images").glob("*.jpg")) + list((out / "labels").glob("*.txt")):
+    if path.name[:8] not in kept:
+        path.unlink()
+        dropped += 1
 (out / "new_skus.txt").write_text("".join(f"{sku}\t{n}\n" for sku, n in sorted(new_skus.items(), key=lambda x: -x[1])))
-print(f"{fetched} new photos -> {out}; {len(new_skus)} products without a class (see new_skus.txt)")
+print(f"{fetched} new photos, {skipped} skipped, {dropped} withdrawn files removed -> {out}; "
+      f"{len(new_skus)} products without a class (see new_skus.txt)")

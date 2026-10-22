@@ -7,13 +7,20 @@ enum TrainingConsent {
     /// and everything already sent is deleted. Returns how many sent photos were deleted.
     @discardableResult
     static func set(_ on: Bool) async throws -> Int {
-        UserDefaults.standard.set(true, forKey: TrainingSamples.askedKey)
+        let defaults = UserDefaults.standard
+        defaults.set(true, forKey: TrainingSamples.askedKey)
         if !on {
-            UserDefaults.standard.set(false, forKey: TrainingSamples.optInKey)   // stop keeping at once, even offline
+            defaults.set(false, forKey: TrainingSamples.optInKey)   // stop keeping at once, even offline
+            defaults.set(true, forKey: TrainingSamples.withdrawPendingKey)   // until the server confirms
             TrainingSamples.clearWaiting()
         }
         let deleted = try await SyncEngine.shared.setTrainingConsent(on)
-        if on { UserDefaults.standard.set(true, forKey: TrainingSamples.optInKey) }
+        if on {
+            defaults.set(false, forKey: TrainingSamples.withdrawPendingKey)
+            defaults.set(true, forKey: TrainingSamples.optInKey)
+        } else {
+            defaults.set(false, forKey: TrainingSamples.withdrawPendingKey)
+        }
         return deleted
     }
 }

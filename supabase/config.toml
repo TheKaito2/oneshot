@@ -418,3 +418,7 @@ enabled = true
 # (auth.getUser against the Auth server), which works with both legacy and new signing keys.
 [functions.delete-account]
 verify_jwt = false
+
+[functions.training-retention]
+# Called by pg_cron with x-cron-secret, not a user JWT; the function checks the secret itself.
+verify_jwt = false

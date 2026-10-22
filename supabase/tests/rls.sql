@@ -41,7 +41,7 @@ insert into storage.objects (bucket_id, name, owner) values
 -- B opted in to training photos and sent one.
 insert into training_consent (shop_id, policy_version) values ('bbbbbbbb-0000-0000-0000-00000000000b', '2026-10-22');
 insert into storage.objects (bucket_id, name, owner) values
-  ('training-frames', 'bbbbbbbb-0000-0000-0000-00000000000b/1.jpg', 'bbbbbbbb-0000-0000-0000-000000000001');
+  ('training-frames', 'bbbbbbbb-0000-0000-0000-00000000000b/11111111-1111-1111-1111-111111111111.jpg', 'bbbbbbbb-0000-0000-0000-000000000001');
 
 -- ---------------------------------------------------------------------------------------------------------------
 -- Signed in as A.
@@ -149,21 +149,31 @@ exception when others then null;
 end $$;
 
 -- Training photos: only with A's own consent, only in A's folder; never B's.
-select throws_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'aaaaaaaa-0000-0000-0000-00000000000a/1.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
+select throws_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'aaaaaaaa-0000-0000-0000-00000000000a/11111111-1111-1111-1111-111111111111.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
   '42501', null, 'A cannot send a training photo before opting in');
 select is((select count(*)::int from training_consent), 0, 'A cannot see B''s consent');
 select throws_ok($$insert into training_consent (shop_id, policy_version) values ('bbbbbbbb-0000-0000-0000-00000000000b', 'x')$$,
   '42501', null, 'A cannot consent for B');
 select lives_ok($$insert into training_consent (shop_id, policy_version) values ('aaaaaaaa-0000-0000-0000-00000000000a', '2026-10-22')$$,
   'A opts in for its own shop');
-select lives_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'aaaaaaaa-0000-0000-0000-00000000000a/1.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
+select lives_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'aaaaaaaa-0000-0000-0000-00000000000a/11111111-1111-1111-1111-111111111111.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
   'A sends a training photo after opting in');
-select throws_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'bbbbbbbb-0000-0000-0000-00000000000b/2.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
+select throws_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'aaaaaaaa-0000-0000-0000-00000000000a/sub/22222222-2222-2222-2222-222222222222.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
+  '42501', null, 'training photos must be <shop>/<uuid>.jpg|json (no subfolders)');
+select throws_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'aaaaaaaa-0000-0000-0000-00000000000a/22222222-2222-2222-2222-222222222222.png', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
+  '42501', null, 'training photos must be .jpg or .json');
+select throws_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'bbbbbbbb-0000-0000-0000-00000000000b/22222222-2222-2222-2222-222222222222.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
   '42501', null, 'A cannot send into B''s training folder');
 select is((select count(*)::int from storage.objects where bucket_id = 'training-frames' and name like 'bbbbbbbb-%'), 0,
   'A cannot list B''s training photos');
-update training_consent set withdrawn_at = now() where shop_id = 'aaaaaaaa-0000-0000-0000-00000000000a';
-select throws_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'aaaaaaaa-0000-0000-0000-00000000000a/2.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
+select lives_ok($$update training_consent set granted_at = '2000-01-01', withdrawn_at = null where shop_id = 'aaaaaaaa-0000-0000-0000-00000000000a'$$,
+  'A may update its consent row');
+select isnt((select granted_at from training_consent where shop_id = 'aaaaaaaa-0000-0000-0000-00000000000a'), '2000-01-01'::timestamptz,
+  'granted_at is the server''s, not the device''s');
+update training_consent set withdrawing = true where shop_id = 'aaaaaaaa-0000-0000-0000-00000000000a';
+select isnt((select withdrawn_at from training_consent where shop_id = 'aaaaaaaa-0000-0000-0000-00000000000a'), null,
+  'withdrawing stamps withdrawn_at on the server');
+select throws_ok($$insert into storage.objects (bucket_id, name, owner) values ('training-frames', 'aaaaaaaa-0000-0000-0000-00000000000a/22222222-2222-2222-2222-222222222222.jpg', 'aaaaaaaa-0000-0000-0000-000000000001')$$,
   '42501', null, 'after withdrawing, A cannot send training photos');
 
 -- anon reaches nothing.
