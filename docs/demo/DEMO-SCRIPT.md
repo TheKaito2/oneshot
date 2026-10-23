@@ -1,8 +1,8 @@
 # OneShot live demo: shot list
 
 Target: about 4:30 in total.
-- **0:00 to 0:15:** the intro clip (`intro-launch.mp4` or `intro-hype.mp4`).
-- **0:15 to 4:30:** the live demo below.
+- **0:00 to 0:11:** the intro: the hype showreel (`Krist/video-editing/oneshot-intro/oneshot-intro-hype.mp4`).
+- **0:11 to 4:30:** the live demo below.
 
 All English. Two devices:
 - **iPad:** the counter. Scan and charge here.
@@ -33,7 +33,7 @@ Lines in *italics* are voice-over; you can record it live or on top afterwards.
 
 ---
 
-## Beat 1: The problem (0:15 to 0:35)
+## Beat 1: The problem (0:11 to 0:35)
 
 **Wide shot of the counter, iPad on its stand.**
 
@@ -101,7 +101,7 @@ Sync runs every few minutes. If they aren't there yet, open Settings › Account
    *"Recognition runs on the device. Nothing leaves it unless the owner opts in, and faces are blurred if they do."*
 2. **Wide shot of the counter,** with one last **Scan** on the iPad.
    *"OneShot. One photo. The whole counter."*
-3. **End card** (from the intro clip): logo + "OneShot".
+3. **End card:** the hype showreel's last 2 s (the ONESHOT lockup).
 
 ---
 
