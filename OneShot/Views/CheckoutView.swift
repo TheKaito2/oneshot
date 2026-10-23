@@ -64,6 +64,8 @@ struct CheckoutView: View {
                 .scrollTargetLayout()
             }
             .scrollTargetBehavior(.paging)
+            // The pages are fixed layouts the bar's inset already lifts: no extra list margin under them (23 Oct).
+            .contentMargins(.bottom, 0, for: .scrollContent)
             .scrollPosition(id: $page)
             .scrollIndicators(.hidden)
             .scrollDisabled(!billOpen)
