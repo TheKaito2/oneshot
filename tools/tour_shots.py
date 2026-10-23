@@ -18,10 +18,10 @@ with tempfile.TemporaryDirectory() as tmp:
             human = a.get("suggestedHumanReadableName", "")
             m = re.match(r"((?:th-)?(?:portrait|landscape)-\d\d-[\w-]+?)_\d+_", human)
             if m and a["exportedFileName"].endswith(".png"):
-                # Half size as JPEG: 81 full-size PNGs were 76 MB.
+                # Full size, JPEG at 95: the hand-in zip's size cap is gone (23 Oct), so no more halving.
                 from PIL import Image
                 im = Image.open(Path(tmp) / a["exportedFileName"]).convert("RGB")
-                im.resize((im.width // 2, im.height // 2), Image.LANCZOS).save(out / f"{m.group(1)}.jpg", quality=85)
+                im.save(out / f"{m.group(1)}.jpg", quality=95, subsampling=0)
 
                 names.append(m.group(1))
 print(f"{len(names)} screenshots -> {out}")
